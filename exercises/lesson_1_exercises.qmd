@@ -33,8 +33,75 @@ Throughout this short course we will refer to a mass spectrometry data set that 
 We will explore data types in our mass spec data set and how different approaches to interacting with the data set may provide different views or perspectives of the data.
 
 1.  In the *exercises* folder within the main project folder, open the **Lesson 1 Exercise 1 Worksheet.xlsx** file.
+
 2.  Navigate to the *data* folder within the main project folder. Right click the **batch_data.csv** file and open the file with a text application such as Notepad for Windows or TextEdit for Macs.
+
 3.  Right click the **batch_data.csv** file and open with Excel. (Note that there is a similarly named **batch_data_ts.csv** file in the data folder as well. Do not open this yet.) If there is a pop-up message that prompts you to take action, read the message carefully and click "Convert."
+
 4.  For each of the column names (separated by commas in the text application), complete the **Lesson 1 Exercise 1 Worksheet.xlsx** based on the data types that you manually infer based on what we just learned about data types from the text file, and based on the format window in Excel.
+
 5.  Working the batch_data.csv file, click the File menu at the top left and click "Save As..." The file format to save should be defaulted to "Comma Separated Values (.csv)" - if it is not, select that and update the file name to "batch_data_excel.csv." Open the **batch_data_excel.csv** file using your text application. How is it different from the original **batch_data.csv** file that you previously opened within the text application?
+
 6.  Open the **batch_data_ts.csv** file in Excel. What is different in this file compared to the previous file?
+
+7.  Click on cell M2. In the formula box, enter the following:
+
+    "=DATEVALUE(MID(I2,1,10))+TIMEVALUE(MID(I2,12,8))"
+
+    The MID function extacts a specified number of characters from a text string, starting at a certain position. The formula will take the first 10 characters of the timestamp text and convert it into a date as a floating point value, take the 8 characters from the 12th position from the left and convert it into a time as a floating point value, and then sum the numeric values together.
+
+8.  Convert the floating point number to a date and time recognized by Excel by right-clicking the cell, clicking on "Format Cells...", selecting "Time" from the Category list, and selecting the bottom most option in the Type window (3/14/12 13:30).
+
+# Exercise 2: Tidy Data
+
+Many, but not all, systems and workflows will generate tidy data, where each variable is in its own column, each observation is in its own row, and each value is in its own cell. Transactional data that captures specific events and timestamps often is organized in this format, but sometimes the software for an instrument does not export data in this format.
+
+1.  Open **sample_data_wide.csv** in Excel. Does this look like tidy data? If not, which of the 3 principles of tidy data does it violate?
+
+2.  Navigate to the Data menu in Excel and click the down arrow beside the Get Data button.
+
+    ![](images/get_data_ss.jpg)
+
+3.  In the Choose data source menu select Text/CSV.
+
+4.  Click the Browse button and select **sample_data_wide.csv**, then click the Get Data button.
+
+    ![](images/file_select_ss.jpg)
+
+5.  Hit the Next button and you should see your data set on the next page. Excel provides some information about the file and contents above and shows an indicator of the data types for each column by the column name (text vs. numeric).
+
+    ![](images/power_query_data.jpg)
+
+6.  Hit the Transform data button to bring up a different menu. You are now within the Power Query Editor, which allows for some transformations.
+
+    ![](images/power_query_transform.jpg)
+
+7.  Click the morphine column, hold the shift button, and then click the final oxycodone column. All 6 analyte columns should be highlighted.
+
+8.  Click the Unpivot columns button. The data in the window should change and you should now see one concentration value for a single analyte per row.
+
+    ![](images/unpivot_ss.jpg)
+
+9.  Navigate to the Home menu and hit the Close & load button to load the data into an Excel worksheet. Note how long this takes to complete.
+
+# Data Transformation in R
+
+R and other programming languages such as Python that are intended to transform data are efficient at these types of operations. The equivalent operations of loading and viewing the data can be performed with the following code:
+
+```{r}
+library(tidyverse) 
+# loads "packages" that allow the user to use functions that others have written
+sample_wide <- read_csv("../data/sample_data_wide.csv") 
+# reads the sample_data_wide.csv file into R
+head(sample_wide, 10) # displays the first 10 rows
+```
+
+Data transformation into a tidy data set requires only one function:
+
+```{r}
+sample <- pivot_longer(sample_wide, 
+                       cols = morphine:oxycodone, 
+                       names_to = "analyte", 
+                       values_to = "concentration")
+head(sample, 10) # view the first 10 lines of the new dataframe
+```
