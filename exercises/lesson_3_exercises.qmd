@@ -1,0 +1,48 @@
+---
+title: "Lesson 3 Exercises"
+format: pdf
+editor: visual
+---
+
+# Chemistry Data Set Orientation
+
+In this lesson we will work with different data sets that align with different statistical questions or approaches that you may encounter in a clinical lab. The first data set is derived from a publicly available data set from the National Health and Nutrition Examination Survey (NHANES), which includes routine clinical chemistry testing from healthy individuals. Synthetic clinical information has been integrated with the data to more closely align with what you may see in a laboratory information system. Let's take a brief look at the data by opening up the **chem_data.csv** file in the data folder.
+
+1.  What does each row contain? (i.e. what is the unit of observation?)
+2.  How many observations are there?
+3.  What steps would you take to review data for only one analyte within the data set?
+
+```{r}
+library(tidyverse)
+
+chem_data <- read_csv("../data/chem_data.csv")
+head(chem_data, 10)
+```
+
+# Performing a 1 sample t-test
+
+1.  With the **chem_data.csv** file open in Excel, click the File menu (top left) and click "Save As..." A best practice when working with data is to leave your raw data unaltered and create a new file for an analysis.
+2.  Within the Save As window, create a new folder called "output" within the MSACL-data-literacy folder. Select the new folder.
+3.  Name the new file "outpt_cholesterol" and save it as an Excel file (.xlsx) using the File Format dropdown menu.
+4.  Press the square between the column A and row 1 to select the whole data set.
+5.  Locate the Sort & Filter button and hit the down arrow, then select Filter.
+6.  Use the filter arrow for the pat_type variable to select just the observations for outpatient samples.
+7.  Use the filter arrow for the test variable to select the observations for cholesterol.
+8.  Select the whole data set by clicking on the top left corner and copy it (Command/Control + C).
+9.  Click the plus sign at the bottom of the window to create a new sheet and name it "outpt_cholesterol". Click the top left square (between column A and row 1) and paste the data set in.
+10. In cell O1 add a new header "average". In rows 2 and 3, enter the mean cholesterol value 190.
+11. Select the Data menu (at the top) to view different analysis options.
+12. If you do not see an option for "Data Analysis" on the far right, click the Analysis Tools option and select the Analysis Toolpak option.
+13. Now click Data Analysis and select "t-Test: Two-Sample Assuming Unequal Variances".
+14. For Variable 1 Range select the values in column L (click cell L2, scroll down to find the last value in the column, hold shift, then click the last cell).
+15. For Variable 2 Range select the 2 values in column O.
+16. Under Output Options, "New Worksheet Ply:" should be selected by default. Enter "one var t-test" in the text box to name the new worksheet.
+17. What does the output tell you?
+
+```{r}
+library(infer)
+outpt_chol <- chem_data |> 
+  filter(pat_type == "outpatient", test == "cholesterol")
+# stores outpatient cholesterol observations in a new data frame outpt_chol
+t_test(outpt_chol, response = value, mu = 190)
+```
