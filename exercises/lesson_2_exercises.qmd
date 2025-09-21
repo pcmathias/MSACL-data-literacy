@@ -14,9 +14,9 @@ We will explore different visualizations and how different aspects of visualizat
 
     -   batch_data_wide.csv
 
-    -   biochem_long.csv
+    -   chem_data.csv
 
-    -   biochem_wide.csv
+    -   chem_data_wide.csv
 
     -   lab_exp.csv
 
