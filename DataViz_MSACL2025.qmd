@@ -13,15 +13,13 @@ library(tidyverse)
 ## Data import
 
 ```{r, message = FALSE}
-chem <- read_csv("data/biochem_long.csv")
+chem <- read_csv("data/chem_data.csv")
 chem_wide <- chem |> 
   pivot_wider(names_from = test, values_from = value)
 
 
 iron <- chem |> 
   filter(test == "iron")
-
-#write_csv(batches_wide, "data/batch_data_wide.csv")
 
 exp <- read_csv("data/lab_exp.csv")
 exp_long <- exp |> pivot_longer(personnel:total, 
@@ -150,11 +148,12 @@ ggplot(data = cor_df, mapping = aes(x = var1, y = var2,
 # flip x axis labels!!
 ```
 
+## Make comparisons easier
+
 ```{r}
 sodium_cor <- filter(cor_df, var1 == "sodium", correlation != 1.000)
-```
 
-## Make comparisons easier
+```
 
 ```{r}
 ggplot(sodium_cor) +
