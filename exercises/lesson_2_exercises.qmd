@@ -1,0 +1,31 @@
+---
+title: "Lesson 2 Exercises"
+format: pdf
+editor: visual
+---
+
+# Exercise 1: Visualize different types of data
+
+We will explore different visualizations and how different aspects of visualization can be used to make communicating with data more effective. We'll start by creating visualizations that explore different types of data.
+
+1.  Navigate to the *data* folder within the main project folder. Right click on the one of the data files below to open with Excel. If there is a pop-up message that prompts you to take action, read the message carefully and click "Convert." Data are delimited with commas.
+
+    -   batch_data.csv
+
+    -   batch_data_wide.csv
+
+    -   biochem_long.csv
+
+    -   biochem_wide.csv
+
+    -   lab_exp.csv
+
+2.  Review the data formats and available variables of your selected data set and use your preferred tool (e.g., Excel, R, python) to create two visualizations that explore different types of relationships in data:
+
+    1.  Quantitative values and qualitative items
+
+    2.  Multiple quantitative values
+
+# Exercise 2: Improve your visualization
+
+Go back to your initial visualizations from Exercise 1 and revise at least one of them using the information you've learned in this module. Be prepared to share what you changed and why.
