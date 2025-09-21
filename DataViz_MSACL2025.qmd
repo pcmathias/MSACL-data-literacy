@@ -1,0 +1,240 @@
+---
+title: "Lesson 2 Data Visualization Principles"
+format: pdf
+editor: visual
+---
+
+## Libraries
+
+```{r, message = FALSE}
+library(tidyverse)
+```
+
+## Data import
+
+```{r, message = FALSE}
+chem <- read_csv("data/biochem_long.csv")
+chem_wide <- chem |> 
+  pivot_wider(names_from = test, values_from = value)
+
+
+iron <- chem |> 
+  filter(test == "iron")
+
+#write_csv(batches_wide, "data/batch_data_wide.csv")
+
+exp <- read_csv("data/lab_exp.csv")
+exp_long <- exp |> pivot_longer(personnel:total, 
+                                names_to = "type",
+                                values_to = "cost")
+```
+
+## Histogram
+
+```{r}
+ggplot(data = iron, mapping = aes(x = value)) +
+  geom_histogram(binwidth = 5) +
+  theme_minimal() + 
+  labs(x = "Value", y = "Count", title = "Histogram of Iron Values")
+```
+
+## Strip plot
+
+```{r}
+ggplot(data = iron, mapping = aes(x = value, y = 1)) +
+  geom_jitter(color = "deepskyblue3") +
+  theme_minimal() + 
+  theme(axis.text.y = element_blank()) +
+  labs(x = "Value", y = "", title = "Strip Plot of Iron Values")
+```
+
+## Bar plots
+
+```{r}
+
+ggplot(data = filter(exp_long, 
+                department %in% c("Chemistry", "Blood Bank",
+                            "Microbiology", "Hematology"))) +
+  geom_bar(mapping = aes(x = department, 
+                         y = cost, 
+                         fill = type), 
+           stat = "identity") +
+  theme_minimal() + 
+  labs(x = "", y = "Cost ($)", 
+       title = "")
+```
+
+```{r}
+ggplot(data = filter(exp_long, 
+                department %in% c("Chemistry", "Blood Bank", 
+                                  "Microbiology", "Hematology"))) +
+  geom_bar(mapping = aes(x = department, 
+                         y = cost, 
+                         fill = type), 
+           stat = "identity",
+           position = "dodge") +
+  theme_minimal() + 
+  labs(x = "", y = "Cost ($)", 
+       title = "")
+```
+
+```{r}
+ggplot(data = filter(exp_long, department == "Chemistry")) +
+  geom_bar(mapping = aes(x = fct_reorder(type, cost), 
+                         y = cost), 
+           stat = "identity",
+           fill = "#7CAE00") +
+  theme_minimal() + 
+  labs(x = "", y = "Cost ($)", 
+       title = "")
+```
+
+```{r}
+ggplot(data = filter(exp_long, department == "Chemistry")) +
+  geom_bar(mapping = aes(x = fct_reorder(type,cost), 
+                         y = cost), 
+           stat = "identity",
+           fill = "#7CAE00") +
+  coord_flip() +
+  theme_minimal() + 
+  labs(x = "", y = "Cost ($)", 
+       title = "")
+```
+
+## Multiple quantitative values
+
+```{r}
+ggplot(chem_wide) +
+  geom_point(mapping = aes(x = creatinine, 
+                           y = blood_urea_nitrogen, 
+                           color = factor(gender))) + 
+  theme_minimal() + 
+  labs(x = "Creatinine (mg/dL)", y = "BUN (mg/dL)", 
+       title = "Correlation of Creatinine and BUN by Gender", 
+       color = "Gender")
+```
+
+```{r}
+ggplot(filter(chem_wide, pat_type == 'inpatient', gender == "Female",
+              creatinine < 5)) +
+  geom_point(mapping = aes(x = creatinine, 
+                           y = blood_urea_nitrogen, 
+                           color = sodium)) + 
+  theme_minimal() + 
+  labs(x = "Creatinine (mg/dL)", y = "BUN (mg/dL)", 
+       title = "Correlation for Inpatient Females by Sodium", 
+       color = "Sodium")
+```
+
+```{r}
+df <- select(chem_wide, alanine_aminotransferase:uric_acid)
+
+cor_df<- cor(df) |>
+  as_tibble(rownames = "var1") |>
+  pivot_longer(
+        cols = -var1, # Pivot all columns except 'Var1'
+        names_to = "var2", # New column for original column names
+        values_to = "correlation") # New column for correlation values
+
+
+library(viridis)
+ggplot(data = cor_df, mapping = aes(x = var1, y = var2, 
+                                    fill = correlation)) + 
+  geom_tile() +
+  scale_fill_viridis(discrete=FALSE) +
+  labs(x = "", y = "", 
+       title = "", 
+       fill = "Correlation") +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust = 1))
+
+# flip x axis labels!!
+```
+
+```{r}
+sodium_cor <- filter(cor_df, var1 == "sodium", correlation != 1.000)
+```
+
+## Make comparisons easier
+
+```{r}
+ggplot(sodium_cor) +
+  geom_bar(mapping = aes(x = correlation, y = var2), 
+           stat = "identity", 
+           fill = "royalblue1") +
+  theme_minimal() + 
+  labs(x = "Correlation with Sodium", y = " ", title = "")
+```
+
+```{r}
+ggplot(sodium_cor) +
+  geom_bar(mapping = aes(x = correlation, 
+                         y = fct_reorder(var2, correlation)), 
+           stat = "identity", 
+           fill = "royalblue1") +
+  theme_minimal() + 
+  labs(x = "Correlation with Sodium", y = " ", 
+       title = "")
+```
+
+```{r}
+ggplot(exp) +
+  geom_bar(mapping = aes(x = department, y = total), 
+           stat = "identity",
+           fill = "grey40") +
+  theme_minimal() + 
+  labs(x = "", y = "Total Expenses ($10,000s)", 
+       title = "")
+```
+
+```{r}
+ggplot(exp) +
+  geom_bar(mapping = aes(x = department, y = total), 
+           stat = "identity",
+           fill = "grey40") +
+  coord_flip() +
+  theme_minimal() + 
+  labs(x = "", y = "Total Expenses ($10,000s)", 
+       title = "")
+```
+
+```{r}
+ggplot(exp) +
+  geom_bar(mapping = aes(x = fct_reorder(department, total, 
+                                         .desc = FALSE), 
+                         y = total), 
+           stat = "identity",
+           fill = "grey40") +
+  coord_flip() +
+  theme_minimal() + 
+  theme(axis.text.x = element_text(size = 16), axis.text.y = element_blank(), 
+        axis.title.x = element_text(size = 16)) +
+  labs(x = "", y = "Total Expenses ($10,000s)", 
+       title = "")
+```
+
+## Effective visual encodings
+
+```{r}
+ggplot(exp) +
+  geom_point(mapping = aes(x = total, y = department), 
+             color = "deepskyblue3",
+             size = 3) +
+  theme_minimal() + 
+  labs(x = "Total Expenses ($10,000s)", y = "", 
+       title = "")
+```
+
+```{r}
+ggplot(exp) +
+  geom_point(mapping = aes(x = total, 
+                           y = fct_reorder(department, total)), 
+             color = "deepskyblue3",
+             size = 3) +
+  #xlim(0, 700) +
+  theme_minimal() + 
+  theme(axis.text.x = element_text(size = 16), 
+        axis.text.y = element_text(size = 16), 
+        axis.title.x = element_text(size = 16)) +
+  labs(x = "Total Expenses ($10,000s)", y = "", 
+       title = "")
+```
