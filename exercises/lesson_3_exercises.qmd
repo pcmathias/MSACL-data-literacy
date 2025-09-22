@@ -12,11 +12,12 @@ In this lesson we will work with different data sets that align with different s
 2.  How many observations are there?
 3.  What steps would you take to review data for only one analyte within the data set?
 4.  Click Save As... in the File menu.
-5.  Within the Save As window, create a new folder called "output" within the MSACL-data-literacy folder. Select the new folder.
+5.  Within the Save As window, if it is not already created, create a new folder called "output" within the MSACL-data-literacy folder. Select the new folder.
 6.  Save the file as an Excel file named **stat_summary.xlsx** within the output folder.
 7.  Using the Filter function from the Sort & Filter menu, create a subset of only the sodium values in the data set and save the data to a separate sheet called "sodium".
 8.  Calculate the mean, median, and mode for the sodium values in the data set.
 9.  Calculate the standard deviation and coefficient of variation (CV).
+10. Is the sodium data normally distributed? How might you assess this informally?
 
 # Analysis in R
 
@@ -35,6 +36,12 @@ sodium_summary <- sodium_data |>
             std_dev_sodium = sd(value),
             cv_sodium = (std_dev_sodium/mean_sodium)*100)
 sodium_summary
+```
+
+```{r}
+ggplot(sodium_data, aes(x = value)) +
+  geom_histogram(binwidth = 1) +
+  theme_bw()
 ```
 
 # Exercise 2: Performing a one-sample t-test
@@ -107,4 +114,89 @@ A common scenario is the need to compare two groups and assess whether the means
 ```{r}
 iron_subset <- filter(chem_data, test == "iron", pat_type == "outpatient")
 t_test(iron_subset, response = value, explanatory = gender, order = c("Male", "Female"))
+```
+
+# Exercise: Calculating correlation coefficients
+
+Within our chemistry data set, we expect that some analytes are positively correlated and some are negatively correlated. To complete many of these operations in Excel, we may need to transform the data set so that each row contains multiple observations from the same individual.
+
+1.  Open **chem_data.csv** and save to a new file named **correlation_analysis.xlsx** in the *output* folder.
+
+2.  Highlight the full range of data, including column headers. Shortcut: When you select the first cell, click Command (Mac) or Control (Windows) + Shift + Right to select all values in the current row, then Command/Control + Shift + Down to select all rows to the bottom of the data set.
+
+3.  In the Insert menu, select PivotTable to bring up the PivotTable menu. Leave the defaults as is (you've already selected the relevant data and you want a new sheet) and click OK.
+
+    ![](images/create_pivot.jpg)
+
+4.  There should be a menu for PivotTable Fields on the right side of the screen. Click "mrn" (not the check box) and hold, and then drag it to the "Rows" box below. This is instructing Excel that our unit of observation is the mrn.![](images/pivot_fields.jpg)
+
+5.  Repeat the same process for the test variable, but drag it the "Columns" box. This indicates that for each distinct value Excel finds under the test column, it will create a new column with that name.
+
+    ![](images/pivot_tests.jpg)
+
+6.  Now do the same process for the value variable, into the "Values" box. PivotTables inherently assume they are doing an aggregation or summarization function so you should see "Sum of value" in the Values box. We are not intending to sum values, but no sum will actually be calculated as long as there is only a single value per unique combination of mrn and test in the data set. The assumption is true for this data set but it is critical to check these types of assumptions when working with PivotTables in other contexts!
+
+7.  PivotTables do not allow for all calculations/operations in Excel to be performed on them. Select the contents of the PivotTable, excluding the last column and last row (which have automatically summed up values). Copy this data, create a new sheet "chem_wide", and paste the data in, starting with the cell in row 1, column 1.
+
+8.  Select the columns for alanine_aminotransferase and aspartate_aminotransferase and navigate to the Insert menu. Under the plot icons, select the plain scatterplot (without lines).
+
+    ![](images/scatterplot.jpg)
+
+9.  To the right of the data set, add "AST-ALT correlation" to a cell. Either to the right or below it, use the formula "=PEARSON(range1, range2)" to calculate the correlation between these values. For range1 input the values for the ALT column and for range2 input the values for the AST column.
+
+10. Do you expect any of the analytes to have a negative correlation with one another? Select two other columns, create a scatterplot, and calculate the correlation coefficient. Are there limitations to the scatterplot that make it difficult to assess the relationship?
+
+# Correlation coefficients in R
+
+```{r}
+chem_wide <- chem_data |> 
+  select(-units) |> 
+  pivot_wider(names_from = test, values_from = value)
+ggplot(chem_wide, 
+       aes(x = alanine_aminotransferase, y = aspartate_aminotransferase)) +
+  geom_point() +
+  theme_bw()
+cor(chem_wide$alanine_aminotransferase, chem_wide$aspartate_aminotransferase)
+```
+
+```{r}
+# better visualization to understand distribution of most values
+ggplot(chem_wide, 
+       aes(x = alanine_aminotransferase, y = aspartate_aminotransferase)) +
+  geom_bin_2d(bins = 100) +
+  xlim(c(0, 100)) +
+  ylim(c(0, 100)) +
+  theme_bw()
+```
+
+# Exercise: Linear regression
+
+1.  Return to your **correlation_analysis.xlsx** file. We will perform an analysis on the chem_wide sheet.
+2.  Navigate to the Data menu and click the Data Analysis option on the far right.
+3.  In the Analysis Tools menu, select Regression.
+4.  For Input Y Range, select the data for aspartate_aminotransferase (column E).
+5.  For Input X range, select the data for alanine_aminotransferase (column B).
+6.  Under Output Options, New Worksheet Ply: should be selected. Name the new tab "regression".
+7.  Select all of the options under the Residuals menu.
+
+# Linear regression in R
+
+```{r}
+# use chem_wide data set from previous R example
+OLS_reg <- lm(aspartate_aminotransferase ~ alanine_aminotransferase, data = chem_wide)
+OLS_reg
+plot(OLS_reg)
+```
+
+```{r}
+library(mcr)
+PB_reg <- mcreg(chem_wide$alanine_aminotransferase, chem_wide$aspartate_aminotransferase,
+                method.reg = "PaBa")
+plot(PB_reg)
+```
+
+```{r}
+Deming_reg <- mcreg(chem_wide$alanine_aminotransferase, chem_wide$aspartate_aminotransferase,
+                method.reg = "Deming")
+plot(Deming_reg)
 ```
