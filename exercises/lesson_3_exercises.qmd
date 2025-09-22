@@ -116,7 +116,7 @@ iron_subset <- filter(chem_data, test == "iron", pat_type == "outpatient")
 t_test(iron_subset, response = value, explanatory = gender, order = c("Male", "Female"))
 ```
 
-# Exercise: Calculating correlation coefficients
+# Exercise 4: Calculating correlation coefficients
 
 Within our chemistry data set, we expect that some analytes are positively correlated and some are negatively correlated. To complete many of these operations in Excel, we may need to transform the data set so that each row contains multiple observations from the same individual.
 
@@ -169,7 +169,7 @@ ggplot(chem_wide,
   theme_bw()
 ```
 
-# Exercise: Linear regression
+# Exercise 5: Linear regression
 
 1.  Return to your **correlation_analysis.xlsx** file. We will perform an analysis on the chem_wide sheet.
 2.  Navigate to the Data menu and click the Data Analysis option on the far right.
@@ -178,6 +178,7 @@ ggplot(chem_wide,
 5.  For Input X range, select the data for alanine_aminotransferase (column B).
 6.  Under Output Options, New Worksheet Ply: should be selected. Name the new tab "regression".
 7.  Select all of the options under the Residuals menu.
+8.  Have we met the assumptions required for regression? (Hint: consider plotting a histogram of the residuals)
 
 # Linear regression in R
 
@@ -190,13 +191,13 @@ plot(OLS_reg)
 
 ```{r}
 library(mcr)
-PB_reg <- mcreg(chem_wide$alanine_aminotransferase, chem_wide$aspartate_aminotransferase,
-                method.reg = "PaBa")
-plot(PB_reg)
-```
-
-```{r}
 Deming_reg <- mcreg(chem_wide$alanine_aminotransferase, chem_wide$aspartate_aminotransferase,
                 method.reg = "Deming")
 plot(Deming_reg)
+```
+
+```{r}
+PB_reg <- mcreg(chem_wide$alanine_aminotransferase, chem_wide$aspartate_aminotransferase,
+                method.reg = "PaBa")
+plot(PB_reg)
 ```
