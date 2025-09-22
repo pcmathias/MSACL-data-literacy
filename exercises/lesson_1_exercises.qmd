@@ -44,13 +44,15 @@ We will explore data types in our mass spec data set and how different approache
 
 6.  Open the **batch_data_ts.csv** file in Excel. What is different in this file compared to the previous file?
 
-7.  Click on cell M2. In the formula box, enter the following:
+7.  Use Save As... to save a new file. Create a new folder called "output" within the MSACL-data-literacy folder. Select the new folder. Save the new file as an Excel (.xlsx) file named **batch_data_excel.xlsx**.
+
+8.  Click on cell M2. In the formula box, enter the following:
 
     "=DATEVALUE(MID(I2,1,10))+TIMEVALUE(MID(I2,12,8))"
 
     The MID function extacts a specified number of characters from a text string, starting at a certain position. The formula will take the first 10 characters of the timestamp text and convert it into a date as a floating point value, take the 8 characters from the 12th position from the left and convert it into a time as a floating point value, and then sum the numeric values together.
 
-8.  Convert the floating point number to a date and time recognized by Excel by right-clicking the cell, clicking on "Format Cells...", selecting "Time" from the Category list, and selecting the bottom most option in the Type window (3/14/12 13:30).
+9.  Convert the floating point number to a date and time recognized by Excel by right-clicking the cell, clicking on "Format Cells...", selecting "Time" from the Category list, and selecting the bottom most option in the Type window (3/14/12 13:30).
 
 # Exercise 2: Tidy Data
 
