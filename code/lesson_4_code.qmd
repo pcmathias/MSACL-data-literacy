@@ -1,0 +1,151 @@
+---
+title: "Lesson 4 Computational Thinking"
+format: pdf
+editor: visual
+---
+
+## Libraries
+
+```{r, message = FALSE}
+library(tidyverse)
+```
+
+## Data import and preparation
+
+```{r, message = FALSE}
+
+exp <- read_csv("data/lab_exp.csv")
+exp_long <- exp |> pivot_longer(personnel:total, 
+                                names_to = "type",
+                                values_to = "cost")
+```
+
+## Create graph
+
+```{r}
+ggplot(data = filter(exp_long, 
+                department %in% c("Chemistry", "Blood Bank", 
+                                  "Microbiology", "Hematology"))) +
+  geom_bar(mapping = aes(x = department, 
+                         y = cost, 
+                         fill = type), 
+           stat = "identity",
+           position = "dodge") +
+  theme_minimal() + 
+  labs(x = "", y = "Cost ($)", 
+       title = "")
+```
+
+## Conditionals
+
+```{r}
+select_pan <- function(baked_good) {
+  if (baked_good == "cupcake" | baked_good == "muffin") {
+      pan <- "cupcake tin"
+  } else if (baked_good == "cake") {
+    pan <- "round cake pan"
+  } else {
+    pan <- "square cake pan"
+  }
+  return(pan)
+}
+
+```
+
+```{r}
+select_pan(baked_good = "cupcake")
+```
+
+```{r}
+select_pan(baked_good = "muffin")
+```
+
+```{r}
+select_pan(baked_good = "cake")
+```
+
+```{r}
+select_pan(baked_good = "brownie")
+```
+
+## Loops
+
+```{r}
+# create a toy data set
+df <- tibble(
+  a = rnorm(10),
+  b = rnorm(10),
+  c = rnorm(10),
+  d = rnorm(10)
+)
+```
+
+```{r}
+# manually calculate median for each column via copy/paste
+median(df$a)
+
+median(df$b)
+
+median(df$c)
+
+median(df$d)
+
+```
+
+```{r}
+# use a for loop to apply the median function across all columns
+
+output <- vector("double", ncol(df))  # 1. output
+for (i in seq_along(df)) {            # 2. sequence
+  output[[i]] <- median(df[[i]])      # 3. body
+}
+output
+
+# output is the result you want after executing code for each iteration in the sequence, here is the median value
+# sequence defines what to loop over, here is each column of the dataframe
+# body is the code that will be repeated, here it is the median function
+```
+
+```{r}
+# use a function that abstracts for loops
+df |> map_dbl(median)
+```
+
+## Prompting
+
+```{r}
+glu <- read_csv("data/fasting_glucose_dataset.csv")
+```
+
+```{r}
+ggplot(glu, aes(x = site, y = fasting_glucose_mg_dL, fill = site)) +
+  geom_boxplot(width = 0.6, outlier.shape = NA, alpha = 0.75) +
+  geom_jitter(aes(color = site), width = 0.12, alpha = 0.35, size = 1.6) +
+  geom_hline(yintercept = 100, linetype = "dashed") +
+  geom_hline(yintercept = 126, linetype = "dotted") +
+  labs(
+    title = "",
+    subtitle = "Dashed line = 100 mg/dL, Dotted line = 126 mg/dL",
+    x = "",
+    y = "Fasting glucose (mg/dL)"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(legend.position = "none")
+```
+
+```{r}
+glu |> group_by(site) |> summarise(median = median(fasting_glucose_mg_dL))
+```
+
+```{r}
+
+ggplot(glu, aes(x = site, y = fasting_glucose_mg_dL)) +
+  geom_boxplot(fill = "white") +
+  geom_jitter(width = 0.2, alpha = 0.6) +
+  labs(
+    title = "Fasting Glucose Distributions by Hospital Site",
+    y = "Fasting Glucose (mg/dL)",
+    x = NULL
+  ) +
+  theme_minimal()
+```
