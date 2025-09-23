@@ -56,6 +56,8 @@ For some categories of population-level studies, you may have a collection of ob
 
 4.  Locate the Sort & Filter button and hit the down arrow, then select Filter.
 
+    ![](images/filter_option.jpg)
+
 5.  Use the filter arrow for the pat_type variable to select just the observations for outpatient samples.
 
 6.  Use the filter arrow for the test variable to select the observations for cholesterol.
@@ -66,15 +68,21 @@ For some categories of population-level studies, you may have a collection of ob
 
 9.  In cell O1 add a new header "average". In rows 2 and 3, enter the mean cholesterol value 190.
 
+    ![](images/one-sided_t-test_step 1-01.jpg)
+
 10. Select the Data menu (at the top) to view different analysis options.
 
 11. If you do not see an option for "Data Analysis" on the far right, click the Analysis Tools option and select the Analysis Toolpak option.
 
 12. Now click Data Analysis and select "t-Test: Two-Sample Assuming Unequal Variances".
 
+    ![](images/one-sided_t-test_data_analysis_menu-01.jpg)
+
 13. For Variable 1 Range select the values in column L (click cell L2, scroll down to find the last value in the column, hold shift, then click the last cell).
 
 14. For Variable 2 Range select the 2 values in column O.
+
+    ![](images/one-sided_t-test_vars.jpg)
 
 15. Under Output Options, "New Worksheet Ply:" should be selected by default. Enter "one var t-test" in the text box to name the new worksheet.
 
@@ -97,16 +105,31 @@ t_test(outpt_chol, response = value, mu = 190)
 A common scenario is the need to compare two groups and assess whether the means are equal. In this exercise we will compare the mean iron value for males and females in this data set to assess whether they are different.
 
 1.  Re-open your **chem_data.csv** file in Excel and use "Save As..." to create a new file "iron_comparison" as a .xlsx file. Save this in the *output* folder. Remember to always separate your analysis from your raw data!
+
 2.  Select the whole data set and use the Filter option to allow you to select a subset of the data.
+
 3.  Use the filter arrow next to the test variable to subset just the iron results.
+
 4.  Use the filter arrow for the pat_type variable to select just the observations for outpatient samples.
+
 5.  Using the down arrow next to the gender variable, sort the data by clicking the Descending button under the Sort options. We now can select the data for males separately than the data for females.
+
 6.  Copy the data set that you've filtered and sorted into a new worksheet named "iron data".
+
 7.  Navigate to the Data menu and click "Data Analysis".
+
 8.  Select "t-Test: Two Sample Assuming Unequal Variances" to open up the analysis window.
+
+    ![](images/two-sided_t-test_step 1.jpg)
+
 9.  For Variable 1 Range, select the values for just the Male observations.
+
 10. For Variable 2 Range, select the values for just the Female observations.
+
 11. Under Output Options, "New Worksheet Ply:" should be selected by default. Enter "two var t-test" in the text box to name the new worksheet.
+
+    ![](images/two_sided_t-test_vars.jpg)
+
 12. What is the mean value for males? For females? What do the t-statistic and p-value suggest?
 
 # Two sided t-test in R
@@ -128,7 +151,9 @@ Within our chemistry data set, we expect that some analytes are positively corre
 
     ![](images/create_pivot.jpg)
 
-4.  There should be a menu for PivotTable Fields on the right side of the screen. Click "mrn" (not the check box) and hold, and then drag it to the "Rows" box below. This is instructing Excel that our unit of observation is the mrn.![](images/pivot_fields.jpg)
+4.  There should be a menu for PivotTable Fields on the right side of the screen. Click "mrn" (not the check box) and hold, and then drag it to the "Rows" box below. This is instructing Excel that our unit of observation is the mrn.
+
+    ![](images/pivot_fields.jpg)
 
 5.  Repeat the same process for the test variable, but drag it the "Columns" box. This indicates that for each distinct value Excel finds under the test column, it will create a new column with that name.
 
