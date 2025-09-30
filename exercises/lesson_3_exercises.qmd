@@ -68,7 +68,7 @@ For some categories of population-level studies, you may have a collection of ob
 
 9.  In cell O1 add a new header "average". In rows 2 and 3, enter the mean cholesterol value 190.
 
-    ![](images/one-sided_t-test_step 1-01.jpg)
+    ![](images/one-sided_t-test_step%201-01.jpg)
 
 10. Select the Data menu (at the top) to view different analysis options.
 
@@ -120,7 +120,7 @@ A common scenario is the need to compare two groups and assess whether the means
 
 8.  Select "t-Test: Two Sample Assuming Unequal Variances" to open up the analysis window.
 
-    ![](images/two-sided_t-test_step 1.jpg)
+    ![](images/two-sided_t-test_step%201.jpg)
 
 9.  For Variable 1 Range, select the values for just the Male observations.
 
