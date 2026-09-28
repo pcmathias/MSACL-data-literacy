@@ -1,0 +1,271 @@
+---
+title: "Module 3 Exercises: Visualization Principles and Best Practices"
+format: html
+editor: visual
+---
+
+This module builds on the import and validation skills from Module 2. You will build charts, identify flaws in poorly designed visualizations, and practice distinguishing exploratory from explanatory work.
+
+The setup chunk below creates three filtered subsets for the coding exercises. It uses `filter()` — a function we will learn fully in Module 4. For now, treat these lines as a black box that hands you the right data for each exercise.
+
+```{r}
+#| label: setup
+#| message: false
+#| warning: false
+library(tidyverse)
+
+chem <- read_csv("../../data/chem_data.csv",
+  col_types = cols(
+    gender     = col_factor(),
+    collect_dt = col_datetime("%Y/%m/%d %H:%M:%S"),
+    verify_dt  = col_datetime("%Y/%m/%d %H:%M:%S"),
+    pat_type   = col_factor(),
+    test       = col_factor()
+  ))
+
+# We'll understand filter() in Module 4 — for now these just create
+# the subsets you need for each exercise.
+k_data      <- chem |> filter(test == "potassium")
+lyte_data   <- chem |> filter(test %in% c("sodium", "potassium", "chloride", "bicarbonate"))
+sodium_data <- chem |> filter(test == "sodium")
+```
+
+---
+
+## Check-in 3A: Exploratory or Explanatory? *(5 minutes — after section 3.2)*
+
+Your instructor will display three charts on screen. For each one, classify it as **exploratory** or **explanatory** and write one sentence explaining what signal in the chart led to your decision.
+
+> **Chart 1:**
+>
+> Classification:
+>
+> Reason:
+
+> **Chart 2:**
+>
+> Classification:
+>
+> Reason:
+
+> **Chart 3:**
+>
+> Classification:
+>
+> Reason:
+
+**Reflection:** Is it possible for the same chart to be used exploratorily by one person and explanatorily by another? Give an example from the MS lab context.
+
+> Your answer:
+
+---
+
+## Check-in 3B: Match the Chart *(5 minutes — after section 3.3)*
+
+For each scenario below, write the chart type you would use and one sentence of justification. There is often more than one defensible answer — focus on the reasoning.
+
+> **Scenario 1:** You want to see how sodium results are distributed across the ICU, inpatient, and outpatient groups simultaneously.
+>
+> Chart type:
+>
+> Why:
+
+> **Scenario 2:** You are reviewing one month of daily QC results for a potassium assay and want to spot runs or trends.
+>
+> Chart type:
+>
+> Why:
+
+> **Scenario 3:** You want to show a poster audience how measured concentration relates to expected concentration across your calibration curve.
+>
+> Chart type:
+>
+> Why:
+
+> **Scenario 4:** You want to quickly check whether the 24 analytes in chem_data have plausible result distributions before proceeding with any analysis.
+>
+> Chart type:
+>
+> Why:
+
+> **Scenario 5:** You need to compare the median TAT across five patient type groups in a written report to lab leadership.
+>
+> Chart type:
+>
+> Why (and is a table ever the better choice here?):
+
+---
+
+## Check-in 3C: Spot the Flaws *(8 minutes — after section 3.4)*
+
+Your instructor will display two charts on screen. **Do not run any code yet** — just examine what you see and answer the questions below. You will fix both charts in Exercise 3E.
+
+> **Bad Chart 1** (a bar chart of analyte means):
+>
+> Flaw 1 — what is wrong and what does it cause a viewer to misunderstand?
+>
+> Flaw 2:
+>
+> Flaw 3:
+
+> **Bad Chart 2** (a boxplot of sodium results by patient type):
+>
+> Flaw 1 — what is wrong and what does it cause a viewer to misunderstand?
+>
+> Flaw 2:
+>
+> Flaw 3:
+
+---
+
+## Exercise 3D: First Plots with ggplot2 *(20 minutes — after section 3.5)*
+
+*This is the first coding exercise in the module. Work through each step in sequence; your instructor will circulate.*
+
+### Step 1 — Skeleton Histogram
+
+Fill in the two blanks to create a histogram of potassium results. `x` should map to the result value; `binwidth` controls bar width.
+
+```{r}
+#| label: hist-potassium-basic
+ggplot(k_data, aes(x = ___)) +
+  geom_histogram(binwidth = ___)
+```
+
+Try `binwidth = 0.1`, `0.5`, and `1.0`. Which best represents the data given that potassium is reported to one decimal place? Why?
+
+> Your answer:
+
+---
+
+### Step 2 — Color by Patient Type
+
+Fill in the three blanks: the `fill` aesthetic, a descriptive `title`, and a `y`-axis label.
+
+```{r}
+#| label: hist-potassium-pattype
+ggplot(k_data, aes(x = value, fill = ___)) +
+  geom_histogram(binwidth = 0.1, alpha = 0.6, position = "identity") +
+  theme_bw() +
+  labs(title = "___",
+       x     = "Potassium (mEq/L)",
+       y     = "___",
+       fill  = "Patient Type")
+```
+
+What do you notice about the distribution of potassium across patient types? Does anything look clinically plausible — for example, do ICU patients differ from outpatients in a way that makes sense?
+
+> Your answer:
+
+---
+
+### Step 3 — Exploratory or Explanatory?
+
+Is the chart you just made an *exploratory* visualization or an *explanatory* one? What would you need to change to make it suitable for a conference poster or a quality report?
+
+> Your answer:
+
+---
+
+**Stop here** — your instructor will pause to debrief before continuing.
+
+---
+
+## Exercise 3E: Distributions, Run Chart, and Bad Chart Rewrites *(22 minutes — after Exercise 3D debrief)*
+
+### Part 1 — Comparing Distributions and a Run Chart *(8 minutes)*
+
+**Boxplots with faceting.** Fill in the two blanks to create side-by-side boxplots for the four electrolytes, with patient type on the x-axis and one panel per analyte.
+
+```{r}
+#| label: boxplot-lytes
+ggplot(lyte_data |> filter(!is.na(pat_type)),
+       aes(x = ___, y = value)) +
+  geom_boxplot() +
+  facet_wrap(~ ___, scales = "free_y") +
+  theme_bw() +
+  labs(title = "Electrolyte distributions by patient type",
+       x = "Patient type",
+       y = "Result value")
+```
+
+Which analyte shows the most variation across patient types? Does that make clinical sense?
+
+> Your answer:
+
+**Run chart.** Fill in the two `yintercept` blanks with the lower and upper reference limits for sodium (normal range: 135–145 mmol/L).
+
+```{r}
+#| label: run-chart-sodium
+# Zoom into a 4-hour window for a clearer view
+sodium_window <- sodium_data |>
+  filter(collect_dt >= as.POSIXct("2022-12-26 08:00:00"),
+         collect_dt <  as.POSIXct("2022-12-26 12:00:00"))
+
+ggplot(sodium_window, aes(x = collect_dt, y = value)) +
+  geom_point(alpha = 0.4) +
+  geom_hline(yintercept = ___, linetype = "dashed", color = "red") +
+  geom_hline(yintercept = ___, linetype = "dashed", color = "red") +
+  theme_bw() +
+  labs(title = "Sodium results — morning of 2022-12-26",
+       x     = "Collection time",
+       y     = "Sodium (mmol/L)")
+```
+
+What elements would be needed to turn this into a proper Levey-Jennings QC chart? List at least three.
+
+> Your answer:
+
+---
+
+### Part 2 — Rewrite the Bad Charts *(14 minutes)*
+
+Both chunks below run without error. The charts are real outputs that a researcher might produce and, unfortunately, share. Your Check-in 3C analysis prepared you for this — now fix them.
+
+**Bad Chart 1.** Run this first to see what you are working with.
+
+```{r}
+#| label: bad-chart-1
+analyte_means <- chem |>
+  group_by(test) |>
+  summarize(mean_val = mean(value, na.rm = TRUE))
+
+ggplot(analyte_means, aes(x = test, y = mean_val, fill = test)) +
+  geom_col() +
+  scale_fill_manual(values = rainbow(24)) +
+  theme(axis.text.x = element_text(angle = 90))
+```
+
+Rewrite it below. You do not need to fix every flaw in a single chart — focus on the most important ones and explain your choices.
+
+```{r}
+#| label: bad-chart-1-improved
+# Your improved version here
+
+```
+
+> Why you made these changes:
+
+---
+
+**Bad Chart 2.** Run this first to see what you are working with.
+
+```{r}
+#| label: bad-chart-2
+ggplot(sodium_data |> filter(!is.na(pat_type)),
+       aes(x = pat_type, y = value)) +
+  geom_boxplot() +
+  coord_cartesian(ylim = c(138, 142))
+```
+
+Rewrite it below.
+
+```{r}
+#| label: bad-chart-2-improved
+# Your improved version here
+
+```
+
+> Why you made these changes:
+
+---

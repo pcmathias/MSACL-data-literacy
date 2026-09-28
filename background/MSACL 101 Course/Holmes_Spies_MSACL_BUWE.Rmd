@@ -1,0 +1,3407 @@
+---
+title: |
+  | Data Science 101: Breaking Up with Excel
+  | September 21-23, 2025
+  | MSACL Montreal
+author:
+- Stephen R Master, MD PhD (masters@email.chop.edu)
+- Department of Pathology and Laboratory Medicine, Children's Hospital of Philadelphia 
+- Nick Spies, MD (nick.spies@aruplab.com)
+- Medical Director: Applied Artificial Intelligence, Clinical Chemistry
+- Daniel T. Holmes, MD (dtholmes@mail.ubc.ca)
+- Department of Pathology and Laboratory Medicine, University of British Columbia
+
+
+documentclass: article
+output:
+  pdf_document:
+    number_sections: yes
+    toc: yes
+    keep_tex: false
+#    dev: CairoPDF
+header-includes: 
+ - \usepackage{exercise}
+ - \usepackage{blindtext}
+ - \usepackage[paperheight=11.0in,paperwidth=8.2in,margin=1in,heightrounded]{geometry}
+
+---
+
+\newpage
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(dev='png', dpi=200, message = FALSE, warning = FALSE, fig.height = 5, fig.width = 5, fig.align = 'center')
+#knitr::opts_chunk$set(message = FALSE, warning = FALSE, fig.height = 3)
+```
+
+## Preparation for the Course
+
+This Short Course requires you to bring your own laptop. Plugs will be provided on the tables so that you do not have to rely on your battery life. You must install the necessary software before you arrive. It can take up to 30 mins and you do not want to be stuck doing this in the session because you get behind.
+
+You need to install both the R programming Language and the R-Studio interface to R. While one can use R without R-Studio, we will all use it to make things uniform. The R programming language is available for download from many different places as you will see on the download page <https://cran.r-project.org/mirrors.html>. Rstudio can be downloaded and installed free for personal use from: <https://posit.co/download/rstudio-desktop/>. You want the Open Source Edition.
+
+
+![](Images/tidy_install.png)
+
+Throughout this handout, we'll be showing you R code in a shaded box like this
+```{r, eval = FALSE}
+R code goes here
+```
+and output will come be in an unshaded area after two "#" signs
+```{r, echo = FALSE}
+print("Here is some R output")
+```
+
+# Basics and Data Types
+## What is R?
+
+The purpose of this course is to show you that many of the data management and data analysis task you *wish* you could do in Excel are, in fact, very easy if you move to the statistical programming language R.
+
+R is what is known as a "scripting language". This means that R does not build portable, stand–alone programs like commercial software we usually purchase. In contrast, R requires the R interpreter to be pre-installed on the computer before we can use any of its utilities. The same is true of other popular scripting languages like Python, PHP, Ruby and JavaScript. In principle this means that if you are using R on a company laptop and you don't have administrative privileges, you are going to need your IT folks to help you install it. 
+
+R has been built for Windows, Linux and Mac, which means that R code you write can be run by other people on other systems *without any alterations to the code*, provided that they have installed the R interpreter. There are occasional exceptions to this rule but any code alterations are--most often--trivial. With the commend `Sys.info()`, R can tell what kind of system you are using and you can tell R to behave differently based on the underlying operating system. 
+
+The programs you write in R are saved as text or "ASCII" files that you save like any old document. You can use any text editor to write your program. This might include programs like Notepad or Notepad++ in the Windows environment or Gedit, eMacs, vi, Nano or Sublime Text in the Linux/Mac environments. In this course we will use a text editor in an environment specifically built for R called RStudio. This program has the benefit that it can both allow you to edit your text and run it without leaving the RStudio program. RStudio has many other convenient features that you will discover should you choose to continue this jou–R–ney. We could spend a lot of time on the background, but we do not have a great deal of time together so we should just jump right in.
+
+## Algebra
+R can act as a calculator.  It follows these basic rules or algebra.
+
+| Operation      | Expression  | R Code  |
+|:--------------:|:-----------:|:-------:|
+| Addition       | $x + y$     | `x + y` |
+| Subtraction    | $x - y$     | `x - y` |
+| Multiplication | $x\times y$ | `x * y` |
+| Division       | $x\div y$   | `x / y` |
+| Exponents      | $x^y$       | `x^y` or `x**y`   |
+| Logarithm      | $\log(x)$   | `log(x)`|
+| Exponential    | $e^x$       | `exp(x)`|
+| Trig Functions | $\sin(x)$   | `sin(x)`|
+
+
+There are some other useful built-in functions in R. These are:
+
+* `abs(x)`
+* `sqrt(x)`
+* `floor(x)`
+* `ceiling(x)`
+* `trunc(x)`
+* `round(x, digits = n)`
+* `signif(x, digits = n)`
+
+### Exercise
+1. Experimentation is a great way to find out what a function does. Determine the square root of 64 with the `sqrt()` function and using the fact that the square root of 64 is really $64^{1/2}$
+2. Try the following:
+    + `ceiling(1.2)`
+    + `ceiling(1.49)`
+    + `ceiling(1)`
+    What does ceiling do?
+3. Try the following:
+    + `round(1.4503,1)`
+    + `round(exp(1),4)`
+    + `round(pi,4)`
+    + Now try typing `round(12314,-1)` and `round(12314,-2)`. What's happening here?
+4. What does `trunc(5.99)` give you? What does `trunc(-3.43)` give you? How is `trunc()` different than `floor()`?
+
+## Comments
+Note that anything we type on an R line that comes after the `#` sign is ignored by R.  This is very useful for including comments in your code and helps to remind you (and others) what you were thinking.  Because anything after the `#` is ignored, we can either put a comment on its own line:
+
+```{r}
+# here is a comment
+```
+
+or after some code that is going to be executed
+
+```{r}
+2 + 2  # we had better get the answer "4"
+```
+
+## Variables
+Variables allow you to store your data so that it can be easily retrieved at a later time.  For example, suppose you calculated the standard deviation of a data set and you had to use this result over and over again (and you did not want to type it our each time!).  The best way to reuse this value is to store it in a variable.
+
+```{r}
+my.sd <- 0.352
+my.sd
+1.96 * my.sd 
+```
+Notice that assigning the variable is performed with an "arrow"  <- . The arrow can actually go the other way too but we don't do that all too much.
+
+```{r}
+a <- 5 -> b
+a
+b
+```
+Getting rid of a variable is sometimes convenient, and the way to do this is with the `rm()` function.
+
+```{r, error = TRUE}
+rm(a)
+a
+```
+
+To list all active variables type `ls()`. To remove all active variables type `rm(list = ls())`. This can also be achieved by clicking the broom icon in the **Environment** tab of the top right pane of Rstudio.
+
+## Data Types
+We will encounter a variety of different data types during this course, and each has specific applications.
+```{r, cache = FALSE}
+var_1 <- TRUE # a logical variable
+class(var_1)
+var_2 <- 32.5 # a numeric variable
+class(var_2)
+var_3 <- "Michael" # a character variable
+class(var_3)
+```
+
+Also, we can make integer variables and factor variables. R guesses which you want, and if it guesses wrong you may need to force it to assume the correct data type. You will see this later on. Don't assume that R has correctly read your mind on the data type you wanted. 
+
+```{r, error = TRUE}
+var_4 <- 5
+class(var_4)
+var_4 <- as.integer(var_4)  # coerces the value to the class of integer
+class(var_4)
+var_5 <- "4"
+class(var_5)
+7 * var_5                   # what happened?
+var_5 <- as.numeric(var_5)  # coerces the character into a numeric
+class(var_5)
+7 * var_5                   # ahhh no error now.
+```
+
+## Vectors
+Vectors are a way to store multiple data points in a single variable. They are like a column from an Excel file and we will use them a lot. To define a vector you have to use the combine `c()` function to group the data. 
+
+```{r}
+x <- c(5,3,6,4,7,2,6) # defines the variable x
+class(x)              # what class will this be?
+```
+
+Importantly, every member of the vector must be of the same type and if they are not, R will choose a data type that will be compatible with all the elements.
+
+```{r}
+y <- c(5,3,6,4,7,2,"Hi There") 
+class(y)              # What happened?
+y
+```
+
+Let's explore some algebra:
+
+```{r}
+x + 2  	# What does it do?
+x + x		# How is this different from x+2
+x / 2		# What does this do?
+x * x		# What does this do?
+x / x		# What does this tell you about dividing vectors?
+sum(x) 	# What does this calculate?
+mean(x)	# And this?
+sd(x)		# And this?
+length(x)	# And this? This is really useful.
+c(x, x)
+rep(x,3)
+```
+
+What if we wanted to find out an individual value from x?
+
+```{r}
+x[2]  # Note the SQUARE brackets.
+# OK, makes sense
+```
+
+What if we wanted to know which value of x was 6, if any?
+
+```{r}
+which(x  ==  6)
+```
+
+**CAREFUL**  "` == `" is used to compare two values to see if they are equal; don't confuse this with and "` = `" or "` <- `", which are for assignment.
+
+```{r}
+x[which(x  ==  6)]    # should give us back a number of 6's of course.
+x  ==  6    #this gives us a logical vector answering the question "Is the value 6?"
+y <- x  ==  6
+y  
+x[y]    #this should just give us back the 6's   
+x[x  ==  6]
+```
+
+### Exercise
+1. Define a variable, `days`, which contains all the days of the week.
+```{r, include = FALSE}
+###Solution###
+days_o_week <- c("Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday")
+days_o_week
+#alternatively you will later learn that you can do this:
+library("lubridate")
+days_o_week <- as.character(wday(1:7, label = TRUE, abbr = FALSE))
+days_o_week
+```
+
+2. Now imagine that you move to a planet where there are an 8th and 9th day of the week, called "Chillday" and "Sleepday". Can you use `c()` to add these days to your days variable so that you do not have to retype everything?
+```{r, include = FALSE}
+###Solution###
+days_o_week <- c(days_o_week,"Chillday", "Sleepday")
+days_o_week
+```
+
+### Exercise
+1. Type `1:10` <Enter> and see what happens.
+2. Now type `x <- 1:10`. What did this do? Find out by asking R what `x` is.
+3. Now type `x <- 5:10`. What did this do?
+4. Type ?seq in the console to find out what the `seq()` function does. Can you replicate the results of `x <- 5:10` with `seq()`? Why is `seq()` more flexible?
+```{r, include = FALSE}
+###Solution to 4.###
+seq(5, 10, 1)
+```
+
+### Exercise
+1. Write an expression in R that will always return the last value in a vector named `z`.
+```{r, include = FALSE}
+###Solution###
+z <- c("this","is","a","phrase","eh?")
+z[length(z)]
+#alternatively
+tail(z,1)
+```
+2. Test your expression's success. We'll start by generating a sequence of letters of the alphabet that terminates randomly.
+
+```{r}
+  z <- letters[1:round(runif(1,0,26),0)]  # don't worry about why this works right now.
+  z
+  z[length(z)]                            # check what the last value is
+```
+
+    Now apply your expression to identify the last letter in the sequence you generated.
+
+# Matrices, Dataframes and Lists
+## Matrices
+
+A matrix is a 2D analogue of the vector. Matrices may not seem all that important but there are certain R statistical functions requiring their use and so you are certainly going to encounter them.
+
+```{r}
+days <- 1:28  # Generates a sequence of 28 integers
+days          # confirm that you have done what you thought
+# Note: another way to do this is with days <- seq(from = 1, to = 28, by = 1)
+```
+
+Now, let's convert this to something that looks more like the calendar layout of February.
+
+```{r}
+matrix(days, nrow = 4, ncol = 7)
+# Huh? What happened?
+#
+# Let's try again
+matrix(days, nrow = 4, ncol = 7, byrow = TRUE)
+# Ahhh
+```
+
+### Exercise
+* February 2016 started on a Monday but was a leap-year.  Make a matrix for February 2016 and fill days that are not in February with NA. We'll talk later about different places that NA pops up, but for now just know that it's R's way of denoting data that is "**N**ot **A**vailable".  Hint for this exercise: start by using the `c()` command to prepend  the appropriate number of NA's to the beginning and the end of variable days. Assign the name feb_2016 to your matrix.
+
+To get a specific value of your matrix, you simply refer to the row and column.
+
+```{r, include = FALSE}
+###Solution###
+feb_2016 <- matrix(c(NA,1:29,NA,NA,NA,NA,NA), nrow = 5, ncol = 7, byrow = TRUE)
+```
+
+```{r}
+feb_2016[3, 4] #Gives entry from row 3 column 4.  Should return 17 as the result.
+# To get all the values in the column, you simply omit the row number.
+feb_2016[ ,6] # Gives us what we need: all the Saturdays.
+# ...and the same trick works for columns
+feb_2016[3, ] # Gives us week 3.
+```
+
+### Exercise
+The raw speed data from your latest bike ride can be exported from your Garmin and brought into R. The ride happens to be exactly 38 mins duration and data is sampled every second. This means that there will be 2280 measurements in total. Execute this code to import the data from a file. 
+```{r, results = 'hide'}
+library(tidyverse)
+speed_vec <- scan("Data_Files/speed.txt") 
+```
+
+* Now, convert this data into a matrix called `speed.mat` of 38 columns where each column is the speed data of one minute. 
+
+```{r, include = FALSE}
+###Solution###
+speed_mat <-  matrix(speed_vec, nrow = 60, ncol = 38, byrow = FALSE)
+head(speed_mat, 10)
+```
+
+## Dataframes
+
+A dataframe (also called a "tibble" in the tidyverse) is the closest thing you are going to get to Excel-like storage of your data. When you read your data into R from a file (if you have saved it from Excel in a standard format), it will become a dataframe. 
+
+Let's convert our February 2016 matrix to a dataframe, and then we will look at how to import Excel-like data to a dataframe  We will spend some time working with dataframes because they are going to be our bread and butter.
+
+First, we can convert a matrix to a dataframe:
+
+```{r}
+feb_2016 <- matrix(c(NA,1:29,NA,NA,NA,NA,NA), nrow = 5,ncol = 7, byrow = TRUE)
+feb_2016 <- as.data.frame(feb_2016)
+feb_2016
+# this has uninformative column names, but we can name the columns as we can in Excel
+names(feb_2016) <- c("Sun","Mon","Tue","Wed","Thu","Fri","Sat")
+feb_2016
+# much better
+```
+
+Second, we can build a dataframe from vectors as follows.
+
+```{r}
+odd_nums <- c(1,3,5,7)
+even_nums <- c(2,4,6,8)
+numbers <- data.frame(odds = odd_nums, evens = even_nums)
+numbers
+# alternatively, numbers <- tibble(rbind(odd.nums, even.nums))
+```
+
+So, the columns of a dataframe could be the results of different data fields in your study, name, health number, sex, age, date of last visit, blood pressure, medications, creatinine, hemoglobin etc. Whatever you could store in an Excel sheet could be in a dataframe We often want to pull out specific columns from a dataframe -- usually to perform statistical tests.
+
+Pulling out a column is easy.  We can do it by the column name or we can do it by the column number.
+
+```{r, eval = FALSE}
+# by column name
+feb_2016$Tue # gives all the Tuesdays in Feb 2016
+# or
+feb_2016[["Tue"]]
+
+# by column number
+feb_2016[[3]] #result as vector
+#or
+feb_2016[,3] #result as tibble
+
+# You can pull out data from an individual cell.
+feb_2016[2,3] 
+
+# Or you can do the same with the $ approach because feb_2016$Tue is a vector
+feb_2016$Tue[2]
+# or
+feb_2016[["Tue"]][2]
+# or
+feb_2016[[3]][2]
+```
+
+If you need to pull more than one column out, you can do so by numbers or the names:
+
+```{r}
+# by number
+feb_2016[,3:4]
+
+#by name - this is particularly convenient when dealing with large dataframes
+feb_2016[,c("Tue","Wed")]
+#or
+select(feb_2016,c("Tue","Wed"))
+```
+
+Let's go back to that bike speed data we have above.  We will start by turning the data, stored previously as matrix called `speed.mat`, into a dataframe.
+
+```{r}
+speed_vec <- scan("Data_Files/speed.txt")
+speed_mat <-  matrix(speed_vec, nrow = 60, ncol = 38, byrow = FALSE)
+speed_df <- as.data.frame(speed_mat)
+names(speed_df) <- paste0("min_",1:38)
+#head(speed_df)
+```
+
+### Exercise
+* Using the speed_df dataframe, find the average speed of the 20th minute of your ride.
+
+```{r, include = FALSE}
+###Solution###
+min_20_avg <- mean(speed_df$min_20)
+min_20_avg
+```
+
+Note that if you try to find the average by row instead of a column, you will run into a problem that illustrates something about dataframes, namely that if you extract a row, you can't just simply do algebra on it because there is generally no guarantee that different columns of a data frame will all be numbers. 
+
+```{r, error = TRUE}
+min_start_avg <- mean(speed_df[1,]) #does not work
+min_start_avg <- mean(speed_mat[1,]) #does work
+```
+
+Here are some things you can do with data in a data frame. You can ask R to tell you things about your data points. For example, you could ask R for some descriptive statistics of the last minute of your ride:
+
+```{r}
+mean(speed_df$min_38)
+median(speed_df$min_38)
+sd(speed_df$min_38)
+summary(speed_df$min_38) # a statistical summary
+quantile(speed_df$min_38, probs = c(0.25,0.50, 0.75)) # specific quantiles
+```
+
+But this does not work when you try to take the grand mean:
+
+```{r, error = TRUE}
+mean(speed_df)
+```
+
+But this approach does work for matrices
+
+```{r, error = TRUE}
+mean(speed_mat)
+```
+
+Remember, we'll say more later about "NA", but for now notice that R gives us a nasty warning message.  The reason that the `mean` function does not operate on data frames in this case because the data in a data frame is often not numeric.  
+
+You can also ask R to tell you which values have certain properties.
+
+```{r}
+# did you dip below 25 kph in the last minute of your ride?
+speed_df$min_38 < 25
+```
+
+But the code authors acknowledge that it is a pain to have to write out those `$` signs all the time, so try this:
+
+```{r}
+attach(speed_df)
+min_1 # now min_1 is a local variable
+min_2 # ...and so is min_2!
+```
+
+Note that if you alter the attached variables, they *do not* alter the original data frame. To remove these variables we type:
+
+```{r}
+detach(speed_df)
+```
+
+There are lots of reasons not to use `attach`, but it is good for quick and dirty things.
+
+### Exercise
+* We are going to read some data from a publicly available data set. This time the data will contain information about liver function tests from an Astra Zeneca clinical trial for a drug administered at 4 doses: A, B, C, and D pre- and post-administration of the drug. Pre-dose results are annotated as .B, for baseline and .M for post-dose. 
+
+```{r}
+liver_data <- read.csv("Data_Files/liver.csv")
+head(liver_data)
+```
+
+Isolate from your data those people who received dose B
+
+```{r, include = FALSE}
+###Solution
+dose_B <- liver_data$dose == "B"
+# or
+dose_B <- which(liver_data$dose == "B")
+
+dose_B_data <- liver_data[dose_B ,]
+dose_B_data
+```
+
+What you have just done is called filtering or subsetting your dataframe, and it is a very frequent task that we are going to be doing more of in the next hour. Because it is such a common task (e.g. pulling out all the subjects less than 40 years, pulling out all the male subjects, excluding an outlier), there are specific commands created for this purpose. 
+
+```{r}
+# you can do it with base R
+dose_B_data <- subset(liver_data, dose == "B")
+
+# or you can use filter from dplyr
+library(dplyr)
+dose_B_data <- filter(liver_data, dose == "B")
+```
+
+You can build other logical constraints to isolate data of interest in vectors, matrices and data frames by using `&` (AND), `|` (OR), and `!` (NOT). For example:
+
+```{r}
+x <- c(3, 4, 2, 7, 5, 8, 9, 5, -2, 34, 15, 7)
+# values of x greater than 2 and less than 7. Use the & for AND.
+x[x > 2 & x < 7]
+# values of x not less than 15
+x[!(x < 15)]
+# which is the same as
+x[x >= 15]
+# values of x less than 3 or greater than 5. Use the | for OR.
+x[x < 3 | x > 5]
+# all values except the first three: use a minus sign
+x[-(1:3)]
+```
+
+and with the dataframe,  we might ask for people on dose D for which ALT.M was greater than ALT.M.
+
+*(Note that -- just like algebra -- we can use parenthesis to make absolutely clear what order we are using to evaluate the expressions)*
+
+```{r}
+filter(liver_data, dose == "D" & (ALT.M > ALT.B))
+```
+
+What do you infer about dose D's affect on ALT given that 122 of 158 subjects have higher ALT.M than ALT.B?
+
+## Lists
+Lists are another way of storing data in a conveniently accessible way. Usually they are used for data types that are different in structure (or store different types of data) but are related because they are part of the same analysis. For example, R frequently provides output of statistical analysis in the form of a list.  Suppose you had a vector, a data frame and a matrix:
+
+```{r}
+a <- c("Doe","a","deer") 
+b <- data.frame(lyrics1 = c("a","female","deer"), lyrics2 = c("Ray","a","drop"))
+d <- matrix(seq(from = 0, to = 100, length.out = 25), nrow = 5, ncol = 5)
+```
+
+But they were all related to some specific problem and you wanted to bundle them together in another variable. This is where you would use a list.
+
+```{r}
+my_list <- list(a,b,d)
+my_list
+```
+
+Components of the list are addressed using a double bracket notation. For example:
+
+```{r}
+my_list[[2]] # gives the dataframe.
+```
+
+If you happen to give the components of the list names, you can address with the `$` notation:
+
+```{r}
+my_list <- list(one = a, two = b, three = d)
+my_list
+my_list$two # gives the same dataframe data
+```
+
+R very often uses lists for statistical reports. For example, the `lm()` function is used to generate a regression report by R.  You can assign the output of `lm()` to a variable and this variable contains a very useful list. 
+
+```{r, results = "hide"}
+x <- 1:10
+y <- 2 * x + rnorm(10,0,1)  # generates some fake data
+reg <- lm(y ~ x)
+str(reg)                    # shows what variables that reg stores.
+
+# ...but they generate a lot of output, so try it on your own
+
+reg$residuals
+reg$fitted.values
+```
+```{r}
+# OK, fine--we'll show one...
+reg$coefficients
+```
+
+As a final trivia point, dataframes are really just lists comprised columns, each of which must be an equal-length vector.
+
+# Reading in Data and Basic Sanity Checking
+## The Working Directory
+First we need to learn how to read in Excel data.  While .xls and .xlsx files can be read in in their native formats (we will show this later), usually we use the simpler approach of dealing with a .csv file. You can save your Excel spreadsheet as a .csv file by clicking "Save As" and selecting "Comma Separated Values".
+
+Before we do this, however, we need to start by telling R where it should consider its current working directory. You can check the current working directory by typing `getwd()`. The directory will display.  You are going to need to get R to the place where you want to go. You can do this with RStudio by choosing **Session** -> **Set Working Directory** -> **Choose Directory** and then navigate where you want to go. However, if this navigation process has to be part of the code in the R Script (which it frequently does), you can get code to do the same thing.
+
+To do the same thing in code, you need to know the *path* that you want to send R to.
+
+* In Windows, you will right-click and then examine Properties of the folder or file. 
+* In Mac OS X you will use CTRL-click on the folder or file and select "Get Info" and look at the "Where" row of the General tab. You can also drag a folder into the terminal window and the full path of the directory will appear on the command line.
+* In Linux you will know what to do because Linux people are never confused by navigating directories from the command line.
+
+
+```{r, eval = FALSE}
+getwd() # where am I now
+setwd("C:/Users/drdan/BUWE")
+getwd() # see that things have changed
+```
+
+** Caution to Windows users: **
+* Windows uses backslash (\\) not forwardslash (/) between subdirectories. 
+The \\ is a special character in R (and many other languages) called an "escape" and it is used to denote special characters like tabs and carriage returns. To overcome this you can either turn all your \\ to \\\\ (an escaped backslash) or you can turn all your \\ to /, to be like the rest of the world.
+
+## Reading a csv File
+
+The command `list.files()` or this tidyverse alternative, `fs::dir_ls()`, will show you all files in the directory you are working in.  To read in the data we first need to make sure that R knows what directory to read from. As mentioned earlier, we can set the working directory using the R Studio Gui under Session > Set Working Directory >  Choose Directory. Alternatively we can use the `set.wd()` command as previously discussed.
+
+from the csv file we type:
+```{r, eval = FALSE}
+read.csv("Data_Files/intersalt.csv")
+```
+
+```{r, include = FALSE}
+read.csv("Data_Files/intersalt.csv")
+# just load it out of our current manuscript build directory
+```
+
+The `read.csv()` function has lots of options. Type ?read.csv to display them.
+
+The `read.delim()` and `read.table()` functions are more generalized version of the same thing for files that are not comma-separated. For example:
+
+* `sep = "|"` tells R that a | is what separates different columns.
+* `sep = "\t"` is another common option for tab delimited files
+* header = FALSE tells R that the first row is not the column names
+* skip = 5 tells R that the first 5 rows are not to be read in
+* na.strings = c("NA", "N/A", "") tells R that missing values are encoded as NA, N/A and empty space.
+* `strip.white = TRUE` is an option to prevent something like `"M"` and `"M "` and `" M "` from being considered three different things.
+
+If you have a file from a collaborator in Quebec or French-Speaking Europe, you may use a comma as decimal place in your work. This means that you are not going to be using vanilla `read.csv()`. First, you will need to be sure that you do not use a comma as your column separator when you save a csv file. You will need to use something else. Most often this is a semicolon. R has a built-in function for those who use commas as decimals. This is `read.csv2()`, which is the same as `read.csv()` except that the default parameter `dec = "."` is changed to `dec = ","` and `sep = ","` is changed to `sep = ";"`.
+
+Returning to the intersalt data set, we should store this data in a variable so that we can do some analysis of it.  Since it is data from the [intersalt study](https://vincentarelbundock.github.io/Rdatasets/doc/DAAG/intersalt.html) we can name the variable intersalt. The file contains blood pressure (bp), sodium excretion (na) and nationality data. We have deliberately inserted a bad data point for instructional purposes.
+
+```{r, eval = FALSE}
+intersalt <- read.csv("Data_Files/intersalt.csv")
+```
+
+```{r, include = FALSE}
+intersalt <- read.csv("Data_Files/intersalt.csv")
+```
+
+The `head()` function is a quick way to look at what the data looks like in a snippet.
+
+```{r}
+head(intersalt) # gives us the first 6 lines
+head(intersalt, 10) #gives us the first 10 lines
+```
+
+Notice that the dataframe displays the data type of each column underneath the column name. 
+
+## Surveying your data
+The `str()` or structure function is where we should go next. We want to find out what assumptions R has made about the nature of the data and change them if need be.
+
+The command `str(intersalt)` gives the following output:
+
+```{r, echo = FALSE}
+str(intersalt)
+```
+
+The `glimpse()` function is similar to `str()`, except that it displays all columns down the page and tries to show you as much data as possible:
+
+```{r, echo = FALSE}
+glimpse(intersalt)
+```
+
+`summary(intersalt)` conveys some summative information:
+
+```{r, echo = FALSE}
+summary(intersalt)
+```
+
+This means that something is wrong with the blood pressure data. The phenomenon observed here occurs when there is non-numeric data in the data set. This is extremely common when there are measurements that are below or above a calibration range. For example, glucose < 1 mmol/L or troponin < 5 ng/L. 
+
+## Coping with Non-numeric Data
+
+So what can we do? See what happens when we type:
+
+```{r}
+as.numeric(intersalt$bp)
+```
+
+The `as.numeric()` function converts the bp data from a character to a numeric. But, why is there now a NA in the data?
+
+This is what all non-numerics become, even if one is $<40$ and another is $>200$ ("NA" stands for "not available").  So, be careful. If we want to preserve something of what was actually in the data file, we will need another approach. If we are happy to have all non-numerics display NAs, then what we have here is fine.
+
+But if we now want to look at the statistics of the bp column, the NA results cannot contribute. It would be good to figure out what is going on.
+
+### Exercise
+
+1. Define vector `x <- c("The", "story", "of", "Hansel", "and", NA, "is", "frightening")`
+2. Apply the function `is.na()` to x. What do you get?
+3. Use this logical vector to replace NA with "Gretel". 
+```{r, include = FALSE}
+###Solution###
+x <- c("The", "story", "of", "Hanzel", "and", NA, "is", "frightening")
+is.na(x)
+x[is.na(x)] <- "Gretel"
+
+#tidyverse offers a specific function to do this:
+replace_na(x,"Gretal")
+```
+
+4. Look at the raw intersalt data and figure out what is wrong with the bp on the entry that is becoming NA. 
+
+```{r, include = FALSE}
+###Solution###
+num.bp <- as.numeric(as.character(intersalt$bp))
+bad.result <- is.na(num.bp)
+bad.result
+which(bad.result)
+intersalt$bp[bad.result]
+
+###or use filter from dplyr###
+filter(intersalt, is.na(as.numeric(bp)))
+```
+
+## Simple replacements with `str_replace()`
+
+There is another supremely useful functions called `str_replace()` and `str_replace_all` which are sort of equivalent to Excel's find and replace but ultimately much more powerful. In their simplest form it is invoked on vector x with this syntax: `str_replace(string, pattern, replacement)`. The `str_replace()` function replaces the first instance of a match and `str_replace_all()` replaces all instances of a match. These functions are vectorized, that is, it operates on every element of a character vector.
+
+For example, we already have a vector `x <- c("The", "story", "of", "Hanzel", "and", "Gretel", "is", "frightening")`. But if we wanted to invent a new story we could write:
+
+```{r}
+x <- c("The", "story", "of", "Hanzel", "and", "Gretel", "is", "frightening")
+str_replace(x, "Gretel", "Olga")
+#and to change x itself
+x <- str_replace(x, "Gretel", "Olga")
+x
+```
+
+The equivalent base-R functionality is available in the `sub()` and  `gsub()` functions. The `sub()` function replaces the first instance of a match and `gsub()` replaces all instances of a match. 
+
+```{r}
+my.sentences <- c("I visited the island of Samos, an island that is close to Turkey", "Greece has a lot of islands, you know. You could even say Greece was islandy.")
+
+sub("island", "isle", my.sentences)
+#compare
+gsub("island", "isle", my.sentences)
+```
+
+### Exercise
+1. Read back in your original intersalt data from the csv file using the `read.csv()` command we used earlier.
+    + Replace all the letter O's in the bp column with 0 (zero) using `str_replace()`.
+    + Convert the bp column to numerics as it should be
+    + Now get a summary of the data and convince yourself it makes sense.
+
+```{r, include = FALSE}
+###Solution###
+intersalt <- read.csv(file = "Data_Files/intersalt.csv")
+intersalt$bp <- str_replace(intersalt$bp, "O", "0")
+intersalt$bp <- as.numeric(intersalt$bp)
+intersalt
+summary(intersalt)
+```
+                          
+## Sanity Checking your Data with Simple Visualization
+### Histograms
+To produce a histogram, we use the command `hist(x)`. To increase the number of bins, we can write `hist(x, breaks = n)` where n is any number you like.
+
+```{r}
+hist(intersalt$bp, breaks = 10)
+```
+
+We will go into detail on beautifying our plots later, but there are many things you can do. Customization is infinite. 
+
+### Boxplots
+
+We can read in a toy data set in order to show how boxplots are made. [This data set](https://vincentarelbundock.github.io/Rdatasets/doc/carData/Leinhardt.html) is comprised of infant mortality data as a function of country.
+
+```{r}
+mortality <- read.csv("Data_Files/Leinhardt.csv")
+boxplot(infant ~ region, data = mortality)
+```
+
+### Basic Scatterplot
+
+Old school style.
+```{r}
+plot(infant ~ income, data = mortality)
+```
+
+The style preferred by the cool people is:
+```{r}
+library(ggplot2)
+qplot(infant, income, data = mortality)
+```
+
+# Regression
+## Ordinary Least Squares
+In this hour we are going to look at one of our very common tasks, which is regression. We will cover ordinary least squares (OLS), Deming and Passing Bablok. These latter two forms of regression have found a neurotic devotion in the Clinical Chemistry literature, and so you have to use them when you publish. They are not available in Excel. The nice thing about Passing Bablok is that it is very resistant to the effect of an outlier, though it is certainly not the only form of robust regression.
+
+Let's start with OLS and let's use the tube.type dataset we used in the last hour. Let's plot the PTH results of EDTA and SST against one another, since we know that there are statistical differences in the mean and median. The function we will use is called `lm()`
+
+```{r}
+tube_data <- read.csv(file = "Data_Files/tube_data.csv")
+OLS_reg <- lm(EDTA ~ SST, data = tube_data)
+summary(OLS_reg)
+#alternative syntax
+lm(tube_data$EDTA ~ tube_data$SST)
+```
+
+Now let's look at all of the things that R calculates:
+
+```{r}
+str(OLS_reg)
+```
+
+This is probably more information than you wanted for right now, but it's a fairly complete list of the things that you might like to know at some point.  To take a look at your data and add the regression line, you can type:
+
+```{r}
+plot(EDTA ~ SST, data = tube_data, main = "OLS Regression")
+#to add the regression line
+abline(OLS_reg$coefficients)
+# abline(OLS_reg$coefficients[1], OLS_reg$coefficients[2]) does same thing
+# abline(OLS_reg) also does the same but is less intuitive
+# lines(tube_data$SST,OLS_reg$fitted.values) does the same thing
+#
+# to add the line of identity...
+abline(0, 1, col = "red", lty = 2)
+```
+
+If you enter `plot(OLS.reg)`, you can cycle through some diagnostic plots of the regression.
+
+## Weighted Least Squares
+Now, sometimes you want to perform weighted regression. This is what we do on the mass spectrometer when we want to improve the recoveries of the low-level calibrators and the expense of the high level calibrators. In other words, when accuracy at the low end is clinically required, we weight the regression.  How we weight is fairly arbitrary, but the bigger the weight, the more fitting effect a point has.
+
+```{r}
+w_OLS_reg <-  lm(EDTA ~ SST, data = tube_data, weights = 1/EDTA)
+summary(w_OLS_reg)
+plot(EDTA ~ SST, data = tube_data, main = "Weighted OLS Regression")
+#to add the regression line
+abline(w_OLS_reg, col = "red")
+#put the unweighted line in for comparison
+abline(OLS_reg, col = "gray")
+#What do you notice?
+```
+
+### Exercise
+* Here is some fake cal curve data that shows the characteristic flattening we see when we are trying to extend our linear range too far:
+
+```{r}
+conc <- seq(from = 1, to = 50, by = 10)
+response <- (conc/20)^(0.7)
+plot(conc, response, xlab = "Concentration",
+     ylab = "(Peak Area of Analyte)/(Peak Area of IS)")
+```
+
+  + Find and plot the OLS regression line. Add it to the plot using abline() in green.
+  + Find and plot the $1/x^2$ weighted OLS regression line. Add it to the plot using `abline()` in purple.
+  + What is the effect of the weighting?
+  
+```{r, include = FALSE}
+###Solution###
+tube_data <- read.csv(file = "Data_Files/tube_data.csv")
+OLS_reg <- lm(EDTA ~ SST,data = tube_data)
+conc <- seq(from = 1, to = 50, by = 10)
+response <- (conc/20)^(0.7)
+plot(conc, response, xlab = "Concentration", ylab = "(Peak Area of Analyte)/(Peak Area of IS)")
+lin_mod <- lm(response~conc)
+w_lin_mod <- lm(response ~ conc,weights = 1/conc^2)
+abline(lin_mod, col = "green")
+abline(w_lin_mod, col = "purple")
+legend("bottomright",
+       c("unweighted","weighted"),
+       lty = c(1,1),
+       col = c("green", "purple"))
+```
+
+## Outlier Effects in OLS
+Outlier effects are significant with OLS regression. To illustrate, we can do the following (you don't need to understand the code, you just need to see the effect an outlier has):
+
+```{r}
+tube_data <- read.csv(file = "Data_Files/tube_data.csv")
+outlier.x <- tube_data$SST
+outlier.x[1] <- 20 #introduce a single outlier point
+summary(lm(tube_data$EDTA ~ outlier.x)) 
+plot(outlier.x, tube_data$EDTA, main = "Effect of an outlier")
+abline(lm(tube_data$EDTA ~ outlier.x), col = "blue") #regression with outlier
+abline(OLS_reg, col = "red") #regression without outlier
+legend("bottomright",
+       c("with outlier","without outlier"),
+       lty = c(1,1),
+       col = c("blue","red"))
+points(20, 13.2, col = "red")
+text(17, 13.2,"Outlier", col = "red")
+arrows(x0 = 18.2,
+       y0 = 13.2,
+       x1 = 19.5,
+       y1 = 13.2,
+       length = 0.1,
+       col = "red")
+```
+
+## Passing Bablok Regression
+Now that you have seen the effect of an outlier, you can see that it would be great to have a regression method that more resistant to the effect of outliers. Passing Bablok regression is such a method. However, this function is not built-in to R. The good thing is that there are packages that include it and we can install them. Statisticians at Roche have contributed a package called "mcr" that contains PB regression (remember to run `install.packages("mcr")` before this next step).
+
+```{r}
+library("mcr")
+PB_reg <- mcreg(tube_data$SST, tube_data$EDTA, method.reg = "PaBa")
+plot(PB_reg) # plots a nice generic plot automatically
+```
+
+### Exercise
+* Use the `mcreg()` function to show that PB regression is more resistant to an outlier than OLS regression. For your x data use outlier.x and for your y data use  tube_data\$EDTA. Plot the regression line. Use `abline()` to add the regression line from the PB.reg model shown immediately above.
+
+Note that PB regression cannot be weighted by virtue of how the method works. There is no minimization of residuals, so there is nothing to weight.  PB regression is very computationally intensive for larger data sets. For this reason, the code authors of the "mcr" package have developed a method called `PaBaLarge` for large data sets. It's not exact, but it's very close. It would be called like this:
+```{r, results = "hide"}
+PB.reg <- mcreg(tube_data$SST, tube_data$EDTA, method.reg = "PaBaLarge")
+```
+
+```{r,include = FALSE}
+###Solution###
+library(mcr)
+tube_data <- read.csv(file = "Data_Files/tube_data.csv")
+PB_reg <- mcreg(tube_data$SST, tube_data$EDTA, method.reg = "PaBa")
+plot(PB_reg) # plots a nice generic plot automatically
+
+#make an outlier and repeat
+outlier.x <- tube_data$SST
+outlier.x[1] <- 20 #introduce a single outlier point
+PB_reg_outlier <- mcreg(outlier.x,tube_data$EDTA)
+abline(-1.487475,1.329158, col = "green") #the straightforward way
+#abline(PB.reg.outlier@glob.coef, col = "green") #the slicker way
+legend("bottom",c("without outlier","with outlier"), lty = c(1,1), col = c("blue","green"))
+```
+
+## Deming Regression
+
+OLS regression assumes that there is no error in the x-axis data. This is only true if the x-axis is mass spectrometry and the y-axis is an immunoassay (ba-dum-*ching*). OK--that was facetious. Deming regression also assumes that the ratios of the variances (i.e. CVs) is known for the two methods. This can only be meaningfully known if both x and y results are run in duplicate. Generally we don't do this because of the expense.  For the most part, if the precision behavior of the two methods is approximately the same, then this value, called $\delta$, is taken to be its default value of 1.  The "mcr" package has both a Deming and a weighted Deming regression.
+
+```{r, results = "hide"}
+Deming_reg <- mcreg(tube_data$SST,
+                    tube_data$EDTA,
+                    method.reg = "Deming")
+WDeming.reg <- mcreg(tube_data$SST,
+                     tube_data$EDTA,
+                     method.reg = "WDeming")
+```
+
+## Preparing a Difference Plot
+
+It is frequently necessary to prepare a difference plot of two methods as part of our work. Difference plots usually display the average of two methods on the x-axis and the difference of two methods on the y-axis--the difference can be expressed as an absolute or a percent. If one of the two methods happens to be a reference method, then the x-axis would display the values of the reference method rather than the average of the two methods. 
+
+Let's suppose we are comparing two creatinine methods. Let's read in the data from the prepared csv file "cre_data.csv".  Remember that you have you use `setwd()` to get yourself to the right directory. 
+
+### Exercise
+1. Create a vector called `avg`, which stores the average of the creatinine values of Method 1 and Method 2. Use `cbind()` to append this vector to your dataframe.
+2. Create a vector called `diff`, which stores the difference of the creatinine values of Method 1 and Method 2  (i.e. Method1 - Method2).  Use `cbind()` to append the vector to your dataframe.
+3. Use `plot()` to create a scatter plot of diff vs avg
+4. What does the "fanning" of the difference as cre increases mean? What is the technical term for this phenomenon of inconstant scatter?
+
+```{r, include = FALSE}
+###Solution###
+cre <- read.csv("Data_Files/cre_data.csv")
+avg <- (cre$Method1+cre$Method2)/2
+diff <- (cre$Method1-cre$Method2)
+cre <- cbind(cre,avg,diff)
+plot(cre$avg,cre$diff)
+```
+Now, we are not done. The plot does not look very nice. It also does not have a horizontal line at the mean difference and it does not have the upper and lower confidence intervals of the mean. We want it to look something like this ultimately:
+
+```{r, echo = FALSE}
+cre <- read.csv("Data_Files/cre_data.csv")
+avg <- (cre$Method1+cre$Method2)/2
+diff <- (cre$Method1-cre$Method2)
+cre <- cbind(cre,avg,diff)
+#plot(cre$avg,cre$diff)
+plot(cre$avg,cre$diff,pch = 21, bg = "gray", col = "blue",main = "Difference Plot", xlab = "Average of Measures (ng/dL)", ylab = "Difference of Measures (ng/dL)", ylim = c(-0.4,0.1))
+sdev <- sd(cre$diff)
+abline(h = mean(cre$diff)+2*sdev, col = "blue", lty = 2)
+abline(h = mean(cre$diff)-2*sdev, col = "blue", lty = 2)
+abline(h = mean(cre$diff), col = "blue", lty = 2)
+```
+
+We now need the standard deviation of the difference and the average difference. We will add these to our graph with `abline()`. 
+
+To add the mean difference we can type:
+
+```{r, eval = FALSE}
+abline(h = mean(cre$diff))
+```
+
+As a matter of simplicity, the mcr package has a function for producing difference plots:
+
+```{r}
+library(mcr)
+tube_data <- read.csv(file = "Data_Files/tube_data.csv")
+PB_reg <- mcreg(tube_data$SST, tube_data$EDTA, method.reg = "PaBa")
+MCResult.plotDifference(PB_reg)
+```
+
+### Exercise
+* The `abline()` function can be used to make both horizontal and vertical lines. The syntax is `abline(h = 5)` for a horizontal line at $y = 5$ and `abline(v = 3)` for a vertical line at $x = 3$.  Whenever you are drawing a line, you can add the parameter lty = 1 through 6 to change the appearance of the line. For example, `abline(h = 4, col = "hotpink", lty = 2)` makes a horizontal dashed line in hot pink at $y = 4$. Groovy.
+
+Calculate the SD of the difference and add horizontal lines at the mean + 2SD and mean - 2SD.  Use `abline()` to add the horizontal lines to the plot. Make the color blue and add the parameter `lty = 2` to make the horizontal lines dashed.  
+
+```{r, include = FALSE}
+###Solution###
+plot(cre$avg,cre$diff,pch = 21, bg = "gray", col = "blue",main = "Difference Plot", xlab = "Average of Measures (ng/dL)", ylab = "Difference of Measures (ng/dL)", ylim = c(-0.4,0.1))
+sdev <- sd(cre$diff)
+abline(h = mean(cre$diff)+2*sdev, col = "blue", lty = 2)
+abline(h = mean(cre$diff)-2*sdev, col = "blue", lty = 2)
+abline(h = mean(cre$diff), col = "blue", lty = 2)
+```
+
+## Non-Linear Regression
+
+It is more than occasionally necessary to fit a series of points that lie on a curve. Now, you have to have some idea what shape of function you want to fit to your data...but if you do, based on some reasoned physical principle, you can determine the "best fit" using any function you want: polynomial, exponential, sinusoidal, etc.
+
+Just to illustrate the principle, let's take a few points that lie on the curve $y = sin(x)$. To do this we type:
+
+```{r}
+x <- seq(from = 0, to = pi, by = 0.3)
+y <- sin(x)
+plot(x,y)
+```
+
+Now we want to add a little "noise" like we would have in real data sets...for example, if this data had come from the angle of a pendulum with a vertical line as a function of time or something. 
+
+```{r, include = FALSE}
+# make the subsequent random draws reproducible
+set.seed(316)
+```
+
+```{r}
+y <- sin(x) + rnorm(11,0,0.05) #11 points, mean of 0, SD of 0.05
+plot(x,y)
+```
+
+Now we can invoke the `nls()` function, which performs non-linear least squares. The syntax is `nls(formula, data, start)`. The `formula` is the functional form you want to fit to with unknowns included as variables, the `data` is the data you are fitting (in this case x and y), and `start` is a list of your best initial guesses for your unknowns.
+
+In our case we are going to make no assumptions about our `sin` function. We will say that $y = A sin(kx+B)+C$, where $A, B, C$ and $k$ are unknowns.  We will just guess that $A, B, C$ and $k$ are 1 for the simplicity. We could do better, but it illustrates the process.
+
+```{r}
+sin.data <- data.frame(x,y)
+nl.reg <- nls(y ~ A*sin(k*x+B)+C,
+              data = sin.data,
+              start = list(A = 1,B = 1,C = 1,k = 1),
+              trace = TRUE)
+summary(nl.reg)
+```
+
+The parameter trace = TRUE shows the work that `nls()` is doing as it tries to find a solution from the start values. If the start values really stink, `nls()` will choke and tell you so.  You will need to find better guesses for the start values. There are ways to accomplish this which are outside the scope of the present discussion. 
+
+So now we can show our fit:
+
+```{r}
+plot(x,y)
+x.fit <- seq(from = 0, to = pi, by = 0.1) #make a bunch of tightly spaced points
+y.fit <- 0.7083 * sin(1.2710 * x.fit - 0.4539) + 0.3097
+lines(x.fit, y.fit, col = "hotpink")
+```
+
+A less aesthetically pleasing but faster way to get this is to plot the fitted values from the `nl.reg()` output.
+
+```{r}
+plot(x,y)
+lines(x, predict(nl.reg))
+```
+
+...or to make a smooth curve:
+
+```{r}
+plot(x,y)
+x.fit <- seq(from = 0, to = pi, by = 0.1)
+y.fit <- predict(nl.reg , list(x = x.fit)) #saves effort of transcribing A,B, C and k
+lines(x.fit, y.fit, col = "hotpink")
+```
+
+### Exercise
+* Suppose that you have the following data for the precision of your cortisol assay at different concentrations. In Canada we live in a nmol/L world, so we'll use those units just to keep America as confused as possible. Enter the following initial data into R. 
+```{r}
+cort <- c(1,2,3,5,10,20,30)
+cv <- c(30, 25, 17,13,6,4.5,5)
+cv.data <- data.frame(cort,cv)
+plot(cort,cv)
+```
+
+...giving this graph.
+
+* Fit this data to a hyperbolic function of the form $y = A/(x-B)+C$. If your start list for $A, B$ and $C$ gives you errors, try fitting to $y = A/x$ without $B$ and $C$ and then use your result for $A$ with $B$ and $C = 0$.
+* Calculate the fitted values of y from `x.fit <- seq(from = 0, to = 30, by = 1)`.
+* Draw the fitted curve in the color "coral".
+* Do your best to estimate the functional sensitivity -- the concentration at which the CV = 20%.
+
+```{r, include = FALSE}
+###Solution###
+cort <- c(1,2,3,5,10,20,30)
+cv <- c(30, 25, 17,13,6,4.5,5)
+cv.data <- data.frame(cort,cv)
+plot(cort,cv)
+cort.reg <- nls(cv~A/(cort-B)+C, data = cv.data,start = list(A = 10,B = 0,C = 0),trace = TRUE)
+cort.fit <- seq(from = 0, to = 30, by = 0.1)
+cv.fit <- predict(cort.reg , list(cort = cort.fit)) 
+lines(cort.fit,cv.fit,col = "coral")
+which((abs(cv.fit-20))<0.1) #tells us if there are any fitted values of the cv that are within 0.1% of 20%
+cort.fit[26] #result of the which function ? gives 2.5 back
+abline (h = 20, col = "red",lty = 2)
+abline(v = 2.5, col = "red", lty = 2) #to confirm
+```
+
+
+# Things with Strings and Tools for Data Cleansing
+
+## Working with Strings
+
+In programming, the word 'string' refers to anything treated as text. Strings may be one word or several words, and can include other characters as well. For example, the word "computer" is a string, as is the sentence "I have 4 computers." There are an array of tools in R specifically for working with strings.
+
+For example, suppose you have to generate 100 jpeg figures using a loop (we will be covering this kind of thing shortly) and you need to name them according to the index of the loop. In this circumstance you are going to need to string together some variables to make the names. The base-r function `paste()` does this for us as does `str_c()` from the stringr package. For example:
+
+```{r}
+number <- seq(from = 99, to = 95, by = -1)
+for (i in number) {
+  phrase <- paste(i, "bottles of beer on the wall", i,
+                  "bottles of beer. \nTake one down, pass it around.",
+                  i-1, "bottles of beer on the wall \n", sep = " ")
+  cat(phrase)
+}
+```
+
+In other words, `paste()` lets us create uninterrupted strings from other strings or variables.  Here is a more practical example where we need to make a bunch of jpegs all at once. The script creates a directory so that you don't have to delete all the jpegs we are going to make.  Paste automatically uses a space between all the things you are pasting together. This is not always what you want so you can specify with `sep = "blablabla"`. 
+
+```{r}
+paste("When my boss is talking my brain says, '", "'. It's like I am dying inside.",
+      sep = "Bla Bla Bla")
+```
+
+Here is a slightly more practical example:
+
+```{r, results = "hide", warning = FALSE}
+dir.create("my_figures") # create a junk folder in the current working directory.
+#to create a directory elsewhere you would need the full path
+
+for (i in 1:10) {
+  random.data <- rnorm(1000,i,0.3) #create Gaussian random data 
+  #with a mean of i and an SD of 0.3
+  file.name <- file.path("my_figures",
+                         paste("figure_number", i, ".jpg", sep = "" ))
+  print(file.name) #for your benefit to see what is going on
+  jpeg(file.name) #open a jpeg file to dump the image into
+  hist(random.data, col = rainbow(10)[i]) #if you want base-r style graphics
+  dev.off() #close the jpeg file
+}
+```
+
+Now go into the ``my_figures'' directory and see what has happened. You will notice that R takes care of the fact that Mac/Linux and Windows platforms use different kinds of slashes in the file structures. 
+
+There are other cool things that you can do with strings. The `strsplit()` function break strings apart based on separators within the string:
+
+```{r}
+line <- "Can I please have a shot of ouzo. This class is killing me"
+split.line <- strsplit(line, " ")
+split.line
+```
+
+At times it is necessary to reduce all letters to capitals or to smalls. The functions that can accomplish this are `toupper()` and `tolower()`. This is particularly useful to process data for further analysis. For example, if you had survey data containing "Yes", "YES", "yes", "Y", and "y" and wanted all of them to be turned into "Y" so that you could do statistics later, you might do something like this:
+
+```{r}
+library(stringr)
+responses <- c("Yes","no","y","y","n","N","NO","Y","YES","Y")
+#clean up this mess
+responses <- str_to_upper(responses)
+responses
+responses <- str_replace(responses,"YES", "Y")
+responses <- str_replace(responses,"NO", "N")
+# alternatively using pure base R
+# responses <- toupper(responses)
+# responses <- gsub("YES", "Y", responses)
+# responses <- gsub("NO", "N", responses)
+responses
+```
+
+Thought: What if you had a lot more possible responses that all started with "Y" but all meant "Yes", like "Yo", "Yepper", "Yessiree"? Did you know that you can actually look for the pattern "Y" followed by any number of other characters? You can.  It's called a "Regular Expression", and just to show you the magic:
+
+```{r}
+responses <- c("Yes","no","y","y","n","N","NO","Y","YES","Y","yes sir",
+               "yep", "YO","Nay Laddie", "Nej", "Nein","Non", "Yayaya",
+               "Nee","No way Jose","Nah", "Nei","não")
+responses <- str_replace(responses, "(^[Yy].*)", "Y")
+responses <- str_replace(responses, "(^[Nn].*)", "N")
+responses #magic
+
+# ^ means "starts with"
+# [Yy] means "Y" or "y" and [Nn] means "N" or "n"
+# . means "followed by anything"
+# * means "the preceding character can occur 0 or more times"
+```
+
+This is just meant to show you that stuff like this is possible. You can learn about it another time.
+
+The `substr()` function has syntax of `substr(x, start, stop)`.  This can be conveniently used to get part of a string when what you want is stuck in the middle. For example if you wanted the last 5 characters of an 18 character string--because it contained, say, the time--you could do something like this:
+
+```{r}
+substr("Feb,02,2015  07:34",14,18)
+```
+
+If you don't happen to know how long the string you are breaking up is, you can use the `nchar()` function. The `length()` function won't work; it tells you how many elements are in a vector. You want `str_length()`.
+
+```{r}
+nchar("Here kitty kitty. Pspspsps") 
+length("Here kitty kitty. Pspspsps")
+```
+
+### Exercise
+* Convert a full name (let's start with `name <- "William Osler"`) to an abbreviated name made up of the first three letters of the first name and the first the letters of the last name, all in lower case. For example "Stephen Master" would become "stemas".
+
+NOTE: the `strsplit()` function produces a list as its output which we find kind of inconvenient generally. To turn it back into a vector just apply the command unlist to it.  ie:
+
+```{r}
+x <- strsplit("Dan Holmes", " ") #creates a list
+str(x)
+x[[1]][1]
+x[[1]][2] #inconvenient syntax
+
+x <- unlist(x)
+x
+x[1]
+x[2] #happy syntax
+```
+
+```{r, include = FALSE}
+###Solution###
+full.name  <- "William Osler"
+split.name <- tolower(unlist(strsplit(full.name, " ")))
+abbrv.name <- paste0(substr(split.name[1], 1, 3), 
+                    substr(split.name[2], 1, 3))
+
+```
+
+## Oh `grep()`, how I love thee. Let me count the "wheys"
+
+The function `grep()` is a very useful function that allows you to look for patterns rather than an exact match. This can be very helpful when the value of interest is buried in other text. For example, you might want to pull out anything that looks like a Personal Health Number or telephone number. 
+
+The syntax for `grep()` is 
+
+```{r, eval = FALSE}
+grep(pattern-to-find, strings)
+```
+
+Note that `grep()` returns the *indices* of the pattern matches in the vector. For example, let's pull the entire web of science publications list and then find all the journals that contain the word "ophthalmology". 
+
+This code will download the Web of Science publication abbreviations database
+```{r}
+if(!file.exists("Data_Files/wos_abbrev_table.txt")){
+  download.file("https://ndownloader.figshare.com/files/5212423",
+                "wos_abbrev_table.csv")
+}
+wos <- read.delim("Data_Files/wos_abbrev_table.txt",
+                     sep = ";",
+                     header = TRUE)
+```
+
+Now, let's find all the journals with the word ophthalmology in them.
+
+```{r}
+ophtho_journals <- grep("[Oo]phthalmology", wos$full)
+ophtho_journals[1:10] # show the first 10
+length(ophtho_journals)
+```
+
+If we want to find the *names* of these journals, it can be accomplished in two ways:
+
+```{r}
+# wos[ophtho.journals,1]
+# or
+# wos[ophtho.journals,]$full
+wos[ophtho_journals,]$full[1:10] # names of the first 10
+```
+
+The tidyverse equivalent of `grep()` is `str_which()`. Consider also the functions `grepl()` and `str_detect` which return logical vectors. Sometimes you will need a logical vector and not the indices...you just need to believe me. It's going to happen. 
+  
+### Exercise
+* Read in starwars_menu.csv. The data is the pre-selected menu for a banquet. Have a look at the data. The caterer needs to know how many individuals want "whey" but the "whey" is buried in things like "the whey, the shoots and the rice".
+  + How many people want "whey"?
+  + Produce a dataframe of all the rows containing the word whey.
+  + Which individuals chose "whey"?
+  + Which individuals did not choose "whey"?
+
+```{r,include = FALSE}
+###Solution###
+food_choices  <- read.csv("Data_Files/starwars_menu.csv")
+food_choices 
+whey.results <- grep("whey", food_choices$Lunch)
+#all rows containing whey
+contains_whey <- food_choices[whey.results, ]
+contains_whey
+length(contains_whey$Subject) #7 people want whey.
+#those that chose whey
+chose.whey <- food_choices$Subject[whey.results]
+chose.whey
+#those that did not choose whey
+no_whey <- food_choices$Subject[-whey.results]#note the negative sign
+no_whey
+```
+
+Finding exact matches is just scratching the surface of what `grep()` and `str_which()` can do. They can also be used to match sophisticated patterns using the same regular expressions tools that `gsub()` and `str_replace()` use. For example, blood collection specimen numbers in lab start with X,M,T,W,H,F, or S and are then followed by 3--6 digits. So we can make a `grep()` search that finds only this pattern so we can see what samples represent patient results (as opposed to quality control material).
+
+```{r}
+x <- c("D123","F12414","X1324556","M432","H2141","S1")
+```
+
+Some of these will match the accession numbers
+
+```{r}
+# ^ means "starts with"
+# | means "OR"
+# [0-9] means any digit
+# {m,n} means previous item matches at least m and at most n times
+# $ means ends with 
+pattern <- "^[X|M|T|W|H|F|S][0-9]{3,6}$"
+grep(pattern, x)
+```
+
+Again, Regular Expressions could be an entire two day course to itself. For now, just know that this type of advanced pattern finding is possible.
+
+# Meet the 'tidyverse' - Pivot, Join, Filter, and Clean
+
+As we have said, ther is a popular dialect/paradigm of R programming referred to as the "tidyverse" that is particularly useful for certain types of data summary and data visualization. It allows for rapid-high level commands accomplishing a great deal in few lines of highly readable code. The challenge of using tidyverse packages is that they are under very rapid development and this can mean that updates in the packages can cause your code to stop functioning. Additionally, many statistical packages use traditional "base R" and they may not cooperate with tidyverse output. However, in the context of our work in health care, we are usually doing fairly simple one-off reports for research or answering a specific question so using the tidyverse makes sense. 
+
+## Packages
+Before we can start using these functions we will have to install and load them. This is because the 'tidyverse' does not exist in 'base' R (that is, the pre-loaded set of function which are installed when you install the R program). Rather, the tidyverse is a set of packages. Packages are themselves sets of functions which have been written by whomever authoured the package. These user-created functions have been 'packaged' and made available for anyone to download and use.
+
+Packages are what makes R great. Lots can be done in base R but often to acheive what you want, you end up having to write your own functions. This is fine if you like programming and find coding your own functions enjoyable. Sometimes, though, we just want to 'get it done' - and whatever 'it' is that you are trying to do, chances are that someone out there has done it before and written a package for you to make it easier.
+
+A final word about packages - they are only as good as the person who wrote them. The tidyverse is a group of packages which have been written by Hadley Wickham (who created RStudio) and his team - which means that we can rely on them being functional, updated and usually bug-free. The same cannot always be said of smaller packages, so if you are ever poking around for a package to fill a niche need, read the documentation and do some google searches to see how others have been able to work with the package before spending too much time trying to code with it.
+
+### Exercise
+* Hopefully you installed the tidyverse when you first installed R as per the pre-course instructions. Just in case, the following code will install the tidyverse package if it is not already there. 
+```{r, eval = FALSE}
+if("tidyverse" %in% rownames(installed.packages()) == FALSE) {install.packages("tidyverse")}
+```
+This command asks R to download the most current version of the tidyverse from CRAN, which is an online package repository. Note that you need to be connected to the internet for this to work.
+
+Since quite a few packages are being downloaded, this may take a few minutes. Perhaps a good time for a coffee break.
+
+Once tidyverse is installed, we need to load it by calling library():
+```{r, eval = FALSE}
+library(tidyverse)
+```
+You only need to install a package once, but you will need to load any packages you need each time you restart R.
+
+
+## `pivot_longer()` and `pivot_wider()`
+Now that we are in the tidyverse, the first thing we want to introduce is what is meant by "tidy data".
+
+When humans prepare spreadsheet data, they typically have each row represent all the observations on single subject. This is usually pretty easy to look at but it happens to have a number of disadvantages from a statistical programming standpoint.
+
+For example, in traditional "untidy" data, you might have each subject on a row and all of their lab tests represented as columns: Sodium, Potassium, Chloride, Bicarbonate, Creatinine, pH, Troponin etc. But in the tidy data paradigm, all of the blood tests should be factors under a single column labelled "Test" and then each row represents a single observation, not a single patient. 
+
+```{r, message = FALSE, warning = FALSE, echo = FALSE}
+library(tidyverse)
+lytes.long <- read.csv("Data_Files/lytes.csv")
+lytes.wide <- pivot_wider(lytes.long, names_from = "Test", values_from = "Result" )
+```
+
+For example, this is a traditional view:
+
+```{r, echo = FALSE}
+library(knitr)
+kable(lytes.wide)
+```
+
+And this is a tidy view of the same data:
+
+```{r, echo = FALSE}
+kable(lytes.long)
+```
+
+It is frequently necessary to jump back and forth between the traditional view, which we call "data wide" and the tidy view which we call "data long". This is accomplished with the functions `pivot_longer()` and `pivot_wider()`.
+
+Let's starting exploring these funtions by reading in some data on "anthropometric" (for want of a better term) [measurements on opossum](https://rdrr.io/cran/DAAG/man/fossum.html).
+
+```{r}
+possum <- read.csv("Data_Files/possum.csv") 
+# we used read.csv here (a tidyverse function) instead of read.csv (base R)
+# the anthropomorphic measurements of the possums are wide
+head(possum)
+```
+
+We can convert them to data long format with the `gather()` function. In the this function we must determine three things:
+
+1. What columns are to be gathered together as factors of a similar type?--This parameter referred to as the "key" and in our output the column will be named "Possum_Metric".
+2. What do you want to call the column that contains the associated values?--This parameter is referred to as the "value" and in our output the column will be named "Result".
+3. Which columns (by name or number) are to be gathered?--In this case it is columns 7--15. You can also denote which columns you *don't* want gathered -- so we could also write this as "-c(1:6)".
+
+```{r}
+library(tidyr)
+possum_long <- pivot_longer(possum, cols = 7:15,
+                            names_to = "bodypart",
+                            values_to = "measurement")
+head(possum_long, 10)
+```
+
+As it turns out (and we will explain more later), this permits very slick calculations:
+```{r}
+#long data permits rapid calculations
+group_by(possum_long, bodypart) %>%
+  summarize(mean  = mean(measurement, na.rm = TRUE),
+            median = median(measurement, na.rm = TRUE),
+            sd = sd(measurement, na.rm = TRUE))
+```
+and plots:
+```{r}
+#long data permits rapid visualizations which we will cover later
+library(ggplot2)
+p <- ggplot(possum_long, aes(x = measurement, fill = bodypart)) + 
+  geom_density(alpha = 0.3, color = NA) 
+p
+```
+
+If we want to convert back to 'untidy' data, this is accomplished by `pivot_wider()`. For this function again we need to determine our "names_from" and "values_from" columns:
+
+1. The "names_from" column will be pivoted wider across the top of the table (this column becomes the column names).
+2. The "value_from" column contains the values we want to populate these new columns.
+
+```{r}
+possum_wide <- pivot_wider(possum_long,
+                           names_from = bodypart,
+                           values_from = measurement)
+head(possum_wide, 10)
+```
+
+## `arrange()`, `filter()`, and `select()`
+
+There are some more very useful and simple functions in the tidyverse which we will need before we get too much further.
+
+The first is `arrange()` and it does pretty much what you think it would. Let's try it out on the possum data:
+```{r}
+arrange(possum, age)
+```
+
+If we want to arrange from largest to smallest, we would ask for the ages in descending `desc()` order:
+
+```{r}
+arrange(possum, desc(age))
+```
+
+What happens if we `arrange()` something that is not a number?
+```{r}
+arrange(possum, X1)
+```
+
+`arrange()` can alphabetize for us too. This is useful in combination with `head()` when surveying our data.
+
+Next up, `filter()` and `select()`. Filtering means choosing *rows* while selecting means choosing *columns*. You can filter rows based on what the rows contain, but you can only select columns by name or position.
+
+```{r}
+filter(possum, sex == "m")
+filter(possum, taill>38)
+select(possum, case, site, age)
+select(possum, 1:5)
+select(possum, -X1)
+```
+
+### Exercise
+* From the possum data, create a table which only has the site, sex, and age data for female possums under the age of 5. Arrange this table from youngest to oldest.
+
+```{r, echo = FALSE, eval = FALSE}
+##SOLUTION
+
+possum_table <- filter(possum, sex == "m" & age < 5)
+possum_table <- select(possum_table, site, sex, age)
+possum_table <- arrange(possum_table, age)
+possum_table
+
+# shortly we will learn that we can do the same thing like this:
+possum_table <- possum %>%
+  filter(sex == "m", age < 5) %>%
+  select(c(site, sex, age)) %>%
+  arrange(age)
+possum_table
+```
+
+## join() ME!
+
+![](Images/darth.jpg)
+
+The tidyverse comes with a number of very useful functions to join related data frames. These functions all work with two data frames at a time and fall into two main categories:
+
+Mutating Joins
+
+* left_join(), right_join()
+* inner_join()
+* full_join()
+
+Filtering Joins
+
+* semi_join()
+* anti_join()
+
+To demonstrate how joins work, we will need some relational data sets. Relational data is data which shares some overlapping 'key' variable (or variables) but each data set has some data which the other does not. Joining is a way of combining these data sets - but there are a surprising number of ways to do this.
+
+Here are two very small data sets we can start with:
+
+```{r, echo = FALSE}
+patients <- "name, smoker, gender, diagnosis, dose
+Magneto, yes,   male, diabetes, 250
+Storm,   yes, female, diabetes, 500
+Mystique, no, female, IBD, 400
+Batman, yes,   male, arthritis, 325
+Joker, no,   male, arthritis, 650
+Catwoman, yes, female,IBD, 400
+Hellboy,  no, male, lupus, 50"
+
+patients <- read.csv(text = patients, strip.white = TRUE)
+patients
+
+medications <- "diagnosis, medication
+diabetes,       metformin
+arthritis,       tylenol
+IBD,       5-ASA
+Hypertension, ramipril"
+
+medications <- read.csv(text = medications, strip.white = TRUE)
+medications
+```
+
+We have doses for medications in the first table, but we don't know which medications each patient is taking!
+
+Let's join the two tables using `left_join()`:
+
+```{r}
+left_join(patients, medications)
+```
+
+Notice that we get a message - the function has figured out which column is the 'key' column - the column which is present in both data sets. Sometimes, though, we don't want to leave this to chance. Better to specify this using the 'by' argument.
+
+```{r, eval = FALSE}
+left_join(patients, medications, by = "diagnosis")
+```
+We get `NA` in our output because we don't have a full set of medication data for each diagnosis.
+
+`left_join()` keeps all the rows in the first (left hand) table and adds columns from the second. `right_join()` does the opposite:
+
+```{r}
+right_join(patients, medications, by = "diagnosis")
+```
+Notice now that we lost some information about Hellboy because his diagnosis wasn't in the medications table.
+
+Usually we use `left_join()`, but sometimes when we are piping (we'll get to that soon), `right_join()` comes in handy.
+
+`full_join()` keeps all the rows from both data sets, again introducing NA as needed:
+```{r}
+full_join(patients, medications, by = "diagnosis")
+```
+
+And finally, `inner_join()` keeps only rows which are common to both data sets:
+```{r}
+inner_join(patients, medications, by = "diagnosis")
+```
+
+These four functions are called mutating joins because they add columns. We'll meet `mutate()` soon and you will see why that makes sense.
+
+The other main type of join are filtering joins. We just met `filter()` so we remember that filtering is a way of choosing rows. Filtering joins only ever remove rows. No new columns get introduced.
+
+`semi_join()` keeps all the rows in the first table which have a match in the second table:
+
+```{r}
+semi_join(patients, medications, by = "diagnosis")
+```
+
+Whereas `anti_join()` *drops* all the rows in the first table which have a match in the second table:
+
+```{r}
+anti_join(patients, medications, by = "diagnosis")
+```
+Remember, these two functions only ever *remove* data.
+
+There is a third category of two table functions. These are the set operations, and you might find them useful for the exercises. These functions assume you have two data frames with all the same variables (columns). They are pretty self-explanatory:
+
+* intersect(x, y): return only observations in both x and y
+* union(x, y): return unique observations in x and y
+* setdiff(x, y): return observations in x, but not in y.
+
+### Exercises
+
+1. Is the output from `right_join(patients, medications)` the same as `left_join(patients, medications)`? Decide what you think the answer is before trying it out in your R session.
+
+2. Here's some more data:
+```{r, echo = FALSE}
+
+scripts_1 <- "patient, script_ID, license
+Magneto, 15,   23546
+Storm,   22,   23546
+Mystique, 5, 6536
+Catwoman, 4, 6536
+Hellboy,  5,   23546
+Hellboy,  12, 67589"
+
+scripts_1 <- read.csv(text = scripts_1)
+scripts_1
+
+scripts_2 <- "patient, script_ID, license
+Magneto, 17,   32567
+Storm,   22,   23546
+Mystique, 55, 6536
+Catwoman, 24, 6536
+Hellboy,  51,   23546
+Hellboy,  12, 67589
+Storm,   22,   23546
+Mystique, 5, 6536
+Catwoman, 4, 6536
+Hellboy,  5,   23546"
+
+scripts_2 <- read.csv(text = scripts_2)
+scripts_2
+
+doctors <- "physician, license, speciality
+Prof.X,   23546, endocrinology
+Grey, 6536, gastroenterology
+Frost, 67589, family.practice
+Agent, 32567, family.practice"
+
+doctors <- read.csv(text = doctors)
+doctors
+```
+Use mutating and filtering joins to piece all the data together and figure out:
+
+* What meds are over the counter? (No prescriptions)
+* Which specialities prescribe metformin?
+
+Note that the two scripts table contain some overlapping data - make sure to only look at each script_ID once!
+
+You'll also need to know that if you are trying to join by columns which have different names, you can use `by = c("x" = "a")`.
+
+```{r, echo=FALSE, eval = FALSE}
+
+##Solution
+all_scripts<-union(scripts_1, scripts_2)
+no_scripts <- anti_join(patients, all_scripts, by = c("name" = "patient"))
+no_scripts <- left_join(no_scripts, medications, by = "diagnosis")
+unique(no_scripts$medication)
+
+meds_speciality <- left_join(all_scripts, doctors, by = "license")
+meds_speciality <- full_join(patients, meds_speciality, by = c("name"="patient"))
+meds_speciality <- left_join(meds_speciality, medications, by = "diagnosis")
+metformin <- filter(meds_speciality, medication=="metformin")
+unique(metformin$speciality)
+```
+
+## A tidy way to handle strings
+
+In lesson four we learned some useful tricks for handling strings using `str_replace()`, `str_detect()`, `str_to_upper()`, `str_to_lower()`, and `str_split()`. These are all in the `stringr` package (included in the tidyverse) and you may find some of these come in handy when working to clean your data:
+
+* `str_c()`
+* `str_length()`
+* `str_pad()`, `str_trim()`
+* `str_to_upper()`, `str_to_lower()`, `str_to_title()`
+* `str_order()`, `str_sort()`
+* `str_detect()`, `str_sub()`, `str_replace()`
+* `str_count()`
+* `str_split()`
+
+These are fairly self explanatory based on the name. We can jump right into trying them and seeing how they work.
+
+### Exercises
+Take another crack at the exercises from lesson four and see if you can perform the same task using tidyverse functions. Notice any differences in behavior or ease of use?
+
+1. Convert a full name (let's start with `name <- "William Osler"`) to an abbreviated name made up of the first three letters of the first name and the first the letters of the last name, all in lower case. For example "Stephen Master" would become "stemas". 
+
+```{r, include=FALSE}
+##SOLUTION
+library(tidyverse)
+
+name <- "William Osler"
+name_lower <- str_to_lower(name)
+name_split <- unlist(str_split(name_lower, " "))
+name_abbrv <- str_c(str_sub(name_split[1], 1, 3), 
+                    str_sub(name_split[2], 1, 3))
+
+#shorter using str_split_1()
+name_lower <- str_to_lower(name)
+name_split <- str_split_1(name_lower, " ")
+name_abbrv <- str_c(str_sub(name_split[1], 1, 3), 
+                    str_sub(name_split[2], 1, 3))
+```
+
+2. Read in starwars_menu.csv. The data is the pre-selected menu for a banquet. Have a look at the data. The caterer needs to know how many individuals want "whey" but the "whey" is buried in things like "the whey, the shoots and the rice".
+  + How many people want "whey"?
+  + Produce a data frame of all the rows containing the word whey.
+  + Which individuals chose "whey"?
+  + Which individuals did not choose "whey"?
+
+```{r,include = FALSE}
+###Solution###
+library(dplyr)
+food_choices <- read.csv("Data_Files/starwars_menu.csv")
+contains_whey <- filter(food_choices, str_detect(Lunch, "whey"))
+contains_whey
+nrow(contains_whey)
+#7 people want whey.
+
+#those that chose whey
+chose_whey <- contains_whey$Subject
+chose_whey
+
+#those that did not choose whey
+no_whey <- filter(food_choices, !(str_detect(Lunch, "whey")))$Subject
+no_whey
+```
+
+3. Use this character vector to experiment with the functions `str_order()`, `str_sort()`, `str_count()`. Can you figure out what each of these functions does? What do `str_pad()`, `str_trim()`, `str_squish()` do?
+
+```{r}
+letters <- c("e", "r", "q", "a", "a", "f", "c", "x", "z")
+```
+
+```{r,include = FALSE}
+###Solution###
+
+# order tells you the index that will place the results in order
+str_order(letters)
+# this will order the results
+letters[str_order(letters)]
+
+# this also orders the results but in one step
+str_sort(letters)
+
+# this tells us how many characters are in each string
+str_count(c("one", "two", "three", "four"))
+
+# add padding to make formatted output
+str_pad(c("here", "you", "go"), width = 20, side = "both", pad = " ")
+
+# remove whitespace from ends
+str_trim("   This   porridge   is   too   hot   ")
+
+# trim the ends AND collapse all whitespace to one space
+str_squish("   This   porridge   is   too   cold   ")
+```
+
+# Piping, Mutating, and Summarizing
+
+## Pipes
+Before we go further, we are going to employ a function called the pipe which is denoted `%>%`. This is analogous to the OSX and Linux command line pipe `|` used (constantly) in shell programming. What is does is "push" the output of one function to another function which avoids repeatedly nested functions. 
+
+Here is an example. This can be hard to read when many functions are nested:
+
+```{r}
+# traditional nested functions
+possum <- read.csv("Data_Files/possum.csv")
+summary(select(filter(possum, sex == "m"), matches("hdlngth")))
+```
+
+But it's easier to read with pipes:
+
+```{r}
+# compare with piped functions
+possum %>% filter(sex == "m") %>%
+  select(hdlngth) %>%
+  summary()
+```
+
+When we pipe, we start with the data we want to work with. All the functions which come next in the 'pipeline' inherit the data as it is fed to them. So we don't need to specify what data we want each function to use, as the default is to use whatever has come 'down the pipe' to that function.
+
+If this is confusing, imagine the `%>%` operator as being the adverb 'then', with the functions being the verbs, and the data being the noun (or subject). So the above pipe can be 'read' as the sentence "Start with the possum data, then filter rows with sex equal to 'm', then select the column 'hdlength', then provide a summary."
+
+## `mutate()` and `transmute()`
+
+The `mutate()` function permits the calculation and addition of a new column. First let's use the electrolyte results from earlier and add a column with the AG the traditional way:
+```{r}
+#traditional way
+lytes.long <- read.csv("Data_Files/lytes.csv")
+lytes.wide <- pivot_wider(lytes.long, names_from = "Test", values_from = "Result" )
+lytes.wide$Anion.Gap <- lytes.wide$Sodium + lytes.wide$Potassium - lytes.wide$Chloride - lytes.wide$`Total CO2`
+lytes.wide
+```
+
+```{r, echo = FALSE}
+#reset df
+lytes.wide <- lytes.wide[,-6]
+```
+
+Now try with pipes and `mutate()`
+```{r}
+Anion_Gaps <- lytes.wide %>% 
+  mutate(Anion.Gap = Sodium + Potassium - Chloride - `Total CO2`)
+Anion_Gaps
+```
+See how piping keeps our code cleaner and easier to type?
+
+The `transmute()` function does the same as `mutate()` but discards all the columns in the original data frame and only returns the newly calculated column:
+```{r}
+Anion.Gaps.2 <- lytes.wide %>%
+  transmute(Anion.Gap = Sodium + Potassium - Chloride -`Total CO2`)
+Anion.Gaps.2
+```
+
+If you want to retain columns with transmute, you can just name them and they will stay:
+```{r}
+#keep the patient IDs
+Anion.Gaps.3 <- lytes.wide %>%
+  transmute(Patient,
+            Anion.Gap = Sodium + Potassium - Chloride - `Total CO2`) 
+Anion.Gaps.3
+```
+
+### Exercise
+* Load the starwars dataset and use `mutate()` to add a column to the starwars dataframe with the BMI of the character. You can simply type `data(starwars)` to get the starwars data to load.
+* What is Jabba's BMI?
+
+$$BMI = \frac{mass(kg)}{[height(cm)]^2} \times 10000$$
+```{r, echo = FALSE, eval = FALSE}
+### SOLUTION
+data("starwars")
+
+Jabba.BMI <- starwars %>% 
+  mutate(BMI = mass/height^2 *10000) %>%
+  filter(str_detect(name, "Jabba")) %>%
+  select(BMI)
+
+Jabba.BMI
+```
+
+## `separate()` and `unite()`
+
+These are pretty easy functions to understand. The `separate()` function breaks columns up based on a separator.
+
+```{r}
+names <- c("Dan", "Janet","Andre", "Angela","Mari") %>% factor()
+startdate <- c("04-Jul-2006", "01-Jul-2016", "01-Sep-2009", "01-Jul-2016","01-Jul-2012")
+staff <- data.frame(names,startdate)
+staff %>% 
+  separate(startdate,
+           into = c("StartDay", "StartMonth", "StartYear"),
+           sep = "-") -> staff.sep
+staff.sep
+```
+
+And `unite()` does the opposite.
+
+```{r}
+staff.sep %>% unite(StartDate, StartDay, StartMonth, StartYear, sep = "|")
+```
+The first argument to unite is the name of the new column you are creating, and then list the columns you want to unite.
+
+###Exercise
+Using the 'staff' data frame we created above, can you separate the 'startdate' column into colums for day, month and year while keeping the original column?
+
+Desired output:
+```{r, echo =FALSE}
+##SOLUTION
+separate(staff, startdate, into = c("StartDay", "StartMonth", "StartYear"), sep = "-", remove=FALSE)
+```
+
+Hint - to see what else a function can do, type '?' and then the function name to bring up the documentation. Often functions have hidden arguments which can do useful things.
+
+## `group_by() %>% summarize()`
+
+The `summarize()` function allows you to rapidly produce summary statistics and it is usually (but not always) used with another function called `group_by()`
+```{r}
+summarize(possum, m.skullw = mean(skullw), sd.skullw = sd(skullw), count = n())
+```
+
+Used by itself, this is not all that useful or interesting but when paired with `group_by()` it is very useful.
+
+
+### Using `group_by() %>% summarize()`
+When `summarize()` is combined with grouping by factors, we get very rapid summaries that would be traditionally more cumbersome. 
+
+They can be used to produce counts:
+```{r}
+#group_by summarize
+iris %>%
+  group_by(Species) %>%
+  summarize(count = n())
+```
+
+They can be used to calculate summary statistics:
+```{r}
+#demonstrate group_by summarize with iris in data wide
+iris %>%
+  group_by(Species) %>%
+  summarize(m.Sepal.Length = mean(Sepal.Length),
+            m.Sepal.Width = mean(Sepal.Width),
+            m.Petal.Length = mean(Petal.Length),
+            m.Petal.Width = mean(Petal.Width))
+```
+
+There are special summarize functions to do the same thing in one line:
+```{r}
+#demonstrate the compactness of summarize_all()
+iris %>%
+  group_by( Species) %>%
+  summarize_all(funs(mean)) -> iris.res1
+iris.res1
+
+#multiple functions
+iris %>%
+  group_by(Species) %>%
+  summarize_all(funs(mean, median, sd)) -> iris.res2
+iris.res2
+```
+
+The summary can be applied to specific columns:
+```{r}
+#specific columns
+iris.res3 <- iris %>%
+  group_by(Species) %>%
+  summarize_at(c("Petal.Length","Petal.Width"),
+               list(mean = mean, median =  median, sd = sd)) 
+iris.res3
+```
+
+
+### Using `group_by() %>% summarize()` with data in long format
+But if we put the data in a datalong format, we get real horsepower and this can also be used to generate quick visualizations by factors as we will show later.
+```{r}
+iris.long <- iris %>%
+  pivot_longer(1:4,
+               names_to = "Flower.Part",
+               values_to = "Length") 
+
+#find the means
+iris.res4 <- iris.long %>%
+  group_by(Species, Flower.Part) %>%
+  summarize(mean = mean(Length))
+iris.res4
+
+#find a bunch of summary stats
+iris.res5 <- iris.long %>%
+  group_by(Species, Flower.Part) %>%
+  summarize_all(list(min = min, mean = mean, sd = sd, med = median, IQR = IQR, max = max))
+iris.res5
+```
+
+Note that all the summarise/summarize verbs work with either the US or UK/Canadian spelling.
+
+
+## Putting all the pipes together
+
+### Exercise
+Using pipes and the various tidyverse 'verbs' (aka functions) you've learned in the last two lessons, write a pipe which starts with the dataframe 'possum' from earlier and returns a dataframe which gives us the number of female possums and the mean age and median foot to tail length ratio for just the female possums, grouped by research site and population? Can you then make the resulting table 'tidy'?
+
+Start with this:
+```{r, eval = FALSE}
+possum.f.sum <- possum %>%
+  filter() %>%
+  mutate() %>% 
+```
+And add what you need.
+
+Desired output:
+```{r, echo=FALSE}
+##SOLUTION##
+possum %>% filter(sex=='f') %>% mutate(foot_to_tail=footlgth/taill) %>%
+  group_by(site, Pop) %>%
+  summarize(mean_age=mean(age), median_foot_to_tail=median(foot_to_tail, na.rm=TRUE), count=n()) %>%
+  gather("Metric", "Value", -site, -Pop)
+```
+
+# Lubridate
+
+## A sign of the times:`lubridate()`
+
+The `lubridate()` package allows us to deal with dates and times and do algebra on them as we would with other vectors. This represents a major advantage over the handling of dates using base R packages.
+
+Lubridate makes logical assumptions about what you probably mean based on typical date formats. 
+
+The functions that lubridate uses are `mdy()`,  `ymd()` and  `dmy()`. They have very predictable behavior.
+
+```{r}
+library(lubridate)
+# May need to change locale to English US if errors are seen
+# Sys.setlocale("LC_TIME", "en_US.UTF-8") #OSX
+# Sys.setlocale("LC_TIME", "English") #Windows
+mdy("Aug-20,1755")
+mdy("Aug/20/1755")
+mdy("08-20-1755")
+mdy("08201755")
+mdy("August 20, 1755")
+mdy("August 20 1755")
+#all work perfectly without any explicit statements about format.
+```
+
+You can also change the language to suit your preferences. For example, if we want to work in French dates.
+
+```{r}
+dmy("Lundi le 12 Septembre, 2016") #gives us an error
+Sys.setlocale("LC_TIME", "fr_CA.UTF-8") #change settings to French Canadian
+dmy("Lundi le 12 Septembre, 2016")
+Sys.setlocale("LC_TIME", "en_US.UTF-8") #change back to English USA
+```
+
+The real gold with lubridate is how it can handle times too!
+
+```{r}
+#calculating the number of days since the Declaration of Independence
+then <- mdy_hms("July 04,  1776 14:32:45")
+then
+now <- ymd_hms(Sys.time())
+now
+delta <- difftime(now, then, units = "days")
+delta #wow
+
+#calculating the number of days Canada has been a country
+then <- mdy_hms("July 01,  1867 11:17:21")
+then
+now <- ymd_hms(Sys.time())
+now
+delta <- difftime(now, then, units = "days")
+delta
+```
+
+### Exercise
+1. Read the file Potassium.csv into a variable called `K.data`. This file contains real K^+^ data extracted from SunQuest from Dan's lab for one month from the two ER bays.  It contains order time, collection time, receive time and result time.  Use the `head()` function to get an idea of how the dates and times are formatted. All the K^+^ results presented were run on an ABL800 whole blood analyzer directly from an unspun PST tube.
+    + Convert the order, receive, and result times into dates
+    + Calculate the order-to-result times and store it a column called TAT ("turn around time"). Use the function `difftime()` to calculate the time difference.
+        + What is the median and IQR of the TAT?
+        + What is the 90th and 99th percentiles of the TAT?
+        + What is the maximum value of TAT?
+    + Calculate the receive-to-result times and store it a column called lab.TAT (the analysis time).
+        + What is the median and IQR of the lab.TAT?
+        + What is the 90th and 99th percentiles of the lab.TAT?
+        + What is the maximum value of lab.TAT? What day did it occur?
+        + What strange finding have you discovered?
+
+```{r, include = FALSE}
+###Solution###
+library(lubridate)
+K.data <- read.csv("Data_Files/Potassium.csv")
+
+# this can also be done with one line using mutate_at()
+K.data <- K.data %>% mutate(ORDERED_DATE = dmy_hm(ORDERED_DATE), 
+                            RESULT_DATE = dmy_hm(RESULT_DATE),
+                            RECEIVED_DATE =  dmy_hm(RECEIVED_DATE))  %>%
+  mutate(TAT = difftime(RESULT_DATE, ORDERED_DATE, units = "min"), 
+         lab.TAT = difftime(RESULT_DATE,RECEIVED_DATE, units = "min"))
+
+K.data %>% 
+  arrange(desc(TAT)) %>%
+  head()
+
+K.data %>% 
+  arrange(desc(lab.TAT)) %>%
+  head()
+
+max(K.data$TAT)
+summary(as.numeric(K.data$TAT))
+quantile(K.data$TAT,probs = c(0.9,0.99))
+
+max(K.data$lab.TAT)
+K.data$ORDERED_DATE[which(K.data$lab.TAT==max(K.data$lab.TAT))]
+summary(as.numeric(K.data$lab.TAT))
+quantile(K.data$lab.TAT,probs = c(0.9,0.99))
+
+#Note two things:
+#1)	Scheduled orders are included.
+#2)	There was a LIS downtime on Jan 29/2015.
+```
+
+2. Produce a histogram of TAT and lab.TAT on the same histogram.
+    Recall: `hist(my.vector, breaks  = 20, add = TRUE)`
+
+    Start with your hist of TAT so that the x axis is long and can display both TAT and lab.TAT. In this particular, `breaks = 20` works nicely for TAT and `breaks = 200` works nicely for lab.TAT.  This was just trial and error.
+
+```{r,include = FALSE} 
+###Solution###
+hist(as.numeric(K.data$TAT), col = "red", breaks = 20)
+hist(as.numeric(K.data$lab.TAT), col = "blue", breaks = 200, add = TRUE)
+```
+
+From this kind of data we can plot the daily turn around time, which can be really helpful. We won't do it now but you have the code here so you can see what is possible. 
+
+```{r}
+plot(lab.TAT ~ RECEIVED_DATE, data = K.data, cex = 0.3) 
+#the LIS downtime on Jan 29 is evident
+```
+
+Making it a little prettier:
+
+```{r}
+plot(lab.TAT ~ RECEIVED_DATE,
+     data = K.data,
+     ylim = c(0,40),
+     col = "#00000060",
+     pch = 19,
+     cex = 0.3) #as it happens individual TATs.
+```
+
+And you can do lots of other things with this data. For demonstration purposes only, in future you will be able to plot daily statistics with some very compact syntax. Plunk this in and see what you get.
+
+```{r}
+library(ggplot2)
+library(tidyr)
+K.data <- read.csv("Data_Files/Potassium.csv")
+K.data %>%
+  mutate(across(COLLECTION_DATE:RECEIVED_DATE, ymd_hms)) %>%
+  mutate(TAT = difftime(RESULT_DATE, ORDERED_DATE, units = "min")) %>%
+  mutate(Date = as.Date(COLLECTION_DATE)) %>%
+  group_by(Date) %>%
+  summarise(Q10 = quantile(TAT, probs = 0.1), Q50 = median(TAT), Q90 = quantile(TAT, probs = 0.9)) %>%
+  pivot_longer(Q10:Q90, names_to = "Quantile", values_to = "TAT") %>%
+  ggplot(aes(x = Date, y = TAT, col = Quantile)) + 
+  geom_line()
+```
+
+# Functions, Conditional Responses and Loops
+## Making your own functions
+
+It is frequently necessary to create a function that does a specific calculation so you do not need to repeatedly write out the same code. We are going to create some functions, save them, and reload them for future convenient use.  This way, we are going to save ourselves *so much* work. 
+
+The syntax of the custom function looks like this:
+
+```{r, eval = FALSE}
+function.name <- function(arg1,arg2,arg3 - ie input variables) {
+  statements to generate an R object
+  return(object)
+}
+```
+
+A simple function might look like this:
+
+```{r}
+square <- function(x) { # x is just a variable name. Any allowable variable name is OK
+    result <- x^2     # calculate the square and assign to a variable "result"
+    return(result)    # return the value of the result variable
+}
+square(5)
+```
+
+Note that variables used in functions are local to the function and cannot be called outside the function. In other words, you can use the variable `x` anywhere else in your script and it will not interfere with your `square()` function. Note that if you define a variable inside your function, you will not be able to inquire as to its value after the function has been executed. 
+
+Let's look at a more complex example. We will go back to handling strings, first by using `substr()` to take a word and remove the first and last letters.
+
+```{r}
+chopper <- function(word) {
+  return(substr(word, 2, nchar(word) - 1))
+} 
+# now try it out on some words
+# will it work on a sentence?
+
+# stringr() library functions can do the same
+chopper_tidy <- function(word) {
+  return(str_sub(word, 2, str_count(word) - 1))
+} 
+```
+
+### Exercise
+1. Write a function called cv that takes a vector of numbers and calculates the CV of those numbers in %. Recall that $\%CV = sd/mean\times100$.
+
+```{r, include = FALSE}
+###Solution###
+cv <- function(x){
+  mu.x <- mean(x)
+  sd.x <- sd(x)
+  return(round(sd.x / mu.x * 100, 2))
+}
+#test it:
+x <- c(22.1,23.3,21.4,19.7,23.2,22.8,24.3,18.2)
+cv(x)  
+```
+
+2. Write a function called `clean` that removes any less than or greater than signs from your data but preserves the number that follows and returns a numeric vector of your data.
+
+```{r, include = FALSE}
+#Solution
+clean <- function(x){
+  x <- as.character(x) #make sure we are not dealing with factor
+  better <- str_replace(x, "<", "")
+  best   <- str_replace(better, ">", "")
+  return(as.numeric(best))
+}
+
+#test
+dirty <- c("1","3","<0.3","<4","5",">9")
+clean(dirty)
+```
+
+Things you should be aware of when making your own functions:
+
+  * You are not limited to having variables as the thing a function does. The function can generate graphs, read or write files, and do anything that R can do.
+  * You can have as many input variables and output variables as you want. If you are returning multiple output variables, you can return them as a dataframe or a list.
+  * You can save your function as a text file and then read it back in at another time using the `source()` function. 
+
+## Conditional Responses
+
+It is very common to have to provide responses based on conditions that are not known *a priori*. For example, you might have to do something different if you have an even number of components to a vector than if you had an odd number of components. Or you might have to apply a different calculation for eGFR for men than for women. In these cases, we need to use "if" statements to make the right decision.  The structure goes like this:
+
+```{r, eval = FALSE}
+if (condition 1) {
+    do something
+} else if (condition 2) {
+    do something else
+} else {
+    do something with everything that fails conditions 1 and 2
+}
+```
+
+Here's a useless function that shows how `if` statements work. It takes a name and tells you if the name corresponds to either of the instructors.
+
+```{r}
+is.teaching.now <- function(name) {
+    if (name == "Dan" | name == "Daniel") {
+        response <- TRUE
+    } else if (name == "Nicholas" | name == "Nick") {
+        response <- TRUE
+    } else {
+        response <- FALSE
+    }
+    return(response)
+}
+#try it
+is.teaching.now("Wolfgang")
+is.teaching.now("Nick")
+```
+
+Here is another function that tells you if a number is even.
+
+```{r}
+iseven <- function(x) {
+   if (floor(x/2) == (x/2)) {
+        return(TRUE)
+    } else {
+        return(FALSE)
+    }
+}
+#try it
+iseven(8)
+iseven(19)
+iseven(pi)
+iseven(round(2*pi,0))
+```
+
+### Exercise
+1. Write a function that tells you whether a number is an integer or not by using the `floor()` function. If it's an integer, have the function return the string "This number has integrity". Otherwise have it return "This number lacks integrity".
+
+```{r, include = FALSE}
+###Solution###
+integrity <- function(x){
+    if (floor(x) == x){
+        answer <- "This number has integrity"
+    } else {
+        answer <- "This number lacks integrity"
+    }
+    return(answer)
+}
+
+#test
+integrity(1.02)
+integrity(pi)
+integrity(1002)
+```
+
+2. Write a function that takes a sentence and determines if the word "schnitzel" is in the sentence. It should return "This sentence contains schnitzel" or "This sentence is schnitzel-free".  You may find a function called `%in%` helpful - this tells you if quantity is in a vector. For example:
+
+```{r}
+sentence <- c("It's","a","beautiful","day","in","Salzburg")
+"Paris" %in% sentence
+"Salzburg" %in% sentence
+```
+
+```{r, include = FALSE}
+###Solution###
+schnitzel.finder <- function(sentence){
+  sen.vec <- str_split(sentence, " ", simplify = TRUE)
+  sen.vec <- str_to_lower(sen.vec) #this turns upper case SCHNITZEL to lower case schnitzel
+  if("schnitzel" %in% sen.vec){
+    return("This sentence contains schnitzel")
+  }else{
+    return("This sentence is schnitzel-free")
+  }
+}
+#test
+schnitzel.finder("Stephen ordered schnitzel at the restaurant but there was none left")
+schnitzel.finder("Stephen ordered sauerkraut at the restaurant. He enjoyed it.")
+
+## you could also use grep()
+## or in tidy syntax
+
+schnitzel.finder.tidy <- function(sentence){
+  sen.test <- sentence %>% 
+    str_to_lower() %>% 
+    str_detect("schnitzel")
+  if(sen.test==TRUE){
+    return("This sentence contains schnitzel")
+  }else{
+    return("This sentence is schnitzel-free")
+  }
+}
+#test
+schnitzel.finder.tidy("Stephen ordered schnitzel at the restaurant but there was none left")
+schnitzel.finder.tidy("Stephen ordered sauerkraut at the restaurant. He enjoyed it.")
+```
+
+## Loops--When you need to say the same thing over and over and over
+
+Very often we need to do the same thing over and over and perform a calculation or inquiry over an entire vector. (See also the `apply()` family of functions or the purrr package). Loops help us to accomplish things like this, and they are an essential tool in many things we will want to do.
+
+There are two kinds of loops: the "for" loop and the "while" loop.  In general we'll use "for" more often but we will cover both.
+
+The syntax of the `for` loop goes like this:
+```{r,eval = FALSE}
+for (counter in sequence) {
+    do something
+}
+```
+So, in reality, that might look like this:
+
+```{r}
+for (i in 1:5) {
+    print(c("Hi number",i))
+}
+```
+The `iseven()` function that we created earlier in this chapter did not function on a vector. It only worked for single numbers. Let's make a loop to apply it to a vector of numbers.
+
+```{r}
+x <- c(1,3,4,2,5,6,7,3,10) # defines a vector to operate on
+result <- vector() # creates an empty vector to store our result in
+for (i in 1:length(x)) {
+    result[i] <- iseven(x[i])
+}
+result
+# Seems to work.  Now let's use it to pull out the numbers.
+x[result]
+```
+
+You can also embed loops inside of loops and, where necessary, call the indices of the outer loop from within the inner loop. You may better appreciate the value of `group_by()` and `summarize()` after realizing that the code authors are doing this nested looping for you with their commands.
+
+```{r}
+# Examine features of irises
+# Loop over the different species and find the mean of the
+# 4 different petal measurements.
+iris <- read.csv("Data_Files/iris.csv")
+species <- unique(iris$Species)
+features <- names(iris)[1:4]
+mean.results <- data.frame(species = rep(NA,3),
+                           m.Sepal.Length = rep(NA,3),
+                           m.Sepal.Width = rep(NA,3),
+                           m.Petal.Length = rep(NA,3),
+                           m.Petal.Width = rep(NA,3))
+for (i in 1:length(species)){
+  flower.data <- subset(iris, Species == species[i])
+  mean.results[i,1]<- as.character(species[i])
+  for (j in 1:length(features)){
+    mean.results[i,j + 1] <- mean(flower.data[,j], na.rm = TRUE)
+  }
+}
+mean.results
+
+# compare
+iris %>%
+  group_by(Species) %>%
+  summarise_all(mean)
+```
+
+Sometimes you don't want to loop to perform a specific (pre-defined) number of tasks. Sometimes you want to loop until an event occurs. For example, you might stop when the data point of interest is identified, or when a specific time is reached, or when until the user clicks "quit" (yes--you can make a GUI in R). In situations like this when the stopping point is not well-defined, you might want to use a while loop in R.
+
+It's pretty straight-forward syntax:
+
+```{r, eval = FALSE}
+while (condition) {
+  do something
+}
+```
+Here's a simple example that is essentially identical to a `for` loop:
+
+```{r}
+i <- 1
+while (i <=  5) {
+    print(c("This is loop number", i))
+    i <- i + 1
+}
+```
+Now let's try an example where a `while` loop makes more sense. The loop generates Gaussian random numbers with a mean of 0 and a standard deviation of 1.  The loop quits when a number is generated that is more than 4 standard deviations from the mean. On average, this will occur about 1 in 10,000 attempts. 
+
+```{r}
+i <- 1
+z <- 0
+while (abs(z) < 4) { #abs means "absolute value" & takes care of neg or pos numbers
+    z <- rnorm(1, 0, 1) #generates a single random number of mean = 0 and sd = 1
+    i <- i + 1
+}
+print(paste("It took",i,"replicates to find a Gaussian random number more than",
+            "4 standard deviations from the mean"))
+```
+
+### Exercise
+* List all possible 3 card hands from a standard card deck with no jokers. Cards can be annotated with character vectors. For example the hearts would be `hearts <- c(paste0(c(2:10),"H"),"JH","QH","KH","AH")`.
+
+```{r, include = FALSE, eval = FALSE}
+###Solution###
+hearts <- c(paste0(c(2:10),"H"),"JH","QH","KH","AH")
+diamonds <- c(paste0(c(2:10),"D"),"JD","QD","KD","AD")
+clubs <- c(paste0(c(2:10),"C"),"JC","QC","KC","AC")
+spades <- c(paste0(c(2:10),"S"),"JS","QS","KS","AS")
+cards <- c(hearts,diamonds,clubs,spades)
+
+hands <- data.frame(card1 = vector(), card2 = vector(), card3 = vector())
+w <- 0
+for (i in 1:50){
+  for (j in (i+1):51){
+    for (k in (j+1):52){
+      w <- w + 1
+      hands[w,] <- c(cards[i], cards[j], cards[k])
+    }
+  }
+}
+
+head(hands, 15)
+#check dimensions
+nrow(hands)
+
+#confirm with theoretical dimensions
+choose(52,3)
+```
+
+
+# ggplot
+
+So far, we've seen how to do some 'quick and dirty' plots with plotting functions like `hist()` and `plot()` which are built in to base R. The tidyverse has its own paradigm for creating graphics called `ggplot`. The advantage to using `ggplot` over base R functions is that the gpplot paradigm comes with many built in defaults to make your plots look nice without having to code too much customization. Overall, the degree to which you can customize ggplot graphics is less than in base R, but it's soo much easier. As we go through some examples, note how ggplot has automatically chosen colour schemes, scales, and axis labels for us, without us specifying any of this. Of course, we can override these, but having some usable defaults built in makes it very fast to produce nice plots.
+
+## What is ggplot?
+The "gg" in "ggplot" stands for "grammar of graphics", and the basic idea is this: when you plot data, you are creating a visual representation of numeric or categorical information.  The most basic example is a scatterplot; the position of a point on the x axis reflects one variable, and the position on the y axis reflects another variable.  That works well for simple examples, but often we have a large number of parameters that we'd like to display.  Ideally, we want a clear, flexible framework that maps arbitrary variables to arbitrary visual elements such as x position, y position, size, color, shape, transparency, etc.  This would let us rapidly explore different ways of looking at our data to see what is the most helpful.  `ggplot` provides this sort of framework, with a clean mapping of variables to output.
+
+Let's illustrate this using one of R's built in data sets, `mpg` which has a variety of data about different models of cars:
+
+```{r}
+glimpse(mpg)
+```
+\newpage
+## Scatterplots
+We can start by plotting city verus highway fuel economy.  `ggplot()` wants us to provide some data, a mapping of the data onto parameters, and a geometry with which to render that data.
+
+```{r}
+ggplot(mpg, aes(x = cty, y = hwy)) +
+  geom_point()
+```
+
+Notice that our `ggplot()` command had three parts: data, a set of "mapping" aesthetics (x and y in this case), and a way of rendering the geometry (`geom_point`).  This doesn't look like our ordinary function calls, but you can think of the `+` as saying "OK, add this geometry rendering to the plot that I just made".
+
+The "aesthetics" that are specified within the `aes()` call are where the real fun starts.  The aesthetics for x and y can be specified in a global `aes()` call in the main `ggplot()` call, and further customization for colour, size, shape etc can be specified inside the geometry call. For example, let's look at city vs highway fuel economy again, and map the year of the model to color.
+
+```{r}
+ggplot(mpg, aes(x = cty, y = hwy)) +
+  geom_point(aes(colour = year))
+```
+
+Notice how that is different than specifing colour *outside* of the `aes()` call:
+
+```{r}
+ggplot(mpg, aes(x = cty, y = hwy)) +
+  geom_point(colour = "red")
+```
+
+Notice that `ggplot()` has made the incorrect inference that the vehicle year should be considered a continuous variable. We can fix this by explicitly making the car year number a factor. We can also combine multiple aesthetics:
+
+```{r}
+mpg %>% 
+  mutate(year = factor(year), cyl = factor(cyl)) %>%
+  ggplot(aes(x = cty, y = hwy, col = year, shape = cyl)) +
+  geom_point()
+```
+
+## Line Plots
+
+There are dozens of geometries at your disposal. Some other common useful ones are `geom_line` and `geom_smooth`.
+
+```{r}
+iris %>%
+  ggplot(aes(x = Sepal.Width, y = Sepal.Length, col = Species)) +
+  geom_line() + 
+  geom_point()
+```
+
+We can `geom_smooth()` a line if it looks too choppy:
+```{r}
+iris %>%
+  ggplot(aes(x = Sepal.Width, y = Sepal.Length, col = Species)) +
+  geom_smooth()
+```
+
+Of note, we can map more than one aesthetic:
+```{r}
+ggplot(mpg, aes(x = cty, y = hwy)) +
+  geom_smooth(aes(linetype = factor(year)), level = 0.2)
+```
+
+## Bar Plots
+
+`geom_bar` has built in stats, with the default being 'count', for which no y aesthetic needs to be specified, as the y axis will display the number of observations for each x axis value:
+```{r}
+ggplot(mpg, aes(x = manufacturer)) +
+  geom_bar(aes(fill = class)) +
+  theme(axis.text.x = element_text(angle = 65, vjust = 0.6))
+```
+Note we used 'fill' here to colour the bars rather than 'colour' - what happens if you use 'colour' instead?
+
+And of course, good old histograms get their own geom:
+```{r}
+ggplot(mpg, aes(x = cty)) +
+  geom_histogram(aes(fill = factor(cyl)), position = "dodge")
+```
+
+## And more!
+
+`ggplot()` objects can be layered and layered upon, including multiple geoms, labels, custom scales, and more. Here's just one example:
+
+```{r}
+ggplot(mpg, aes(manufacturer, cty))+
+  geom_boxplot(aes(fill = manufacturer),
+               outlier.shape = NA)  + 
+  geom_dotplot(binaxis = 'y', 
+               stackdir = 'center', 
+               dotsize = .3, 
+               fill = "black",
+               col = "black") +
+  theme(axis.text.x = element_text(angle = 65, vjust = 0.6)) + 
+  labs(title="Box plot + Dot plot", 
+       subtitle="City Mileage vs Make",
+       x = "Make of Vehicle",
+       y = "City Mileage",
+       legend = "")
+```
+
+## Multipanel Plots
+
+If you want to produce multi-panel plots that are based on a factor within your data set, this can be accomplished using the `facet_wrap()` function:
+
+```{r}
+ggplot(mpg, aes(x = displ, y = hwy)) + 
+  geom_point() + 
+  facet_wrap(~ class)
+```
+
+You can  use `facet_grid()` if you want to produce all possible combinations of two factors in your data:
+
+```{r}
+ggplot(mpg, aes(x = displ, y = hwy)) + 
+  geom_point() + 
+  facet_grid(drv~class)
+```
+
+And if you just want to glue images together that may not originate from a single `ggplot()` command, this can be achieved with the `plot_grid()` function from the cowplot package.
+
+```{r}
+library(cowplot)
+p1 <- ggplot(mpg, aes(x = displ, y = hwy, colour = class)) + 
+  geom_point()
+p2 <- ggplot(mpg, aes(x = hwy, fill = class)) + 
+  geom_density(alpha = 0.5)
+plot_grid(p1, p2, nrow=2, labels=c('A', 'B'))
+```
+
+There is so much more you can do with `ggplot()` that we won't have time to cover. If you are looking for more ways to display data and customize your plots, check out one of the many [ggplot 'cheat sheets'](https://github.com/rstudio/cheatsheets/blob/master/data-visualization-2.1.pdf) available online. You can also start by going through the data visialization chapter of Hadley Wickham's book [R for Data Science](https://r4ds.had.co.nz/data-visualisation.html) or see the [R Graphics Cookbook](https://r-graphics.org/) by Winston Chan. 
+
+### Exercise
+* Using the mpg dataset or any of the other datasets we've used so far, spend some time playing around with various geoms and aesthetics. Remember you can type `?geom_smooth` or similar to bring up the documentation in RStudio. Can you figure out how to make a "violin" plot?
+
+```{r, echo=FALSE}
+##Solution (example)
+
+ggplot(mpg, aes(class, cty))+
+  geom_violin(aes(fill=class)) + 
+  labs(title="Violin plot") +
+  theme(axis.text.x = element_text(angle=65, vjust=0.6))
+
+```
+
+## Saving a plot
+We have a lot of flexibility about saving our plots. We can save in bmp, jpg, png, tiff and in vector formats of svg, ps and pdf.  This is very good.
+
+Unfortunately, the syntax between Mac and Windows is a little different.
+
+### Saving as a jpeg , png, tiff or bmp.
+Execute the following:
+  
+```{r, eval = FALSE}
+jpeg(filename = "violin_plot.jpg",  width = 10, height = 10, units = "in", res = 200)
+ggplot(mpg, aes(class, cty))+
+  geom_violin(aes(fill=class)) + 
+  labs(title="Violin plot") +
+  theme(axis.text.x = element_text(angle=65, vjust=0.6))
+dev.off()
+```
+
+On Macs this translates to:
+  
+```{r, eval = FALSE}
+quartz(file = "violin_plot.jpg", width = 10, height = 10, type = "jpg", dpi = 200)
+ggplot(mpg, aes(class, cty))+
+  geom_violin(aes(fill=class)) + 
+  labs(title="Violin plot") +
+  theme(axis.text.x = element_text(angle=65, vjust=0.6))
+dev.off()
+```
+
+If you want output that is "vector" in nature:
+
+```{r, eval = FALSE}
+postscript(file = "violin_plot.ps", width = 10, height = 10) 
+ggplot(mpg, aes(class, cty))+
+  geom_violin(aes(fill=class)) + 
+  labs(title="Violin plot") +
+  theme(axis.text.x = element_text(angle=65, vjust=0.6))
+dev.off()
+```
+
+You will notice that the aspect ratio needs adjustment for the ps output. You can do pdf also for example:
+  
+```{r, eval = FALSE}
+pdf(file = "violin_plot.pdf", width = 10, height = 10) 
+ggplot(mpg, aes(class, cty))+
+  geom_violin(aes(fill=class)) + 
+  labs(title="Violin plot") +
+  theme(axis.text.x = element_text(angle=65, vjust=0.6))
+dev.off()
+```
+
+
+# File Operations
+You are going to need to read files in, as you have done with `read.csv()`. You are going to need to write files--whether it is the statistical output or perhaps the content of a dataframe that you have produced through your efforts. Sometimes you need to remove files or move files too. All of these file operations are possible from within R.  You can also both read and write xls or xlsx files, which we will touch on also. This stuff is dry but it is necessary. 
+
+What files are in the current working directory? This does the trick, as we have discussed.
+
+```{r, eval = FALSE}
+list.files()
+```
+
+If you want the figures in a specific directory, you can put it in the parentheses as in `dir_ls(path = "Name_of_Subdirectory")`.  You can also provide the "full path" of a directory too.
+
+```{r, eval = FALSE}
+list.files(path = "/")
+# should give you all the files in the C: directory in windows
+#   and the root directory in Linux and Mac OSX
+```
+Let's suppose we want to see if a file is present--so that we don't try to perform an operation on a non-existent file, or to ensure that some other event is complete.  We can ask as follows:
+
+```{r}
+file.exists("Data_Files/Potassium.csv")
+file.exists("Data_Files/Data_Set_3.1459.csv")
+```
+
+We might want to create a directory and then move or copy some files into it.
+
+```{r, eval = FALSE}
+dir.create("junk_here")
+
+if (file.exists("junk_here")) {
+  file.copy("Data_Files/Potassium.csv", "junk_here/bla.csv")
+} else {
+  print("Hey -- That directory did not get created")
+}
+```
+
+Note that if you provide `file_copy()` a vector of file names, `file_copy()` will copy all the files in the vector.
+
+### Exercise
+1.  You have a number of .csv files used in this course in the directory "Data_Files". Create a new directory called "Data_Files_Copy" and use `file_copy()` to copy all of the .csv files into the new "Data_Files_Copy" directory. Make sure you copy *only* the .csv files.
+
+```{r, include = FALSE}
+###Solution###
+dir.create("Data_Files_Copy")
+my.list <- list.files(path = "Data_Files", pattern = "*.csv")
+file.copy(from = file.path("Data_Files", my.list), to = file.path("Data_Files_Copy", my.list)) #Destination does not need to be a vector ... can be a directory
+```
+
+2. Rename the files created in (1) appending today's date to the file name so that the filenames look like this name-yyyy-mm-dd.csv. Make sure you do this in a generic fashion so that it will work regardless of how many files there are and what their initial names are. Use `Sys.Date()` to get the date. Use the `gsub()` command to replace ".jpg" with "yyyy-mm-dd.jpg".} 
+
+```{r, include = FALSE}
+###Solution###
+old_names <- list.files("Data_Files_Copy", pattern = "*.csv")
+new_names <- str_replace(old_names, ".csv", str_c("-", Sys.Date(), ".csv", sep = ""))
+file.rename(file.path("Data_Files_Copy", old_names), file.path("Data_Files_Copy", new_names))
+```
+
+## Writing a data frame to a csv file
+
+Suppose you have done a bunch of work and you want to write it to a file so that you can share it or open it in a spreadsheet program.
+
+For the sake of showing you what we mean, let's create a fake-o dataframe.
+
+```{r}
+subjects <- 1:10
+secret_identity <- c("Clark", "Peter", "Bruce", 
+                     "David", "Orin", "Dick", 
+                     "Diana", "Steve", "Tony", "Barry")
+hero <- c("Superman","Spiderman","Batman",
+          "Hulk","Aquaman","Robin the Boy Wonder",
+          "Wonder Woman","Captain America","Iron Man","Flash")
+hero_data <- data.frame(subjects, secret_identity, hero)
+write_csv(hero_data, "hero_data.csv")
+```
+
+Now go confirm that the file is there and open it in a spreadsheet program.
+
+But what if you forgot one superhero and you needed to append? You can append the individual record to the existing file. Note that `col.names` is turned off and `append` is turned on.
+
+```{r}
+subjects <- 1:10
+secret_identity <- c("Clark", "Peter", "Bruce", 
+                     "David", "Orin", "Dick", 
+                     "Diana", "Steve", "Tony", "Barry")
+hero <- c("Superman","Spiderman","Batman",
+          "Hulk","Aquaman","Robin the Boy Wonder",
+          "Wonder Woman","Captain America","Iron Man","Flash")
+hero_data <- data.frame(subjects, secret_identity, hero)
+write_csv(hero_data, "hero_data.csv")
+
+forgotten_hero <- data.frame(subjects = 11,
+                         secret_identity = "Kara",
+                         hero = "Supergirl")
+#you have to create it in an object of 1 column and 3 rows
+write_csv(forgotten_hero, "hero_data.csv", append = TRUE)
+```
+
+Using this technique, you can add data to a file from a loop as the data is found to meet specific predefined criteria. For example, a resident and DH pulled all the hyponatremia occurrences from the LIS in 2014 and then looked for samples showing correction of Na^+^ that is clinically too rapid ($>8$ mmol/L in less than 24h). As these records were found, they were written to a file. 
+
+## Writing xlsx files
+Writing xlsx files with multiple sheets is quite easy also using the package xlsx. Note that there are multiple packages that can do this. You can also create fancy Excel files with formatting, bold, colored fonts and fill colors.  This would only be of interest if you were writing automated reports for those folks for whom the appearance matters more than the content.
+
+```{r, eval = FALSE}
+install.packages("openxlsx")
+```
+```{r}
+library(openxlsx)
+hero.list <- list(Main_Heros = hero_data,
+                  Forgotten_Heros = forgotten_hero)
+write.xlsx(hero.list, file = "hero_data.xlsx", row.names = FALSE)
+```
+
+The same package allows you to read in a specific sheet from an xlsx file starting and finishing at a specific row. 
+
+
+# Projects
+
+## Option 1: Lab Utilization Investigation
+
+This file contains some very nice clean data about lab tests at a *totally fictional* hospital:
+```{r}
+lab.data <- read.csv("Data_Files/lab_data.csv")
+glimpse(lab.data)
+```
+
+Load it into your R session and see if you can produce a report on some KPIs (key performance indicators) for the lab:
+
+* Start by surveying your data - what time period does it cover? How many tests do you have information on?
+* What is the median and 90th percentile for Scheduled to Result turn around time for each test?
+* Break it up by location type and create a nice plot (perhaps boxplot or violin plot or time-series plots) of TAT for the Emergency room versus Inpatients.
+* Are there certain hours of the day when the turn around time suffers? Days of the week?
+
+Then see if you can find some utilization insights:
+
+* From what location type do the bulk of orders for each test originate?
+* Which doctors order the most tests overall? Which doctors order the most tests per patient seen?
+* How many tests are ordered on each patient?
+
+```{r, echo = FALSE, eval = FALSE}
+library(readr)
+library(lubridate)
+library(dplyr)
+library(ggplot2)
+lab.data %>% mutate_if(is.character, as.factor) -> lab.data
+lab.data %>% summary
+
+##### Start by surveying your data - what time period does it cover? How many tests do you  have information on?
+
+#count the tests
+table((lab.data$TEST))
+
+##### What is the median and 90th percentile for scheduled to Result turn around time for each test?
+
+#calculate the TAT column
+lab.data %>% mutate(TAT = difftime(RESULT_DATE, SCHEDULED_DATE, units = "min")) -> lab.data
+
+#calculate 50th and 90th percentiles
+lab.data %>% 
+  group_by(TEST) %>%
+  summarize(perc50 = median(TAT), perc90 = quantile(TAT, probs = 0.9))
+
+##### Break it up by location type and create a nice plot (perhaps boxplot or violin plot or time-series plots) of TAT for the Emergency room versus Inpatients.
+
+#TAT visualization boxplot
+lab.data %>%
+  filter(LOCATION_TYPE == "Emergency" | LOCATION_TYPE == "Inpatient") %>%
+  ggplot(aes(x = LOCATION_TYPE, y = as.numeric(TAT), fill = LOCATION_TYPE)) +
+  geom_violin() + 
+  geom_boxplot(width = 0.1, outlier.shape = NA) + 
+  ylim(c(0,500))
+
+#TAT visualization time series
+lab.data %>%
+  filter(LOCATION_TYPE == "Emergency" | LOCATION_TYPE == "Inpatient") %>%
+  ggplot(aes(x = COLLECTION_DATE, y = as.numeric(TAT), col = LOCATION_TYPE)) +
+  geom_point(size = 0.1) + 
+  geom_smooth() +
+  ylim(c(0,500))
+
+##### Are there certain hours of the day when the turn around time suffers? Days of the week? Add hour of day and day of week
+
+lab.data %>%
+  mutate(hod = hour(COLLECTION_DATE),
+         dow = weekdays(COLLECTION_DATE)) -> lab.data
+
+#Examine by hour of day
+lab.data %>%
+  filter(LOCATION_TYPE == "Emergency" | LOCATION_TYPE == "Inpatient") %>%
+  ggplot(aes(x = as.numeric(hod),y = as.numeric(TAT))) +
+  geom_point() +
+  geom_smooth() +
+  ylim(c(0,500))
+
+#Examine by day of week
+lab.data %>%
+  filter(LOCATION_TYPE == "Emergency" | LOCATION_TYPE == "Inpatient") %>%
+  ggplot(aes(x = factor(dow), y = as.numeric(TAT))) +
+  geom_violin() + 
+  geom_boxplot(width = 0.1) +
+  ylim(c(0,500))
+
+##### From what location type do the bulk of orders for each test originate?
+
+lab.data %>%
+  group_by(LOCATION_TYPE) %>%
+  summarize(count = n())
+
+# more granular
+lab.data %>%
+  group_by(TEST, LOCATION_TYPE) %>%
+  summarize(count = n())
+
+##### Which doctors order the most tests overall? Which doctors order the most tests per patient seen?
+
+# number of tests
+lab.data %>%
+  group_by(ORDERING_PHYSICIAN) %>%
+  summarize(testcount = n()) %>% 
+  arrange(desc(testcount))
+
+# number of tests per patient
+lab.data %>%
+  group_by(ORDERING_PHYSICIAN) %>%
+  summarize(testcount = n(), num_patients = length(unique(ID))) %>%
+  mutate(countsperpatient = testcount/num_patients) %>%
+  arrange(desc(countsperpatient))
+
+##### How many tests are ordered on each patient?
+lab.data %>%
+  group_by(ID) %>%
+  summarize(count = n()) %>%
+  arrange(desc(count))
+  
+# Some more specifics are possible - just for demonstration
+  lab.data %>%
+    group_by(ID) %>%
+    summarize(Total = n()) -> Totals
+  
+  lab.data %>%
+    group_by(ID, TEST) %>%
+    summarize(count = n()) %>%
+    pivot_wider(names_from = TEST, values_from = count) %>%
+    left_join(.,Totals, by = "ID")
+```
+
+## Option 2: Clean Up Some Research Data -- Bad Medicine
+
+This is raw data from a study published on a familial hypercholesterolemia cohort from 2005. The birthdates are not real. The data were hand-transcribed by a resident into Excel.
+
+### Birthday Blues
+
+If you would rather jump straight to analyzing cleaned data, run the solution code in the .Rmd file and then jump down to the next section.
+
+* Read in the xlxs file entitled "badly_entered_data.xlxs". 
+* Look at the DOB format using `head()` or `glimpse()`
+* Parse the birthdays using the appropriate lubridate function and append them as a new column.
+* What does the error message mean?
+* Have a look at what lubridate has done. Why did this happen? How could this be avoided? Can you suggest a fix? Consider `str_c()` or `paste()`.
+* Perform the parsing again. What has happened this time?
+* Determine what is still wrong with the problematic birthdates.
+* Can you come up with a programmatic way of salvaging the data other than fixing it by hand?
+
+```{r, echo = FALSE, eval = FALSE}
+# Read in the xlxs file entitled "badly_entered_data.xlxs"
+library(readxl)
+library(stringr)
+library(lubridate)
+library(dplyr)
+library(tidyr)
+fh <- read_excel("Data_Files/badly_entered_data.xlsx")
+
+# Look at the DOB format using `head()` or `glimpse()`
+head(fh) #looks like ymd() will work
+
+# Parse the birthdays using the appropriate lubridate function and append them as a new column.
+
+fh <- mutate(fh, DOB_parsed = ymd(DOB)) 
+head(fh) #uh oh
+fh <- fh[,-9] #start over
+
+# Have a look at what lubridate has done. Why did this happen? How could this be avoided? Can you suggest a fix? Consider `str_c()` or  `paste()`
+
+fh$DOB2 <- paste0("19",fh$DOB)
+
+# Perform the parsing again. What has happened this time?
+fh <- mutate(fh,DOB2_parsed = ymd(DOB2))
+# But 32 failed to parse ... why?
+
+# Determine what is still wrong with the problematic birthdates.
+# Let's look which ones it is. 
+bad.dates.indices <- which(is.na(fh$DOB2_parsed))
+bad.dates <- fh[bad.dates.indices,]
+# These were entered as dmy()! 
+
+# Can you come up with a programmatic way of salvaging the data other than fixing it by hand?
+
+fh <- fh[,-c(9,10)] #start over again
+dates1 <- data.frame(dmy_dates = fh$DOB[bad.dates.indices])
+dates1 <- separate(dates1,
+                   dmy_dates,
+                   into = c("day","month","year"),
+                   sep = "-")
+dates1$year <- str_c("19",dates1$year)
+dates1 <- str_c(dates1$year,dates1$month,dates1$day, sep = "-")
+
+dates2 <- data.frame(ymd_dates = fh$DOB[-bad.dates.indices])
+dates2 <- str_c("19",dates2$ymd_dates, sep ="")
+
+fh$DOB2[bad.dates.indices] <- dates1
+fh$DOB2[-bad.dates.indices] <- dates2
+fh$DOB2 <- ymd(fh$DOB2)
+
+# That's the long way. Here is the short way
+dates1 <- parse_date_time2(fh$DOB, "ymd", cutoff_2000 = 0L)
+dates2 <- parse_date_time2(fh$DOB[bad.dates.indices], "dmy", cutoff_2000 = 0L)
+dates1[is.na(dates1)] <- dates2
+fh$DOB3 <- dates1
+```
+
+### Descriptive Analysis
+
+* In this data set 1 codes as Male and 2 codes as Female. How many males and females are there?
+* If the study analyis was performed on 30-Aug-2003, calculate the ages of the patients in years on that date and append it as a new column.
+* Determine the median and IQR of the patients in this study by sex.
+* Is there a significant difference in the distribution of the ages of males and females? You can look at the functions `t.test()` and `wilcox.test()` as appropriate.
+* Compare the distribution of cholesterol results between males and females and determine if there is a significant difference.
+* Calculate the LDL-cholesterol and append as a new column.
+
+```{r, echo = FALSE, eval = FALSE}
+# In this data set 1 codes as Male and 2 codes as Female. How many males and females are there?
+fh$Sex <- factor(fh$Sex)
+summary(fh$Sex)
+
+# If the study analyis was performed on 30-Aug-2003, calculate the ages of the patients in years on that date and append it as a new column.
+analysis.date <- ymd("2003-08-30")
+fh$Age <- difftime(analysis.date, fh$DOB3, units = "weeks") %>%
+  as.numeric()
+fh$Age <- fh$Age/52.25
+
+# Determine the median and IQR of the patients in this study by sex.
+fh %>% 
+  group_by(Sex) %>%
+  summarize(median = median(Age, na.rm = TRUE), IQR = IQR(Age, na.rm = TRUE))
+
+#Is there a significant difference in the distribution of the ages of males and females? You can look at the functions `t.test()` and `wilcox.test()`
+library(ggplot2)
+  fh %>%
+  ggplot(aes(x=Age, fill = Sex)) + 
+  geom_histogram(alpha=0.5)
+# maybe
+  
+m.ages <- filter(fh, Sex == 1)$Age
+f.ages <- filter(fh, Sex == 2)$Age
+wilcox.test(m.ages, f.ages)
+# yes
+
+# Compare the distribution of cholesterol results between males and females and determine if there is a significant difference.
+fh %>%
+  ggplot(aes(x = TC, fill = Sex)) + 
+  geom_histogram(alpha=0.5) + 
+    xlim(0,20)
+
+fh %>%
+  ggplot(aes(x = log(TC), fill = Sex)) + 
+  geom_histogram(alpha=0.5) + 
+    xlim(0,5)
+
+m.CHO <- filter(fh, Sex == 1)$TC
+f.CHO <- filter(fh, Sex == 2)$TC
+
+summary(m.CHO)
+summary(f.CHO)
+
+wilcox.test(m.CHO, f.CHO)
+t.test(log(m.CHO), log(f.CHO))
+# yes
+
+# Calculate the LDL-cholesterol and append as a new column.
+fh <- mutate(fh, LDL = TC - HDL - TRIG/2.2)
+```
+
+### A Physiology Question
+
+There is a body of literature that says that lipoprotein(a) is unrelated to LDL cholesterol concentration because it is regulated through an independent pathway.
+
+* Produce a correlation plot of Lp(a) versus LDL-C.
+* Is there a statistically significant correlation?
+* What is the regression equation of Lp(a) as a function of LDL-C? Look at `lm()`
+* Does the data support or refute the traditional claim?
+
+
+```{r, echo = FALSE, eval = FALSE}
+# Produce a correlation plot of Lp(a) versus LDL-C.
+fh %>%
+  ggplot(aes(x = LDL, y = `Lp(a)`)) + 
+  geom_point() + 
+  xlim(0,20)
+
+# Is there a statistically significant correlation?
+cor.test(fh$LDL, fh$`Lp(a)`)
+
+# What is the regression equation of Lp(a) as a function of LDL-C? Look at `lm()`
+lin.mod <- lm(`Lp(a)` ~ LDL, data = fh)
+summary(lin.mod)
+
+# Does the data support or refute the traditional claim?
+fh %>%
+  ggplot(aes(x = LDL, y = `Lp(a)`)) + 
+  geom_point() + 
+  xlim(0,20) + 
+  geom_smooth(method='lm',formula=y~x)
+# pretty unimpressive... supports the traditional view
+
+# Maybe by quantile of LDL?
+library(gtools)
+fh %>%
+  mutate(quartile = quantcut(LDL, q = 4, na.rm = TRUE)) %>%
+  filter(!is.na(quartile)) %>%
+  ggplot(aes(x = quartile, y = `Lp(a)`, fill = quartile)) + 
+  geom_boxplot() +
+  geom_jitter(position=position_jitter(0.1))
+# still unimpressive
+```
+
+## Option 3: Flat File Formatting
+
+We are going to take flat file export data from an SCIEX API 5000 mass spectrometer and reformat the flat file for upload to the SunQuest lab information system. The process will be nearly identical for any instrument and LIS combination.  The file you want to import is called API_Flat_File.csv. Before you do, open the file in a text editor or Excel. You will notice that the first 26 lines contain useless information, which you want to exclude when you read the file in. In fact, if you don't exclude them, R won't interpret the shape of the dataframe properly and this will cause confusion and delay, as Sir Topham Hatt says.  The other thing to note is that this is a tab-delimited text file, not a comma-delimited file. So, sep = "\\t" is a required parameter for `read_delim()`, not sep = ",". Have a look at `help(read_delim)` to learn how to exclude the initial lines of a file--you want to look at the example of the skip option.
+
+You want to pull out three relevant columns, which are named "Sample Name", "Analyte Peak Name" and "Calculated Concentration (pmol/L)." It is better to address them by their name rather than their number because changes in AB SCIEX software could change which column number you are pulling...but not likely the name. Build a new dataframe containing these three columns.
+
+This new dataframe contains extraneous information. You only need to up load the results of the quantifier ion ("Aldo 1"), not the qualifier ion ("Aldo 2"). Use `str_which()` to identify the rows containing "Aldo 1" data. Filter out the rows with "Aldo 1" data and assign this to a new dataframe. 
+
+Your dataframe still contains stuff that the LIS cannot digest. The patient samples have "Sample Name" in the format E followed by 10 integer digits. We only want these rows. Use `str_which()` to identify the rows, filter them out, and assign them to a new variable. In this simple example, it is sufficient to search based on the pattern "E", but in general this would not be a good idea.  In general you would use a regular expression to look for the pattern of E followed by 10 repetitions of the pattern 0-9.  The search term, in this case, would be ${}^\wedge$E[0-9]{10}' (Starts with E followed by 0-9 exactly 10 times).  Filter out the patient data and assign to a new dataframe.
+
+Use `str()` to examine the "Calculated Concentration" column. You will see that we have a problem. It is not numeric because to the undetectable results which come across as "No Peak".  We need to force this column to be numeric while assigning a concentration of 0 to the "No Peak" results. Sometimes the instrument sends other non-numeric terms over for undetectable results (like "< 0"). So, the safest thing to do is to convert the whole column to numeric and then replace the NA results with 0. 
+
+If you do not convert to character first, terrible things will befall you ... you will create results corresponding to the integer of the level R assigned to the column when it was read it. Oh, the horror.  Apply `as.numeric(as.character())` to the Calculated.Concentration column to generate numeric data, assigning it to a temporary vector. This vector will contain NA results. Replace the NAs with 0 in this manner:
+
+```{r, eval = FALSE}
+temp <- replace_na(temp,0)
+```
+
+Now overwrite the `Calculated Concentration (pmol/L)` field of your dataframe with the numeric data in your temp vector. Now we are almost done.
+
+SunQuest wants its upload format like this:
+
+`API,E2660178393,ALD,230`
+
+`API,E2660172438,ALD,95`
+
+`API,E2660174731,ALD,634`
+
+`API,E2660174643,ALD,217`
+
+API is the instrument name, the E-numbers are the patient IDs, ALD is the testcode and the numbers afterward are the results. Two of these columns are built already in your dataframe. Build the other two with `rep("API",n)` and `rep("ALD",n)` where `n` is the number of rows. Build a final dataframe corresponding to the required format (immediately above) and write it to a file with a comma as separator. Name the file "processed_flat_file.txt" so that when you click on it, it does not open in Excel, only in a text editor.
+
+```{r, include = FALSE, eval = FALSE}
+###Solution###
+library(readr)
+ms.out <- read_delim(file = "Data_Files/API_Flat_File.csv",
+                   skip = 26,
+                   delim = "\t")
+
+#pull out only the columns of interest
+ms.out <- dataframe(Name = ms.out$`Sample Name`,
+                 MRM = ms.out$`Analyte Peak Name`,
+                 Conc = ms.out$`Calculated Concentration (pmol/L)`)
+
+          
+samples <- str_which(ms.out$Name,
+                     pattern = "^E[0-9]{10}")
+
+ms.out <- ms.out[samples,]
+
+#pull out MRM1
+MRM1 <- str_which(ms.out$MRM, pattern = "Aldo 1")
+ms.out <- ms.out[MRM1,]
+
+#convert conc to numeric
+ms.out$Conc <- as.numeric(ms.out$Conc)
+ms.out <- mutate(ms.out, Conc = replace_na(ms.out$Conc,0))
+#alternatively
+#ms.out$Conc[is.na(ms.out$Conc)] <- 0
+
+output <- dataframe("API", #replicates itself automatically
+                 ms.out$Name,
+                 "ALD", #replicates itself automatically
+                 ms.out$Conc)
+
+#write the processed file
+write_csv(output,
+          path = "processed_flat_file.txt",
+          col_names = FALSE)
+```
+
+# Appendix: Old Skool Base R Plotting
+
+We are going to learn how to make a very high quality publication-read figures that are completely customizable and in any image format.  While the techniques described in this lesson are not as powerful in and of themselves than those of the tidyverse, they are far more customizable. 
+
+```{r, include = FALSE}
+set.seed(42)
+```
+
+```{r}
+x <- runif(75, 0, 100) # produces 75 random numbers between 0 and 100.
+y <- 1.1 * x + rnorm(75,0,3) #add some bias and some scatter
+```
+
+The most rudimentary default plot is created by 
+
+```{r}
+plot(x,y)
+```
+
+First, we will want to make better axis labels. This is easy. It is accomplished, for example, by adding xlab = "Method 1 (nmol/L)" to the x-axis and corresponding text to the y-axis. 
+
+```{r}
+plot(x,y,xlab = "Method 1 (nmol/L)", ylab = "Method 2 (nmol/L)")
+```
+
+The title can be altered with the parameter main = "My Cool Title".
+
+```{r}
+plot(rep((1:5),5),c(rep(5,5),rep(4,5),rep(3,5),rep(2,5),rep(1,5)),pch = 1:25,
+     xlab = "",ylab = "")
+```
+
+The parameter that alters the point character is called pch and you can set its value between 1 and 25.  The colour of the points is set with col = "the color I want". Characters 21-25 have fill colors in addition to outline colours and these can be set with the parameter bg.
+
+```{r}
+plot(x,y,xlab = "Method 1 (nmol/L)", ylab = "Method 2 (nmol/L)", main = "My Cool Title",
+     pch = 21, col = "blue", bg = "orange")
+```
+
+Your point colors can be in a vector if you want and the colours will cycle through the vector:
+
+```{r}
+plot(x,y,xlab = "Method 1 (nmol/L)", ylab = "Method 2 (nmol/L)", main = "My Cool Title",
+     pch = 19, col = c("red", "gold","green") )
+```
+
+In the event that you want the pch to be a letter...feel free!
+
+```{r}
+plot(x,y,xlab = "Method 1 (nmol/L)", ylab = "Method 2 (nmol/L)", main = "My Cool Title",
+     pch = c("M","I","C","K","E","Y"), col = c("red", "gold","green") )
+```
+
+You can see a full chart of R's colours here:
+<research.stowers-institute.org/efg/R/Color/Chart/ColorChart.pdf>
+
+
+You can address colours using their hexadecimal code if you want.
+
+```{r}
+plot(x,y,xlab = "Method 1 (nmol/L)", ylab = "Method 2 (nmol/L)", main = "My Cool Title",
+     pch = 19, col = "#483D8B") #slateblue
+```
+
+Another cool thing you can do is make the points semitransparent by appending a number in hexadecimal after the hex colour code from 00 to FF (256).  A 00 makes the point invisible and FF makes it full transparent. A value of 80 makes a nice semitransparent look for high density plots.
+
+```{r}
+plot(x,y,xlab = "Method 1 (nmol/L)", ylab = "Method 2 (nmol/L)", main = "My Cool Title",
+     pch = 18, col = "#483D8B80") #slateblue
+```
+
+You can make your points bigger with the parameter cex.  A value of 1 is default. 2 is double sized and 0.5 is half-sized etc.
+
+```{r}
+plot(x,y,xlab = "Method 1 (nmol/L)", ylab = "Method 2 (nmol/L)", main = "My Cool Title",
+     pch = 18, col = "#483D8B80", cex = 2) #slateblue
+```
+
+The size of the axis annotation is adjusted by cex.axis and the axis labels with cex.lab
+
+```{r}
+plot(x,y,xlab = "Method 1 (nmol/L)", ylab = "Method 2 (nmol/L)", main = "My Cool Title",
+     pch = 18, col = "#483D8B80", cex = 2, cex.axis = 1.25, cex.lab = 1.5) #slateblue
+```
+
+Not surprisingly, there are axis.col and lab.col parameters to.
+
+```{r}
+plot(x,y,xlab = "Method 1 (nmol/L)", ylab = "Method 2 (nmol/L)", main = "My Cool Title",
+     pch = 18, col = "#483D8B80", cex = 2, cex.axis = 1.25, cex.lab = 1.5, col.axis = "green",
+     col.lab = "coral") #slateblue
+```
+
+For now we will stop, but you get the picture that all plot parameters are adjustable. 
+
+## Connecting the dots
+In other kinds of plots, we might want our dots connected--like in a stability study perhaps.
+
+Suppose you are looking at how testosterone increases with time exposed to the gel in a gel separator tube. This is mock data, but the phenomenon is real. 
+
+```{r}
+times <- seq(from = 0, to = 48, by = 8)
+testo <- seq(from = 0.5, to = 0.9, length.out = 7) + rnorm(7,0,0.05)
+plot(times,testo)
+```
+
+But to make a line use "l"
+
+```{r, results = "hide"}
+plot(times,testo, type = "l")
+```
+
+or both "b"
+
+```{r, results = "hide"}
+plot(times,testo, type = "b")
+```
+
+or overwritten "o"
+
+```{r, results = "hide"}
+plot(times,testo, type = "o")
+```
+
+Try these out on your own.
+
+Next, to adjust the y and x axis, use xlim and ylim
+
+```{r}
+plot(times, testo, type = "o", xlim = c(0,48), ylim = c(0,1) )
+```
+
+When a plot already exists (and is active), you can add other points or lines to the graph with the commands `points()` and `lines()`
+
+```{r, eval = FALSE}
+testo2 <- seq(from = 0.2, to = 0.6, length.out = 7) + rnorm(7,0,0.05)
+points(times, testo2, col = "red")
+lines(times, testo2, col = "green")
+```
+
+```{r, echo = FALSE}
+plot(times, testo, type = "o", xlim = c(0,48), ylim = c(0,1) )
+testo2 <- seq(from = 0.2, to = 0.6, length.out = 7) + rnorm(7,0,0.05)
+points(times, testo2, col = "red")
+lines(times, testo2, col = "green")
+```
+
+You can add lines to your plot with `abline()` as we had done earlier, and there are 6 lines styles to adjust with the parameter `lty`.
+
+```{r, eval = FALSE}
+abline(v = 24, lty = 2) #vertical line at 24 hours, dashed
+abline(v = 48, lty = 3) #vertical line at 48 hours, fine dashed
+```
+
+```{r, echo = FALSE}
+plot(times, testo, type = "o", xlim = c(0,48), ylim = c(0,1) )
+testo2 <- seq(from = 0.2, to = 0.6, length.out = 7) + rnorm(7,0,0.05)
+points(times, testo2, col = "red")
+lines(times, testo2, col = "green")
+abline(v = 24, lty = 2) #vertical line at 24 hours, dashed
+abline(v = 48, lty = 3) #vertical line at 48 hours, fine dashed
+```
+
+## A legend from your own mind
+
+You can add a legend to the plot very easily, and it is highly customizable also.
+
+```{r, eval = FALSE}
+legend("topleft", c("first line", "second line"), lty = c(1,1), col = c("black","green"))
+legend("bottomright", c("first dots", "second dots"), pch = c(1,1), col = c("black","red"))
+```
+
+```{r, echo = FALSE}
+plot(times, testo, type = "o", xlim = c(0,48), ylim = c(0,1) )
+testo2 <- seq(from = 0.2, to = 0.6, length.out = 7) + rnorm(7,0,0.05)
+points(times, testo2, col = "red")
+lines(times, testo2, col = "green")
+abline(v = 24, lty = 2) #vertical line at 24 hours, dashed
+abline(v = 48, lty = 3) #vertical line at 48 hours, fine dashed
+legend("topleft", c("first line", "second line"), lty = c(1,1), col = c("black","green"))
+legend("bottomright", c("first dots", "second dots"), pch = c(1,1), col = c("black","red"))
+```
+
+## Opening a new plot window
+
+If you want to open a new plot window to work on, type `quartz()` on Macs and type `x11()` on Windows and Linux X11 is the name of the Unix windowing system, which is where the command's name comes from.  To close an active plot window, type `dev.off()`.
+
+## Putting more than one plot in a single figure.
+
+To create multiple plotting environments in a single window, you can use the `par` command. 
+
+For example `par(mfrow = c(1,2))` creates a 1 row, 2 column plotting environment. Then if you make two consecutive plots, they will fill the two environments.
+
+```{r, fig.width = 8}
+par(mfrow = c(1,2))
+plot(times, testo)
+hist(testo)
+```
+
+Use the mouse to adjust the plot window and see what will happen. You can put as many plots are you like.
+```{r, fig.height = 6, fig.width = 6}
+par(mfrow = c(3,3))
+colors <- rainbow(9)
+for (i in 1:9){
+    x <-  rnorm(100,0,1)
+    y <- x + rnorm(100,0,0.5)
+    plot(x,y,col = colors[i])
+    abline(lm(y ~ x))
+}
+```
+
+
+## Adding text to a graph
+You can easily add text to a graph with the `text()` command. The syntax is `text(x,y,"what you want to say")`. You can adjust whether the text is left or right justified to the starting point, its size, its color, its rotation and its font.
+
+```{r}
+times <- seq(from = 0, to = 48, by = 8)
+testo <- seq(from = 0.5, to = 0.9, length.out = 7) + rnorm(7,0,0.05)
+plot(times,testo, xlim = c(0,48), ylim = c(0,1), type = "o")
+text(12, 0.9, "This is my line plot", col = "purple", cex = 1)
+```
+
+### Exercise
+* test_data.csv is method comparison data between the Siemens Advia Centaur and Deborah French's LC-MS/MS testosterone method. Read the data in test_data.csv.}
+  + Examine the data with `head()`.
+  + Produce a scatter plot and a difference plot side by side using the nmol/L data or the ng/dL data as you prefer.
+  + Make the color of the points green and semitransparent in pch = 16.
+  + Label the x and y-axes appropriately showing the units you have chosen using `xlab` and `ylab`.
+  + Add an appropriate title using the main parameter.
+  + Add a regression line--any type you like and the color of your choosing. Use `abline()` and `lm()` or  `mcreg()`.
+  + Add the line of identity in a dashed red line using `abline()` and the `lty` parameter.
+  + Put a legend in the top left hand corner identifying the regression line and the line of identity specifying its color and type of dashing. Use `legend()`.
+  + Below the regression equation put a statement about the correlation coefficient.
+  + Write the regression relationship on the graph with the `text()` function.}
+  + Produce an appropriately proportioned difference plot with difference expressed as %.
+  + Add the mean difference line.
+  + Add the $\pm$ 2SD lines
+  + Put the two figures on the same image with `par(mfrow = c(1,2))`.
+  + Save them as a png, 300 dpi, 12 inches across, 6 inches deep.
+  + Save also as a pdf.
+
+```{r, include = FALSE}
+###Solution###
+T.data <- read.csv("Data_Files/testo_compare.csv")
+library(mcr)
+reg <- mcreg(T.data$LCMSMS,T.data$Centaur, method.reg = "PaBa")
+
+plot(T.data$LCMSMS,T.data$Centaur, main = "Regression Comparison IA and LCMSMS in Males", xlab = "Testosterone LCMSMS (nmol/L)", ylab = "Testosterone Centaur (nmol/L)", pch = 16, col = "#556B2F80", xlim = c(0,35), ylim = c(0,35))
+abline(reg@para[1],reg@para[2])
+abline(0,1,col = "red",lty = 2)
+regression <- paste("Centaur = ",round(reg@para[2],3)," x LCMSMS + ",round(reg@para[1],3),sep = "" )
+text(1,32,regression, pos = 4)
+text(1,30, paste("R = ", round(cor(T.data$LCMSMS,T.data$Centaur),3)), pos = 4)
+legend("bottomright", c("Regression","Identity"), lty = c(1,2), col = c("black","red"))
+
+diff <- (T.data$Centaur- T.data$LCMSMS)/T.data$LCMSMS*100
+sdev <- sd(diff)
+plot(T.data$LCMSMS,diff, pch = 16, col = "#556B2F80", ylim = c(-60,30), main = "Difference Plot", xlab = "Testosterone LCMSMS (nmol/L)", ylab = "Difference (%)")
+abline(h = mean(diff))
+abline(h = mean(diff)+2*sdev, lty = 2)
+abline(h = mean(diff)-2*sdev,lty = 2)
+
+png("Final_Output.png", width = 12, height = 6, units = "in", res = 300)
+par(mfrow = c(1,2))
+
+#regression plot
+plot(T.data$LCMSMS,T.data$Centaur, main = "Regression Comparison IA and LCMSMS in Males", xlab = "Testosterone LCMSMS (nmol/L)", ylab = "Testosterone Centaur (nmol/L)", pch = 16, col = "#556B2F80", xlim = c(0,35), ylim = c(0,35))
+abline(reg@para[1],reg@para[2])
+abline(0,1,col = "red",lty = 2)
+regression <- paste("Centaur = ",round(reg@para[2],3)," x LCMSMS + ",round(reg@para[1],3),sep = "" )
+text(1,32,regression, pos = 4)
+text(1,30, paste("R = ", round(cor(T.data$LCMSMS,T.data$Centaur),3)), pos = 4)
+legend("bottomright", c("Regression","Identity"), lty = c(1,2), col = c("black","red"))
+
+#difference plot
+plot(T.data$LCMSMS,diff, pch = 16, col = "#556B2F80", ylim = c(-60,30), main = "Difference Plot", xlab = "Testosterone LCMSMS (nmol/L)", ylab = "Difference (%)")
+abline(h = mean(diff))
+abline(h = mean(diff)+2*sdev, lty = 2)
+abline(h = mean(diff)-2*sdev,lty = 2)
+
+
+par(mfrow = c(1,1))
+dev.off()
+
+pdf("Final_Output.pdf", width = 12, height = 6)
+par(mfrow = c(1,2))
+
+#regression plot
+plot(T.data$LCMSMS,T.data$Centaur, main = "Regression Comparison IA and LCMSMS in Males", xlab = "Testosterone LCMSMS (nmol/L)", ylab = "Testosterone Centaur (nmol/L)", pch = 16, col = "#556B2F80", xlim = c(0,35), ylim = c(0,35))
+abline(reg@para[1],reg@para[2])
+abline(0,1,col = "red",lty = 2)
+regression <- paste("Centaur = ",round(reg@para[2],3)," x LCMSMS + ",round(reg@para[1],3),sep = "" )
+text(1,32,regression, pos = 4)
+text(1,30, paste("R = ", round(cor(T.data$LCMSMS,T.data$Centaur),3)), pos = 4)
+legend("bottomright", c("Regression","Identity"), lty = c(1,2), col = c("black","red"))
+
+#difference plot
+plot(T.data$LCMSMS,diff, pch = 16, col = "#556B2F80", ylim = c(-60,30), main = "Difference Plot", xlab = "Testosterone LCMSMS (nmol/L)", ylab = "Difference (%)")
+abline(h = mean(diff))
+abline(h = mean(diff)+2*sdev, lty = 2)
+abline(h = mean(diff)-2*sdev,lty = 2)
+
+par(mfrow = c(1,1))
+dev.off()
+```
+
+```{r cleanup, include = FALSE}
+file.list <- list.files(recursive = TRUE)
+del.list <- c(list.files("Data_Files_Copy", recursive = TRUE, full.names = TRUE), list.files("my_figures", recursive = TRUE, full.names = TRUE), list.files(pattern = "Final", recursive = TRUE, full.names = TRUE), list.files(pattern = "hero", recursive = TRUE, full.names = TRUE))
+file.remove(del.list)
+file.remove("Data_Files_Copy")
+file.remove("my_figures/")
+```

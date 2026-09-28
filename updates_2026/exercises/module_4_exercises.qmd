@@ -1,0 +1,404 @@
+---
+title: "Module 4 Exercises: Computational Approaches to Data"
+format: html
+editor: visual
+---
+
+This module introduces a framework for thinking before you code, then applies it to the core data transformation operations. The first half uses `chem_data`; the second half introduces the course's LC-MS/MS pain management dataset — three related tables that mirror how instrument software actually exports data.
+
+```{r}
+#| label: setup
+#| message: false
+#| warning: false
+library(tidyverse)
+
+chem <- read_csv("../../data/chem_data.csv",
+  col_types = cols(
+    gender                   = col_factor(),
+    pregnancy_status_at_exam = col_factor(),
+    collect_dt               = col_datetime("%Y/%m/%d %H:%M:%S"),
+    receive_dt               = col_datetime("%Y/%m/%d %H:%M:%S"),
+    verify_dt                = col_datetime("%Y/%m/%d %H:%M:%S"),
+    pat_type                 = col_factor(),
+    payor_groups             = col_factor(),
+    test                     = col_factor(),
+    units                    = col_factor()
+  ))
+```
+
+---
+
+# FIRST HALF
+
+## Check-in 4A: Decompose Before You Code *(8 minutes — after section 4.1)*
+
+> **Scenario:** The lab director asks: *"Which analytes had a turnaround time over 4 hours for more than 5% of results, broken down by patient type?"*
+
+Work through all four thinking steps **in writing, before touching any code.** A good decomposition makes the code almost write itself.
+
+### Decompose
+
+Break the lab director's question into smaller sub-questions, each with a concrete answer. What do you need to figure out in sequence?
+
+> 1.
+> 2.
+> 3.
+> 4.
+> 5.
+
+### Pattern Recognition
+
+What features of `chem_data`'s structure make this problem solvable? Which columns will you rely on?
+
+> Your answer:
+
+### Abstraction
+
+What stays *constant* regardless of the specific threshold values? What would you change to answer "more than 2 hours" or "more than 10%" instead?
+
+> What stays constant (the pipeline structure):
+>
+> What varies (the parameters):
+
+### Algorithm
+
+Write plain-English pseudocode — step by step, no R syntax. Write it so a colleague who has never used R could follow it.
+
+```
+Step 1:
+Step 2:
+Step 3:
+Step 4:
+Step 5:
+Step 6:
+```
+
+---
+
+## Check-in 4B: Write the Filter *(8 minutes — after section 4.2)*
+
+Fill in the four blanks to create a subset of outpatient alkaline phosphatase results for female patients aged 50 and over. Use the exact strings that appear in the data.
+
+```{r}
+#| label: filter-alk-phos
+alk_phos_f <- chem |>
+  filter(test     == "___",
+         pat_type == "___",
+         gender   == "___",
+         age      >= ___)
+
+nrow(alk_phos_f)
+```
+
+How many rows does `alk_phos_f` contain? Does that seem reasonable given the full dataset has 155,544 rows? Show your rough reasoning.
+
+> Your answer:
+
+Which of the four conditions was **decomposition** (narrowing to a relevant subset) and which was more like **pattern recognition** (applying a uniform criterion to all rows that pass the earlier filters)?
+
+> Your answer:
+
+---
+
+## Check-in 4C: Read the Pipeline *(5 minutes — after section 4.3)*
+
+The chunk below is pre-written. **Before running it**, predict in writing what the output will look like: how many rows, what columns, and roughly what the values in `pct_low` will represent.
+
+```{r}
+#| label: pipeline-predict
+chem |>
+  filter(test == "potassium", pat_type == "inpatient") |>
+  mutate(low_k = value < 3.5) |>
+  group_by(gender) |>
+  summarize(
+    n_low   = sum(low_k,  na.rm = TRUE),
+    pct_low = round(mean(low_k, na.rm = TRUE) * 100, 1)
+  )
+```
+
+> Your prediction (before running):
+
+Now run it. Which step, if any, produced output that surprised you?
+
+> Your answer:
+
+---
+
+## Check-in 4D: Compute TAT *(7 minutes — after section 4.4)*
+
+Turnaround time is the elapsed time between two timestamps. Fill in the two blanks — the start and end of the interval for *total* TAT (collection to verification).
+
+```{r}
+#| label: mutate-tat
+chem_tat <- chem |>
+  mutate(total_tat_hours = as.numeric(___ - ___, units = "hours"))
+
+summary(chem_tat$total_tat_hours)
+```
+
+What is the median TAT? What is the maximum? Does the maximum seem realistic for a routine chemistry result, and what might explain it?
+
+> Your answer:
+
+`mutate()` corresponds to **abstraction** in the CT framework. In one sentence, explain why: what rule is being expressed once and applied uniformly?
+
+> Your answer:
+
+---
+
+## Check-in 4E: Group and Reshape *(10 minutes — after section 4.5)*
+
+### Part 1 — Two Grouping Variables
+
+Fill in the two blanks to summarize results by both analyte and patient type.
+
+```{r}
+#| label: analyte-pattype-summary
+analyte_pat_summary <- chem |>
+  filter(!is.na(pat_type)) |>
+  group_by(___, ___) |>
+  summarize(mean_value = mean(value, na.rm = TRUE),
+            n          = n(),
+            .groups    = "drop")
+
+nrow(analyte_pat_summary)
+```
+
+Before running: how many rows do you expect? (How many analytes × how many patient type categories?) Show your reasoning.
+
+> Expected rows:
+>
+> Actual rows after running:
+
+### Part 2 — Reshape to Wide
+
+Fill in the two blanks to pivot the analyte-level summary so each analyte becomes its own column.
+
+```{r}
+#| label: pivot-wide
+analyte_summary <- chem |>
+  group_by(test) |>
+  summarize(mean_value = mean(value, na.rm = TRUE))
+
+analyte_wide <- analyte_summary |>
+  select(test, mean_value) |>
+  pivot_wider(names_from  = ___,
+              values_from = ___)
+
+analyte_wide
+```
+
+Which format — long (`analyte_summary`) or wide (`analyte_wide`) — would you pipe into a `ggplot2` call? Which would you paste into a slide? Why does the answer differ?
+
+> Your answer:
+
+---
+
+**Stop here — mid-module break (10 minutes)**
+
+---
+
+# SECOND HALF
+
+The second half introduces the LC-MS/MS pain management dataset. This dataset has the three-table structure that clinical MS labs encounter in practice: raw peak data from the instrument, processed sample results, and per-batch calibration and metadata.
+
+```{r}
+#| label: setup-ms
+#| message: false
+# Three related tables from an LC-MS/MS pain management assay
+peak_data   <- read_csv("../../data/peak_data.csv")
+sample_data <- read_csv("../../data/sample_data.csv")
+batch_data  <- read_csv("../../data/batch_data_ts.csv")
+
+# Quick orientation
+glimpse(sample_data)
+glimpse(batch_data)
+```
+
+---
+
+## Check-in 4F: Navigate the MS Dataset *(10 minutes — after section 4.6)*
+
+Answer all four questions in writing. No code required (yet).
+
+**Question 1.** What column(s) would you use as the key to join `sample_data` to `batch_data`? Is `batch_name` alone sufficient? How would you verify your answer before running the join?
+
+> Your answer:
+
+**Question 2.** Write the R code to enrich `sample_data` with instrument name and batch pass/fail from `batch_data`. You want all rows from `sample_data` regardless of whether a match exists.
+
+```r
+# Your code here
+
+```
+
+**Question 3.** Write the R code to identify any `batch_name` + `compound_name` combinations in `sample_data` that have *no* matching row in `batch_data`. What would such orphaned rows indicate about data quality?
+
+```r
+# Your code here
+
+```
+
+**Question 4.** Suppose a data entry error caused one `batch_name` + `compound_name` combination to appear 3 times in `batch_data` instead of once. How many rows would the join produce for each matching row in `sample_data`? Why is this a problem for downstream calculations?
+
+> Your answer:
+
+---
+
+## Check-in 4G: Anatomy of a Quarto Document *(5 minutes — after section 4.7)*
+
+Open the capstone file (Exercise 4H below, or a version displayed by your instructor). Find and label each of the following elements by writing its line number or a short description of where it appears:
+
+> **YAML header** (the block at the top that controls document metadata and output format):
+
+> **A narrative paragraph** (plain markdown text, not inside a code chunk):
+
+> **A code chunk** (the fenced block with `{r}`):
+
+> **A chunk option** (a line inside a chunk starting with `#|`):
+
+> **An in-line code reference or parameterized value** (a value that would update automatically if the underlying data changed):
+
+---
+
+## Exercise 4H: Capstone — An LC-MS/MS Batch Review Pipeline *(44 minutes)*
+
+This exercise builds a complete, reproducible summary of batch quality across the pain management dataset. The document has four sections. Each section has a small number of blanks and a narrative space. Work through them in order; render to HTML when all four are complete.
+
+The pipeline structure and `|>` scaffolding are provided with step comments. Fill in the **arguments**, not the structure.
+
+---
+
+### Section 1 — Import and Validate *(~8 minutes)*
+
+```{r}
+#| label: s1-validate
+#| message: false
+
+# How many rows in each table?
+nrow(sample_data)
+nrow(batch_data)
+
+# How many unique batches and compounds?
+n_distinct(sample_data$___)      # unique batch names in sample_data
+n_distinct(sample_data$___)      # unique compound names
+
+# Any missing pass/fail values?
+sum(is.na(sample_data$sample_passed))
+sum(is.na(batch_data$batch_passed))
+```
+
+*Narrative: Write 2–3 sentences describing what the validation showed. Are there any mismatches between batch counts in the two tables that you would want to investigate?*
+
+> Your narrative:
+
+---
+
+### Section 2 — Explore *(~8 minutes)*
+
+Filter `sample_data` to patient samples only. The setup chunk at the top of the second half already imported `sample_data` — use it directly here.
+
+```{r}
+#| label: s2-explore
+patient_samples <- sample_data |>
+  filter(sample_type == "___")          # keep only patient samples
+
+# Exploratory boxplot of measured concentration by compound,
+# panels split by whether the sample passed
+ggplot(patient_samples |> filter(!is.na(sample_passed)),
+       aes(x = compound_name, y = concentration)) +
+  geom_boxplot() +
+  facet_wrap(~ ___, ncol = 1) +         # one panel per pass/fail status
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(title = "Patient sample concentrations by compound and pass/fail status",
+       x = "Compound",
+       y = "Concentration")
+```
+
+*Narrative: Label this visualization explicitly as exploratory. What pattern, if any, do you see between failed samples and concentration? Is there anything surprising?*
+
+> Your narrative:
+
+---
+
+### Section 3 — Join and Summarize *(~12 minutes)*
+
+Fill in the four blanks: the two key columns for the join, the grouping variables, and the CV formula. The pipeline structure is provided.
+
+```{r}
+#| label: s3-join-summarize
+batch_summary <- sample_data |>
+  # Step 1: enrich sample results with batch metadata
+  left_join(batch_data,
+            by = c("___" = "___",        # first key column (same name in both tables)
+                   "compound_name" = "compound_name")) |>
+  # Step 2: keep only samples from batches that passed QC
+  filter(batch_passed == TRUE,
+         sample_type  == "patient") |>
+  # Step 3: summarize by compound and instrument
+  group_by(___, ___) |>
+  summarize(
+    n            = n(),
+    mean_conc    = round(mean(concentration,  na.rm = TRUE), 2),
+    sd_conc      = round(sd(concentration,    na.rm = TRUE), 2),
+    cv_pct       = round((___ / ___) * 100,  1),   # CV = SD / mean × 100
+    .groups      = "drop"
+  ) |>
+  arrange(compound_name, instrument_name)
+
+batch_summary
+```
+
+*Narrative: Which compound × instrument combinations have the highest CV? Does the instrument affect precision differently across compounds? Write 2–3 sentences.*
+
+> Your narrative:
+
+---
+
+### Section 4 — Communicate *(~8 minutes)*
+
+Build a polished explanatory chart from `batch_summary`. Add a horizontal reference line at 15% CV — a common acceptability threshold for LC-MS/MS assays.
+
+```{r}
+#| label: s4-communicate
+ggplot(batch_summary,
+       aes(x = compound_name, y = cv_pct, color = ___)) +  # color by instrument
+  geom_point(size = 3) +
+  geom_hline(yintercept = ___, linetype = "dashed", color = "gray40") +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(title = "___",
+       x     = "Compound",
+       y     = "CV (%)",
+       color = "Instrument",
+       caption = "___")   # one sentence explaining what a point above the line means
+```
+
+*Narrative: What would you do next if a compound × instrument combination exceeded 15% CV? Describe in one or two sentences what action this chart would prompt.*
+
+> Your narrative:
+
+---
+
+### Render and Reflect *(~8 minutes)*
+
+Render this document to HTML using the **Render** button at the top of RStudio. Once it renders successfully, go back to Section 2 and change `sample_type == "patient"` to `sample_type == "calibrator"`, then re-render.
+
+**What updated automatically when you changed `sample_type`?**
+
+> Your answer:
+
+**What did you have to update manually?**
+
+> Your answer:
+
+**What single change would make the `sample_type` filter fully parameterized — meaning it appears in only one place in the entire document, and changing it there updates every section?**
+
+> Your answer:
+
+**Final reflection:** This document — raw data files in, rendered HTML report out, with no manual steps in between — is a reproducible analysis. What is the practical value of this property for a clinical MS lab performing routine batch review?
+
+> Your answer:
+
+---

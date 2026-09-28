@@ -1,0 +1,100 @@
+---
+title: "Module 1 Exercises: Data Literacy Foundations"
+format: html
+editor: visual
+---
+
+This module requires no R. You will work directly with raw data files using a plain text editor. The goal is to build your mental model of what a dataset looks like before any software touches it — and to practice recognizing data types, spotting problems, and thinking about structure.
+
+Two short check-ins are interspersed with the lecture: **Check-in 1A** follows section 1.2 (Data Types) and **Check-in 1B** follows section 1.3 (Tidy Data). Do not work ahead — wait for your instructor's prompt before starting each one.
+
+---
+
+## Check-in 1A: Reading Raw Data and Spotting Types *(10 minutes — after section 1.2)*
+
+### Setup
+
+Open `chem_data.csv` in a plain text editor:
+
+- **Mac:** Right-click the file → Open With → TextEdit. If it opens formatted, go to Format → Make Plain Text.
+- **Windows:** Right-click → Open With → Notepad.
+
+Scroll through the first 20–30 rows. Do not try to analyze it yet — just get a feel for what you are looking at.
+
+The table below shows the 13 columns in `chem_data.csv` along with example raw values taken directly from the first data row. Your job is to fill in the **Predicted data type** and **Notes/concerns** columns.
+
+For **Predicted data type**, use plain language: *text*, *whole number*, *decimal number*, *date/time*, *category (few options)*, *boolean*, etc. You do not need to use R type names yet.
+
+For **Notes/concerns**, flag anything that might cause problems: unusual formats, potential missingness, values that could be misread by software, ambiguity about what the variable represents.
+
+| Variable | Example raw values | Predicted data type | Notes/concerns |
+|---|---|---|---|
+| mrn | 118087 | | |
+| gender | Male | | |
+| age | 51 | | |
+| pregnancy_status_at_exam | *(empty)* | | |
+| collect_dt | 2022/12/26 11:28:10 | | |
+| receive_dt | 2022/12/29 11:01:20 | | |
+| verify_dt | 2022/12/30 03:39:38 | | |
+| pat_type | cancer center | | |
+| payor_groups | self pay | | |
+| last_name | harrell | | |
+| test | alanine_aminotransferase | | |
+| value | 21 | | |
+| units | U/L | | |
+
+### Follow-up: The Wide Format
+
+Now open `chem_data_wide.csv` in the same plain text editor.
+
+Scroll across the header row. Answer the following questions in the space provided:
+
+**How many rows does `chem_data_wide.csv` have (approximately)?**
+
+<!-- your answer here -->
+
+**How many columns does it have? How does that compare to `chem_data.csv`?**
+
+<!-- your answer here -->
+
+**What happened to the data when it was pivoted wide? Where did the `test`, `value`, and `units` columns go?**
+
+<!-- your answer here -->
+
+---
+
+**Stop here** — your instructor will debrief before continuing to section 1.3.
+
+---
+
+## Check-in 1B: Tidy or Not Tidy? *(8 minutes — after section 1.3)*
+
+These questions ask you to think about data structure. There is no single right answer to some of them — the goal is to reason carefully and be specific.
+
+**Three principles of tidy data:**
+
+1. Every variable has its own column.
+2. Every observation has its own row.
+3. Every value has its own cell.
+
+---
+
+**Question 1.** Looking at `chem_data.csv` (long format) versus `chem_data_wide.csv` (wide format): which tidy data principle or principles does the **wide** format violate, and how?
+
+> Your answer:
+
+---
+
+**Question 2.** Name one analytical question that would be *easier* to answer from the **long** format, and one that would be *easier* from the **wide** format. Be specific — use actual column names or analyte names.
+
+> Easier from long format:
+
+> Easier from wide format:
+
+---
+
+**Question 3.** Suppose you received a new batch of results from your instrument's vendor software and it was delivered in wide format — one row per patient, one column per analyte. What would you need to do to it before analyzing it in R using tidyverse tools? Name at least two concrete steps.
+
+> Your answer:
+
+---

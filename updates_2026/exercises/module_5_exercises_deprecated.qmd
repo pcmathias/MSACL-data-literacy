@@ -1,0 +1,237 @@
+---
+title: "Module 5 Exercises: Computational Thinking and Reproducibility [SUPERSEDED]"
+format: html
+editor: visual
+---
+
+> **Note:** In the updated 4-module course structure (Option 2), the content from this file has been reorganized:
+>
+> - The CT decomposition exercise (Exercise 5A) → **Check-in 4A** in `module_4_exercises.qmd`
+> - The reproducible mini-report (Exercise 5B) → **Exercise 4H** in `module_4_exercises.qmd` (expanded and reworked to use the LC-MS/MS dataset)
+>
+> This file is retained for reference only. Use `module_4_exercises.qmd` for the current course.
+
+---
+
+This final module asks you to zoom out. Rather than filling in individual blanks, you will decompose a real lab problem into its logical steps, build a small reproducible report, and reflect on what it means for an analysis to be reproducible.
+
+```{r}
+#| label: setup
+#| message: false
+#| warning: false
+library(tidyverse)
+chem <- read_csv("../../data/chem_data.csv",
+  col_types = cols(
+    gender     = col_factor(),
+    collect_dt = col_datetime("%Y/%m/%d %H:%M:%S"),
+    receive_dt = col_datetime("%Y/%m/%d %H:%M:%S"),
+    verify_dt  = col_datetime("%Y/%m/%d %H:%M:%S"),
+    pat_type   = col_factor(),
+    test       = col_factor()
+  ))
+```
+
+---
+
+## Exercise 5A: Decompose a Lab Problem
+
+*Estimated time: 15 minutes*
+
+> **Scenario:** The lab director asks: *"Which analytes had a turnaround time over 4 hours for more than 5% of results in this dataset, broken down by patient type?"*
+
+Before writing any code, work through the four thinking steps below. This is the reasoning process that a good data analyst does before touching a keyboard.
+
+---
+
+### Decompose
+
+Break the lab director's question into smaller sub-questions that each have a concrete answer. A good decomposition makes each step feel manageable and reveals hidden assumptions.
+
+What sub-questions do you need to answer in sequence to solve the full problem?
+
+> 1.
+> 2.
+> 3.
+> 4.
+> 5.
+
+---
+
+### Pattern Recognition
+
+What features of `chem_data`'s structure make this problem solvable? In other words, what information does the dataset already contain that you will rely on?
+
+> Your answer:
+
+---
+
+### Abstraction
+
+In a solution to this problem, what stays *constant* regardless of the specific question being asked, and what would you change to answer a related but different question (for example, "more than 2 hours" or "more than 10%" or "broken down by gender instead of patient type")?
+
+> What stays constant (the structure of the pipeline):
+
+> What varies (the parameters you would swap out):
+
+---
+
+### Algorithm
+
+Write plain-English pseudocode for a solution — step by step. Do not use R syntax. Write it the way you would explain the process to a colleague who has never used R.
+
+```
+Step 1:
+Step 2:
+Step 3:
+Step 4:
+Step 5:
+Step 6:
+```
+
+---
+
+### Working Solution
+
+The chunk below contains R code that implements exactly what the lab director asked for. Run it and compare each line to your pseudocode.
+
+```{r}
+#| label: tat-solution
+#| eval: false
+# Compare this to your pseudocode — does each step correspond to a line?
+chem |>
+  mutate(tat_hours = as.numeric(verify_dt - collect_dt, units = "hours")) |>
+  filter(!is.na(pat_type)) |>
+  group_by(test, pat_type) |>
+  summarize(
+    n_total    = n(),
+    n_long_tat = sum(tat_hours > 4, na.rm = TRUE),
+    pct_long   = round((n_long_tat / n_total) * 100, 1),
+    .groups    = "drop"
+  ) |>
+  filter(pct_long > 5) |>
+  arrange(desc(pct_long))
+```
+
+**Change `eval: false` to `eval: true` in the chunk options above (or copy it into the Console to run it). Then answer:**
+
+**Are any of the analyte/patient-type combinations in the results surprising? What might explain why inpatient or ICU samples have a higher percentage of long TAT results compared to outpatient samples?**
+
+> Your answer:
+
+---
+
+**Stop Here** — your instructor will pause to debrief the group before continuing.
+
+---
+
+## Exercise 5B: Build a Reproducible Mini-Report
+
+*Estimated time: 30 minutes*
+
+This exercise is a structured Quarto authoring experience. Each section below has a code chunk for you to complete and a space for a brief narrative paragraph. After completing all four sections, render the document to HTML using the Render button at the top of RStudio.
+
+Then: change the analyte name in Section 2 from `"potassium"` to any other analyte in the dataset, and re-render the document. Observe what updates automatically.
+
+---
+
+### Section 1 — Data Validation
+
+Fill in the two blanks, then run the chunk and write your interpretation.
+
+```{r}
+#| label: s1-validation
+#| message: false
+# Run your validation checklist — fill in the blanks
+nrow(chem)
+n_distinct(chem$___)
+count(chem, test) |> filter(n != ___)   # flag any analytes with unexpected row counts
+```
+
+*Narrative: Write 2–3 sentences describing what the validation showed and whether you have any concerns.*
+
+> Your narrative:
+
+---
+
+### Section 2 — Analyte Selection
+
+The variable `selected_analyte` controls the rest of the report. For now, leave it set to `"potassium"`. After you have completed and rendered the full document once, come back here to change it.
+
+```{r}
+#| label: s2-analyte-selection
+# Choose an analyte — change this value to explore a different one
+selected_analyte <- "potassium"   # <-- change me
+
+analyte_data <- chem |>
+  filter(test == ___)
+```
+
+*Narrative: Briefly describe the analyte you chose and any clinical context that is relevant — what does it measure, what are typical clinical concerns?*
+
+> Your narrative:
+
+---
+
+### Section 3 — Summary by Patient Type
+
+Fill in the four blanks to compute a summary table grouped by patient type.
+
+```{r}
+#| label: s3-summary
+analyte_summary <- analyte_data |>
+  filter(!is.na(___)) |>
+  group_by(___) |>
+  summarize(
+    n            = n(),
+    mean_value   = mean(value,   na.rm = TRUE),
+    median_value = ___,
+    sd_value     = sd(value, na.rm = TRUE)
+  )
+analyte_summary
+```
+
+*Narrative: What does the summary tell you? Are there meaningful differences across patient types in either the typical value or the spread? What clinical explanation might there be?*
+
+> Your narrative:
+
+---
+
+### Section 4 — Distribution
+
+Fill in the three blanks to create a faceted histogram. The `binwidth` should be appropriate for your selected analyte's measurement scale — try a few values and choose one that shows the shape clearly without being too noisy or too coarse.
+
+```{r}
+#| label: s4-distribution
+ggplot(analyte_data |> filter(!is.na(pat_type)),
+       aes(x = value, fill = pat_type)) +
+  geom_histogram(binwidth = ___, alpha = 0.6, position = "identity") +
+  facet_wrap(~ pat_type, ncol = 2) +
+  theme_bw() +
+  labs(title = paste(___, "results by patient type"),
+       x     = paste0(___, " (", unique(analyte_data$units), ")"),
+       y     = "Count")
+```
+
+*Narrative: Describe the distribution. Is it roughly symmetric or skewed? Are there outliers visible in any patient type group? Does the shape differ meaningfully across groups?*
+
+> Your narrative:
+
+---
+
+### Closing Reflection
+
+After re-rendering with a different analyte, answer these questions:
+
+**What updated automatically when you changed `selected_analyte`?**
+
+> Your answer:
+
+**What did you have to update manually?**
+
+> Your answer:
+
+**What would need to change to make this report fully *parameterized* — meaning the analyte name appears in only one place in the entire document, and changing it there updates everything, including axis labels, titles, and narrative text?**
+
+> Your answer:
+
+---
