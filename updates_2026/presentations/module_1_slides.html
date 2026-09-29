@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="module_1_slides_files/libs/clipboard/clipboard.min.js"></script>
+<script src="module_1_slides_files/libs/quarto-html/tabby.min.js"></script>
+<script src="module_1_slides_files/libs/quarto-html/popper.min.js"></script>
+<script src="module_1_slides_files/libs/quarto-html/tippy.umd.min.js"></script>
+<link href="module_1_slides_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="module_1_slides_files/libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="module_1_slides_files/libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.10.18">
+
+  <meta name="author" content="MSACL DS 100">
+  <title>Data Literacy Foundations</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="module_1_slides_files/libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="module_1_slides_files/libs/revealjs/dist/reveal.css">
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+  </style>
+  <link rel="stylesheet" href="module_1_slides_files/libs/revealjs/dist/theme/quarto-2740581606dc327e82f18f789b69d8a0.css">
+  <link rel="stylesheet" href="assets/module_1/styles.css">
+  <link href="module_1_slides_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="module_1_slides_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="module_1_slides_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="module_1_slides_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="quarto-title-block center">
+  <h1 class="title">Data Literacy Foundations</h1>
+  <p class="subtitle">DS 100 — Module 1</p>
+
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+MSACL DS 100
+</div>
+</div>
+</div>
+
+</section>
+<section id="welcome-to-ds-100" class="slide level2">
+<h2>Welcome to DS 100</h2>
+<ul>
+<li>A short course on <strong>data literacy</strong>, <strong>visualization</strong>, and <strong>computational thinking</strong> for clinical laboratory professionals</li>
+<li>We’ll use <strong>RStudio and the tidyverse</strong> exclusively — no Excel</li>
+<li>Designed to complement <strong>MSACL 101</strong> (“Breaking Up with Excel”), which teaches R syntax in depth</li>
+<li>This course focuses on the <em>mental models</em> — why you organize and think about data the way you do</li>
+</ul>
+<p class="lead">
+By the end of today: you’ll think like a data-literate scientist before you write a single line of R.
+</p>
+<aside class="notes">
+<p>Frame this as a mental-model course, not a syntax course. Reassure trainees that heavy coding starts in Module 2, not now.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="module-1-learning-objectives" class="slide level2">
+<h2>Module 1 Learning Objectives</h2>
+<p>By the end of this module, you will be able to:</p>
+<ul>
+<li>Distinguish common data types and explain why type matters for downstream analysis</li>
+<li>Identify whether a dataset follows tidy data principles — and articulate the tradeoffs</li>
+<li>Apply project and file organization principles for a reproducible analysis</li>
+<li>Recognize common data quality issues and their downstream consequences</li>
+</ul>
+<div class="pillars">
+<div>
+<h4>
+Types
+</h4>
+<p>
+What can this value even do?
+</p>
+</div>
+<div>
+<h4>
+Structure
+</h4>
+<p>
+How easy is this to work with?
+</p>
+</div>
+<div>
+<h4>
+Quality
+</h4>
+<p>
+Can I trust this answer?
+</p>
+</div>
+<div>
+<h4>
+Organization
+</h4>
+<p>
+Can I repeat this in 6 months?
+</p>
+</div>
+</div>
+</section>
+<section id="before-we-start-orienting-in-rstudio" class="slide level2">
+<h2>Before We Start: Orienting in RStudio</h2>
+<p>This module has <strong>no R code</strong> — but we’ll still work inside RStudio.</p>
+<p>Today, RStudio is simply a <strong>text editor</strong>: a place to open files, read them carefully, and record your answers.</p>
+<ol type="1">
+<li>Open the course project — double-click the <code>.Rproj</code> file</li>
+<li>In the <strong>Files</strong> pane, open <code>updates_2026/exercises/module_1_exercises.qmd</code></li>
+<li>This file opens in the <strong>Source</strong> pane — you’ll type your answers directly into it</li>
+<li>Save often (Cmd/Ctrl+S) — nothing here runs or executes</li>
+</ol>
+<blockquote>
+<p>Getting oriented now — before anything needs to <em>run</em> — is what makes Module 2 feel easy instead of overwhelming.</p>
+</blockquote>
+<aside class="notes">
+<p>Emphasize: opening the .Rproj first matters because it sets the working directory correctly for every later module. This is the seed that pays off in Module 2 when relative paths need to work.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="why-rstudio-even-for-a-non-coding-module" class="slide level2">
+<h2>Why RStudio — Even for a Non-Coding Module?</h2>
+<ul>
+<li>One consistent home for course materials, exercises, and (soon) code</li>
+<li>The <strong>Source</strong> pane doubles as a plain-text and Markdown editor</li>
+<li>Getting comfortable navigating panes <em>before</em> you need to run anything lowers the stakes</li>
+<li>Module 2 will introduce RStudio as a <em>computational</em> tool — today is just geography</li>
+</ul>
+<div class="pillars">
+<div>
+<h4>
+Today
+</h4>
+<p>
+RStudio as a text editor — read, navigate, record answers
+</p>
+</div>
+<div>
+<h4>
+Module 2+
+</h4>
+<p>
+RStudio as a computational tool — import, transform, visualize
+</p>
+</div>
+</div>
+</section>
+<section id="what-is-data" class="slide level2" data-background-color="#2c3e50">
+<h2>1.1 What Is Data?</h2>
+<p class="subtitle">
+Before we touch R, we need a shared vocabulary for what we’re even looking at
+</p>
+</section>
+<section id="what-is-data-1" class="slide level2">
+<h2>What Is Data?</h2>
+<ul>
+<li><strong>Data</strong> = observations recorded systematically</li>
+<li>Every value in a dataset represents something measured, reported, or logged in the real world</li>
+<li>Two categories worth separating:
+<ul>
+<li><strong>Raw data</strong> — recorded as originally captured (an instrument reading, a timestamp)</li>
+<li><strong>Derived data</strong> — calculated or transformed from raw values (a turnaround time, a mean)</li>
+</ul></li>
+</ul>
+<blockquote>
+<p>If you can’t say what real-world event a value represents, you don’t yet understand your data.</p>
+</blockquote>
+</section>
+<section id="why-structure-matters-before-any-analysis" class="slide level2">
+<h2>Why Structure Matters — Before Any Analysis</h2>
+<ul>
+<li>The same facts can be organized many different ways</li>
+<li>Structure determines:
+<ul>
+<li>What questions are <em>easy</em> to answer</li>
+<li>What questions are <em>possible</em> to answer at all</li>
+<li>How easily errors are introduced or hidden</li>
+</ul></li>
+<li>We’ll return to this directly in section 1.3 (Tidy Data)</li>
+</ul>
+<p class="lead">
+Structure is a decision you make — not a fact about the data itself.
+</p>
+</section>
+<section id="data-types" class="slide level2" data-background-color="#2c3e50">
+<h2>1.2 Data Types</h2>
+<p class="subtitle">
+Six categories cover almost everything you’ll encounter in clinical and MS data
+</p>
+</section>
+<section id="why-data-types-matter" class="slide level2">
+<h2>Why Data Types Matter</h2>
+<p>A data type isn’t just a technical label — it determines:</p>
+<ul>
+<li>What operations are valid (can you average it? sort it? subtract it?)</li>
+<li>How software will interpret ambiguous values</li>
+<li>Whether a value like <code>"NA"</code> means <em>missing</em> or literally the state of Nebraska</li>
+</ul>
+<p>Misidentifying a type is one of the most common — and most silent — sources of analysis errors.</p>
+<blockquote>
+<p>A wrong data type doesn’t crash your code. It just quietly gives you the wrong answer.</p>
+</blockquote>
+</section>
+<section id="common-data-types" class="slide level2">
+<h2>Common Data Types</h2>
+
+<img data-src="assets/module_1/data_types.svg" class="quarto-figure quarto-figure-center r-stretch" style="width:92.0%"><aside class="notes">
+<p>Walk through each card briefly rather than reading it verbatim — ask learners to shout out which chem_data column they think matches each card.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="a-special-case-censored-below-lod-values" class="slide level2">
+<h2>A Special Case: Censored / Below-LOD Values</h2>
+<div class="columns">
+<div class="column" style="width:55%;">
+<ul>
+<li>Clinical and MS data often contain values reported as <strong>“&lt;0.5”</strong> or <strong>“undetectable”</strong></li>
+<li>These are not missing — they are a special type: <strong>censored data</strong></li>
+<li>The true value is known to be <em>somewhere below a threshold</em>, not unknown entirely</li>
+<li>Treating a censored value as missing (or worse, as zero) can distort every downstream summary statistic</li>
+</ul>
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Note</strong></p>
+</div>
+<div class="callout-content">
+<p>We will not perform formal censored-data statistics in this course — but recognizing these values when you see them is essential data literacy.</p>
+</div>
+</div>
+</div>
+</div><div class="column" style="width:45%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="assets/module_1/censored_data.svg" class="quarto-figure quarto-figure-center" style="width:100.0%"></p>
+</figure>
+</div>
+</div></div>
+</section>
+<section id="types-in-the-wild-a-raw-csv-row" class="slide level2">
+<h2>Types in the Wild: A Raw CSV Row</h2>
+<pre><code>121444,"Male",44,NA,2022-12-26 00:24:02,2022-12-26 01:58:16,
+2022-12-26 03:42:19,NA,"unassigned","lopez","alanine_aminotransferase",17</code></pre>
+<ul>
+<li>No column tells you the type — you have to infer it from the value and context</li>
+<li><code>NA</code> appears twice, but for two different reasons</li>
+<li>The datetime has no explicit format label — R will have to be told how to read it (Module 2)</li>
+</ul>
+<p class="lead">
+Every column in this row is a small decision you’ll have to make deliberately.
+</p>
+</section>
+<section id="check-in-1a-spot-the-types" class="slide level2" data-background-color="#8e44ad">
+<h2>→ Check-in 1A: Spot the Types</h2>
+<div class="badge">
+⏱ 10 minutes
+</div>
+<p>Open <code>chem_data.csv</code> in a plain text editor (not RStudio — a real text editor).</p>
+<p>For each of the 13 columns, predict the data type and flag any concerns.</p>
+<ul>
+<li>Which columns look <strong>numeric</strong> vs.&nbsp;<strong>categorical</strong>?</li>
+<li>Where might <strong>censored</strong> or <strong>missing</strong> values be hiding?</li>
+<li>Which column will need an explicit <strong>datetime format</strong>?</li>
+</ul>
+<p><em>Return to <code>module_1_exercises.qmd</code> in RStudio to record your answers.</em></p>
+</section>
+<section id="tidy-data-principles" class="slide level2" data-background-color="#2c3e50">
+<h2>1.3 Tidy Data Principles</h2>
+<p class="subtitle">
+The same facts, organized differently, can make an analysis easy or nearly impossible
+</p>
+</section>
+<section id="three-principles-of-tidy-data" class="slide level2">
+<h2>Three Principles of Tidy Data</h2>
+<p>A dataset is <strong>tidy</strong> when:</p>
+<ol type="1">
+<li>Every <strong>variable</strong> has its own column</li>
+<li>Every <strong>observation</strong> has its own row</li>
+<li>Every <strong>value</strong> has its own cell</li>
+</ol>
+<ul>
+<li>Not a matter of taste — a precise, checkable definition</li>
+<li>Most tidyverse tools <em>assume</em> tidy input</li>
+</ul>
+<blockquote>
+<p>Tidy data isn’t prettier data. It’s data shaped for the tools you’re about to use.</p>
+</blockquote>
+</section>
+<section id="the-same-facts-two-structures" class="slide level2">
+<h2>The Same Facts, Two Structures</h2>
+
+<img data-src="assets/module_1/tidy_long_wide.svg" class="quarto-figure quarto-figure-center r-stretch" style="width:95.0%"><p>Same information — very different shapes. Notice the explicit <code>NA</code> that appears only once the data is widened.</p>
+</section>
+<section id="tradeoffs-long-vs.-wide" class="slide level2">
+<h2>Tradeoffs: Long vs.&nbsp;Wide</h2>
+<table class="caption-top">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th>Long (tidy)</th>
+<th>Wide</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Add a new analyte</td>
+<td>Add rows</td>
+<td>Add a column, restructure</td>
+</tr>
+<tr class="even">
+<td>Filter by analyte</td>
+<td>Easy (<code>filter()</code>)</td>
+<td>Awkward</td>
+</tr>
+<tr class="odd">
+<td>Human-readable summary table</td>
+<td>Harder to scan</td>
+<td>Easy to scan</td>
+</tr>
+<tr class="even">
+<td>Feed into <code>ggplot2</code></td>
+<td>Usually required</td>
+<td>Usually needs reshaping first</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Neither format is “wrong”</strong> — but one is almost always easier for a given task</li>
+<li>The tidyverse gives you tools (<code>pivot_longer()</code>, <code>pivot_wider()</code>) to convert between them — we’ll see these in Module 4</li>
+</ul>
+</section>
+<section id="check-in-1b-tidy-or-not-tidy" class="slide level2" data-background-color="#8e44ad">
+<h2>→ Check-in 1B: Tidy or Not Tidy?</h2>
+<div class="badge">
+⏱ 8 minutes
+</div>
+<p>Compare <code>chem_data.csv</code> (long) and <code>chem_data_wide.csv</code> (wide).</p>
+<p>Answer three written questions in <code>module_1_exercises.qmd</code>:</p>
+<ul>
+<li>Which tidy principle does the wide format bend?</li>
+<li>When is each format easier to use?</li>
+<li>What would you need to do to a wide file before analyzing it in R?</li>
+</ul>
+</section>
+<section id="data-quality-and-common-pitfalls" class="slide level2" data-background-color="#2c3e50">
+<h2>1.4 Data Quality and Common Pitfalls</h2>
+<p class="subtitle">
+Plausible-looking data is not the same thing as trustworthy data
+</p>
+</section>
+<section id="common-data-quality-issues" class="slide level2">
+<h2>Common Data Quality Issues</h2>
+<ul>
+<li><strong>Missing values</strong> — and knowing <em>why</em> they’re missing (not tested vs.&nbsp;not applicable vs.&nbsp;lost)</li>
+<li><strong>Duplicate rows</strong> — same observation recorded more than once</li>
+<li><strong>Out-of-range values</strong> — a pH of 45, an age of 200</li>
+<li><strong>Encoding inconsistencies</strong> — <code>"Male"</code> vs.&nbsp;<code>"M"</code> vs.&nbsp;<code>"male"</code> treated as three different categories</li>
+<li><strong>Timestamp errors</strong> — a verify time earlier than the collect time</li>
+</ul>
+<p class="lead">
+Each of these can silently corrupt a downstream summary — often without any error message.
+</p>
+</section>
+<section id="why-silent-errors-are-the-dangerous-ones" class="slide level2">
+<h2>Why “Silent” Errors Are the Dangerous Ones</h2>
+<ul>
+<li>Software rarely stops and warns you when data is <em>plausible but wrong</em></li>
+<li>A mis-encoded category doesn’t crash your analysis — it just quietly gets excluded, or double-counted</li>
+<li>This is exactly why Module 2 introduces a <strong>validation checklist</strong> as a required first step, every time you import data</li>
+</ul>
+<blockquote>
+<p>The most dangerous bugs are the ones that produce an answer — just the wrong one.</p>
+</blockquote>
+</section>
+<section id="project-and-file-organization" class="slide level2" data-background-color="#2c3e50">
+<h2>1.5 Project and File Organization</h2>
+<p class="subtitle">
+Reproducibility starts with where your files live, not with your code
+</p>
+</section>
+<section id="a-simple-durable-folder-structure" class="slide level2">
+<h2>A Simple, Durable Folder Structure</h2>
+
+<img data-src="assets/module_1/folder_structure.svg" class="quarto-figure quarto-figure-center r-stretch" style="width:88.0%"><ul>
+<li><strong><code>data/</code> is read-only, in spirit</strong> — never overwrite or edit a raw file by hand</li>
+<li>The <code>.Rproj</code> file anchors all relative paths so your code works regardless of where the folder lives on disk</li>
+</ul>
+</section>
+<section id="bringing-it-together" class="slide level2">
+<h2>Bringing It Together</h2>
+<div class="pillars">
+<div>
+<h4>
+Data types
+</h4>
+<p>
+Determine what’s even <em>possible</em> to compute
+</p>
+</div>
+<div>
+<h4>
+Tidy structure
+</h4>
+<p>
+Determines what’s <em>easy</em> to compute
+</p>
+</div>
+<div>
+<h4>
+Data quality
+</h4>
+<p>
+Determines whether your answer is <em>trustworthy</em>
+</p>
+</div>
+<div>
+<h4>
+File organization
+</h4>
+<p>
+Determines whether your work is <em>repeatable</em>
+</p>
+</div>
+</div>
+<p class="lead">
+Four habits. Zero lines of R code. All essential before you ever open a script.
+</p>
+</section>
+<section id="coming-up-module-2" class="slide level2">
+<h2>Coming Up: Module 2</h2>
+<ul>
+<li>RStudio as a <strong>computational</strong> tool, not just a text editor</li>
+<li>Importing <code>chem_data.csv</code> with the tidyverse</li>
+<li>Correcting the types you predicted today</li>
+<li>A hands-on data validation checklist</li>
+</ul>
+<p class="lead">
+<strong>Bring your laptop, charged, with R and RStudio installed.</strong>
+</p>
+
+</section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+<p>DS 100 · Module 1: Data Literacy Foundations</p>
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="module_1_slides_files/libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="module_1_slides_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="module_1_slides_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="module_1_slides_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="module_1_slides_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="module_1_slides_files/libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="module_1_slides_files/libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="module_1_slides_files/libs/revealjs/plugin/search/search.js"></script>
+  <script src="module_1_slides_files/libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="module_1_slides_files/libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'smaller': true,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: true,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'fade',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1280,
+
+        height: 720,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 6.0e-2,
+
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    <script id="quarto-html-after-body" type="application/javascript">
+      window.document.addEventListener("DOMContentLoaded", function (event) {
+        const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+        tabsets.forEach(function(tabset) {
+          const tabby = new Tabby('#' + tabset.id);
+        });
+        const isCodeAnnotation = (el) => {
+          for (const clz of el.classList) {
+            if (clz.startsWith('code-annotation-')) {                     
+              return true;
+            }
+          }
+          return false;
+        }
+        const onCopySuccess = function(e) {
+          // button target
+          const button = e.trigger;
+          // don't keep focus
+          button.blur();
+          // flash "checked"
+          button.classList.add('code-copy-button-checked');
+          var currentTitle = button.getAttribute("title");
+          button.setAttribute("title", "Copied!");
+          let tooltip;
+          if (window.bootstrap) {
+            button.setAttribute("data-bs-toggle", "tooltip");
+            button.setAttribute("data-bs-placement", "left");
+            button.setAttribute("data-bs-title", "Copied!");
+            tooltip = new bootstrap.Tooltip(button, 
+              { trigger: "manual", 
+                customClass: "code-copy-button-tooltip",
+                offset: [0, -8]});
+            tooltip.show();    
+          }
+          setTimeout(function() {
+            if (tooltip) {
+              tooltip.hide();
+              button.removeAttribute("data-bs-title");
+              button.removeAttribute("data-bs-toggle");
+              button.removeAttribute("data-bs-placement");
+            }
+            button.setAttribute("title", currentTitle);
+            button.classList.remove('code-copy-button-checked');
+          }, 1000);
+          // clear code selection
+          e.clearSelection();
+        }
+        const getTextToCopy = function(trigger) {
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+        }
+        const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+          text: getTextToCopy
+        });
+        clipboard.on('success', onCopySuccess);
+        if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+          const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+            text: getTextToCopy,
+            container: window.document.getElementById('quarto-embedded-source-code-modal')
+          });
+          clipboardModal.on('success', onCopySuccess);
+        }
+          var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+          var mailtoRegex = new RegExp(/^mailto:/);
+            var filterRegex = new RegExp('/' + window.location.host + '/');
+          var isInternal = (href) => {
+              return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+          }
+          // Inspect non-navigation links and adorn them if external
+         var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+          for (var i=0; i<links.length; i++) {
+            const link = links[i];
+            if (!isInternal(link.href)) {
+              // undo the damage that might have been done by quarto-nav.js in the case of
+              // links that we want to consider external
+              if (link.dataset.originalHref !== undefined) {
+                link.href = link.dataset.originalHref;
+              }
+            }
+          }
+        function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+          const config = {
+            allowHTML: true,
+            maxWidth: 500,
+            delay: 100,
+            arrow: false,
+            appendTo: function(el) {
+                return el.closest('section.slide') || el.parentElement;
+            },
+            interactive: true,
+            interactiveBorder: 10,
+            theme: 'light-border',
+            placement: 'bottom-start',
+          };
+          if (contentFn) {
+            config.content = contentFn;
+          }
+          if (onTriggerFn) {
+            config.onTrigger = onTriggerFn;
+          }
+          if (onUntriggerFn) {
+            config.onUntrigger = onUntriggerFn;
+          }
+            config['offset'] = [0,0];
+            config['maxWidth'] = 700;
+          window.tippy(el, config); 
+        }
+        const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+        for (var i=0; i<noterefs.length; i++) {
+          const ref = noterefs[i];
+          tippyHover(ref, function() {
+            // use id or data attribute instead here
+            let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+            try { href = new URL(href).hash; } catch {}
+            const id = href.replace(/^#\/?/, "");
+            const note = window.document.getElementById(id);
+            if (note) {
+              return note.innerHTML;
+            } else {
+              return "";
+            }
+          });
+        }
+        const findCites = (el) => {
+          const parentEl = el.parentElement;
+          if (parentEl) {
+            const cites = parentEl.dataset.cites;
+            if (cites) {
+              return {
+                el,
+                cites: cites.split(' ')
+              };
+            } else {
+              return findCites(el.parentElement)
+            }
+          } else {
+            return undefined;
+          }
+        };
+        var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+        for (var i=0; i<bibliorefs.length; i++) {
+          const ref = bibliorefs[i];
+          const citeInfo = findCites(ref);
+          if (citeInfo) {
+            tippyHover(citeInfo.el, function() {
+              var popup = window.document.createElement('div');
+              citeInfo.cites.forEach(function(cite) {
+                var citeDiv = window.document.createElement('div');
+                citeDiv.classList.add('hanging-indent');
+                citeDiv.classList.add('csl-entry');
+                var biblioDiv = window.document.getElementById('ref-' + cite);
+                if (biblioDiv) {
+                  citeDiv.innerHTML = biblioDiv.innerHTML;
+                }
+                popup.appendChild(citeDiv);
+              });
+              return popup.innerHTML;
+            });
+          }
+        }
+      });
+      </script>
+    
+
+</body></html>
