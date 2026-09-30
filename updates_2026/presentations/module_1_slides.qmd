@@ -287,6 +287,32 @@ Answer three written questions in `module_1_exercises.qmd`:
 
 ---
 
+## RStudio Needs a "Point of Reference"
+
+- Every time R reads or writes a file, it looks relative to one location: the **working directory**
+- Write `"data/chem_data.csv"` and R has to guess *which* `data/` folder you mean — it guesses based on the working directory, not where the file "obviously" is
+- No defined point of reference means the same code can run on your laptop and fail on a colleague's — or fail on your own machine next month
+- This is *not* a coding topic — it's a mental model you need before you write a single line of import code
+
+> A script that only runs from your Desktop isn't reproducible. It's just accidentally correct on your computer, today.
+
+::: {.notes}
+Frame the working directory as "where R thinks it is right now." Most import errors in Module 2 will trace back to this concept, so it's worth landing solidly here.
+:::
+
+---
+
+## RStudio Projects Fix the Problem
+
+- An **`.Rproj` file** marks a folder as a *project* — opening it tells RStudio "set the working directory here, every time"
+- Every relative path in your code (`data/chem_data.csv`) is now anchored to that project folder, regardless of whose computer it lives on
+- This is *why* Module 2 always starts with "open the `.Rproj` file" — not the script, not the `.qmd` — the project file first
+- Combined with a consistent folder structure, this is what makes an analysis **portable**: it runs the same way on any machine
+
+<p class="lead">The folder structure on the next slide only pays off once a project file anchors it.</p>
+
+---
+
 ## A Simple, Durable Folder Structure
 
 ![](assets/module_1/folder_structure.svg){fig-align="center" width="88%"}

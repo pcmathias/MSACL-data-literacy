@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 560" font-family="Helvetica, Arial, sans-serif">
+  <!-- Outer window frame -->
+  <rect x="10" y="10" width="980" height="540" rx="10" fill="#eceff1" stroke="#7f8c8d" stroke-width="2"/>
+  <!-- Title bar -->
+  <rect x="10" y="10" width="980" height="34" rx="10" fill="#34495e"/>
+  <circle cx="34" cy="27" r="6" fill="#e74c3c"/>
+  <circle cx="56" cy="27" r="6" fill="#f1c40f"/>
+  <circle cx="78" cy="27" r="6" fill="#2ecc71"/>
+  <text x="480" y="32" font-size="14" fill="#ffffff" text-anchor="middle">RStudio</text>
+
+  <!-- Source pane (top-left) -->
+  <rect x="26" y="60" width="460" height="230" rx="6" fill="#ffffff" stroke="#2980b9" stroke-width="2.5"/>
+  <rect x="26" y="60" width="460" height="34" fill="#2980b9"/>
+  <text x="42" y="83" font-size="16" font-weight="700" fill="#ffffff">Source</text>
+  <text x="42" y="118" font-size="13" fill="#2c3e50">Your .qmd / .R files live here</text>
+  <text x="42" y="140" font-size="13" fill="#2c3e50">Write code and narrative text</text>
+  <text x="42" y="162" font-size="13" fill="#2c3e50">Nothing runs until you tell it to</text>
+  <text x="42" y="184" font-size="12" font-family="Courier New, monospace" fill="#7f8c8d">chem &lt;- read_csv(...)</text>
+
+  <!-- Console pane (bottom-left) -->
+  <rect x="26" y="300" width="460" height="230" rx="6" fill="#2c3e50" stroke="#1a252f" stroke-width="2.5"/>
+  <rect x="26" y="300" width="460" height="34" fill="#1a252f"/>
+  <text x="42" y="323" font-size="16" font-weight="700" fill="#ffffff">Console</text>
+  <text x="42" y="360" font-size="13" fill="#d5dbdb">Where code actually executes</text>
+  <text x="42" y="382" font-size="13" fill="#d5dbdb">Type directly, or run from Source</text>
+  <text x="42" y="404" font-size="12" font-family="Courier New, monospace" fill="#58d68d">&gt; 1 + 1</text>
+  <text x="42" y="424" font-size="12" font-family="Courier New, monospace" fill="#58d68d">[1] 2</text>
+
+  <!-- Environment pane (top-right) -->
+  <rect x="514" y="60" width="460" height="230" rx="6" fill="#ffffff" stroke="#16a085" stroke-width="2.5"/>
+  <rect x="514" y="60" width="460" height="34" fill="#16a085"/>
+  <text x="530" y="83" font-size="16" font-weight="700" fill="#ffffff">Environment</text>
+  <text x="530" y="118" font-size="13" fill="#2c3e50">Every object you've created</text>
+  <text x="530" y="140" font-size="13" fill="#2c3e50">so far, in this session</text>
+  <text x="530" y="168" font-size="12" font-family="Courier New, monospace" fill="#7f8c8d">chem   155,544 obs. of 13 vars</text>
+
+  <!-- Files/Plots/Help pane (bottom-right) -->
+  <rect x="514" y="300" width="460" height="230" rx="6" fill="#ffffff" stroke="#d35400" stroke-width="2.5"/>
+  <rect x="514" y="300" width="460" height="34" fill="#d35400"/>
+  <text x="530" y="323" font-size="16" font-weight="700" fill="#ffffff">Files / Plots / Help</text>
+  <text x="530" y="360" font-size="13" fill="#2c3e50">Files: browse the project folder</text>
+  <text x="530" y="382" font-size="13" fill="#2c3e50">Plots: view charts you've built</text>
+  <text x="530" y="404" font-size="13" fill="#2c3e50">Help: documentation for any function</text>
+</svg>
