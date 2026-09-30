@@ -17,12 +17,11 @@ The 5-module version treats computational thinking as a destination — a standa
 ---
 
 ## Module 1: Data Literacy Foundations
-**Duration: 1.5 hours**
+**Duration: 1.4 hours**
 
 ### Learning Objectives
 - Distinguish common data types and explain why type matters for downstream analysis
 - Identify whether a dataset follows tidy data principles and articulate the tradeoffs
-- Apply project and file organization principles to set up a reproducible analysis environment
 - Recognize common data quality issues and explain their downstream consequences
 
 ### Topics and Interspersed Exercises
@@ -45,16 +44,14 @@ Two printed or projected tables — one tidy (long), one wide. Answer three writ
 **1.4 Data Quality and Common Pitfalls (10 min)**  
 Missing values, duplicate rows, out-of-range values, encoding inconsistencies, timestamp errors; how each can silently corrupt downstream results.
 
-**1.5 Project and File Organization (5 min)**  
-data/, R/, output/ folder structure; never modify raw data; the .Rproj file as the anchor for all relative paths.
-
 ---
 
 ## Module 2: Introduction to R and RStudio
-**Duration: 2 hours**
+**Duration: 2.1 hours**
 
 ### Learning Objectives
 - Navigate the RStudio interface and understand the purpose of each pane
+- Apply project and file organization principles to set up a reproducible analysis environment
 - Import and inspect a dataset using the tidyverse
 - Recognize and correct common data type misassignments
 - Apply a systematic data validation checklist after importing data
@@ -70,6 +67,9 @@ Open the course .Rproj file. Fill in a table identifying the four panes and thei
 **2.2 R Basics: Objects, Functions, and Packages (12 min)**  
 Assignment with `<-`; the difference between an object and a function; packages as bundled tools; `library(tidyverse)` as the only package needed for this course.
 
+**2.2b Project and File Organization (10 min)**  
+Why RStudio needs a "point of reference": the working directory, and why the same relative path can resolve differently on two machines. The `.Rproj` file as the fix — opening it anchors the working directory to the project folder, so every relative path (`data/chem_data.csv`) works the same way regardless of whose computer it's on. A simple, durable folder structure (`data/`, `R/`, `output/`); `data/` treated as read-only in spirit — never modify raw data by hand. This is *why* every module in this course starts with "open the `.Rproj` file first" — including the one learners just did in Check-in 2A.
+
 **2.3 Importing Data with Explicit Column Types (18 min)**  
 `read_csv()` and type inference; why R guesses wrong on datetime and factor columns; specifying `col_types` explicitly; the collect_dt format string `"%Y/%m/%d %H:%M:%S"`.
 
@@ -77,7 +77,7 @@ Assignment with `<-`; the difference between an object and a function; packages 
 Two-part: (1) import with `read_csv()` using default types, run `glimpse()` and `summary()` — identify which columns are wrong; (2) re-import with explicit `col_types`, confirm the corrections. Fill in two blanks: the datetime format string and `col_factor()` for pat_type.
 
 **2.4 Data Validation Checklist (15 min)**  
-Why validation is the first step after every import; the six-step checklist: `nrow()`, `n_distinct()`, `count()` by analyte, `count()` by pat_type, value range by test, timestamp completeness with `is.na()`.
+Why validation is the first step after every import; the six-step checklist: `nrow()`, `n_distinct()`, `count()` by analyte, `count()` by pat_type, value range spot-check on a single analyte (sodium, using a preview `filter()` — "we'll understand this in Module 4"), timestamp completeness with `is.na()`.
 
 → **Check-in 2C: Run the Checklist (15 min)**  
 Step through all six validation checks on the correctly imported chem_data. Record findings. Instructor debrief: what to do when validation reveals a problem.
@@ -251,11 +251,11 @@ Exercises are interspersed throughout each module rather than batched at the end
 
 | Module | Title | Lecture | Check-ins / Exercises | Total |
 |--------|-------|---------|-----------|-------|
-| 1 | Data Literacy Foundations | 45 min | 23 min (2 check-ins) | 1.5 hrs |
-| 2 | Introduction to R and RStudio | 57 min | 43 min (3 check-ins) | 2.0 hrs |
+| 1 | Data Literacy Foundations | 40 min | 18 min (2 check-ins) | 1.4 hrs |
+| 2 | Introduction to R and RStudio | 67 min | 43 min (3 check-ins) | 2.1 hrs |
 | 3 | Visualization Principles and Best Practices | 50 min | 60 min (3 check-ins + 2 exercises) | 2.0 hrs |
 | 4 | Computational Approaches to Data | 50 min | 143 min (7 check-ins + capstone) | 3.5 hrs |
-| **Total** | | **202 min** | **269 min** | **9.0 hrs** |
+| **Total** | | **207 min** | **264 min** | **9.0 hrs** |
 
 *Module 4 includes a 10-minute mid-module break absorbed within the 3.5-hour allocation. The larger exercise-to-lecture ratio in Module 4 is intentional: once each CT pillar is introduced (≤12 min), learners immediately apply it before the next concept is introduced.*
 
