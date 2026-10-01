@@ -88,8 +88,4 @@ If R or RStudio won't install on your machine (locked-down work laptop, permissi
 
 Please still try the normal installation first — Posit Cloud is slower and has usage limits on the free tier, so it's a fallback, not the primary plan.
 
----
 
-### Questions Before the Session?
-
-[Contact info / email — fill in before sending]
