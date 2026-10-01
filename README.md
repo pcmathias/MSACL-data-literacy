@@ -56,16 +56,7 @@ install.packages("tidyverse")
 
 ---
 
-### 4. Download the course materials
-
-1. Go to [github.com/pcmathias/MSACL-data-literacy](https://github.com/pcmathias/MSACL-data-literacy) (or scan the QR code provided at the session)
-2. Click the green **Code** button, then **Download ZIP**
-3. Unzip the folder somewhere you'll remember (e.g. your Desktop or Documents folder) — do **not** leave it inside your Downloads folder or inside another zip
-4. Inside the unzipped folder, double-click the `.Rproj` file to open the course project in RStudio
-
----
-
-### 5. Set up a free Claude account
+### 4. Set up a free Claude account
 
 We'll use Claude (Anthropic's AI assistant) during a few parts of the course. A free account is all you need.
 
@@ -78,7 +69,7 @@ You do not need a paid plan for anything in this course.
 
 ---
 
-### 6. Install the Claude desktop app (recommended)
+### 5. Install the Claude desktop app (recommended)
 
 The desktop app is the same Claude account you just created, in a dedicated application instead of a browser tab — it's a bit more convenient to switch to during the course than a browser tab, but it's optional.
 
@@ -102,4 +93,11 @@ If R or RStudio won't install on your machine (locked-down work laptop, permissi
 
 Please still try the normal installation first — Posit Cloud is slower and has usage limits on the free tier, so it's a fallback, not the primary plan.
 
+---
 
+### Day of the Course (Do Not Download Prior)
+
+1. Go to [github.com/pcmathias/MSACL-data-literacy](https://github.com/pcmathias/MSACL-data-literacy) (or scan the QR code provided at the session)
+2. Click the green **Code** button, then **Download ZIP**
+3. Unzip the folder somewhere you'll remember (e.g. your Desktop or Documents folder) — do **not** leave it inside your Downloads folder or inside another zip
+4. Inside the unzipped folder, double-click the `.Rproj` file to open the course project in RStudio
