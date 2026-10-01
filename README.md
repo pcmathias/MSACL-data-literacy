@@ -78,6 +78,20 @@ You do not need a paid plan for anything in this course.
 
 ---
 
+### 6. Install the Claude desktop app (recommended)
+
+The desktop app is the same Claude account you just created, in a dedicated application instead of a browser tab — it's a bit more convenient to switch to during the course than a browser tab, but it's optional.
+
+**Windows and Mac:**
+1. Go to [https://claude.ai/download](https://claude.ai/download)
+2. Download the installer for your operating system
+3. Run the installer and accept all the defaults
+4. Open the app and sign in with the same account you created in Step 5
+
+If you'd rather not install another application, using Claude at [https://claude.ai](https://claude.ai) in your browser works identically for everything in this course.
+
+---
+
 ### If Installation Fails: Posit Cloud (Backup Plan)
 
 If R or RStudio won't install on your machine (locked-down work laptop, permissions issues, etc.), you can run everything in a browser instead, with no installation:
