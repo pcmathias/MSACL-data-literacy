@@ -18,18 +18,27 @@ format:
     smaller: true
 ---
 
-## Welcome to DS 100
+## Disclosure of Relevant Financial Relationships
 
-- A short course on **data literacy**, **visualization**, and **computational thinking** for clinical laboratory professionals
-- We'll use **RStudio and the tidyverse** exclusively — no Excel
-- Designed to complement **MSACL 101** ("Breaking Up with Excel"), which teaches R syntax in depth
-- This course focuses on the *mental models* — why you organize and think about data the way you do
+The faculty, committee members, and staff who are in position to control the content of this activity are required to disclose to MSACL and to learners any financial relationships that have occurred within the last 24 months with ineligible companies whose primary business is producing, marketing, selling, re-selling, or distributing healthcare products used by or on patients. MSACL has reviewed the disclosures and mitigated all relevant financial relationships.
 
-<p class="lead">By the end of today: you'll think like a data-literate scientist before you write a single line of R.</p>
+You can view the financial disclosures of any Steering / Scientific Committee Member or Podium Presenters (except for Industry Workshops, which do not qualify for CME credit) on the MSACL website directly underneath the person's name. Click "Review Relevant Financial Disclosures".
+
+MSACL staff associated with the development of content for this activity report no relevant financial relationships.
 
 ::: {.notes}
-Frame this as a mental-model course, not a syntax course. Reassure trainees that heavy coding starts in Module 2, not now.
+This slide must be included in the deck WITHOUT MODIFICATION. Relevant Financial Relationships are declared on the following slide.
 :::
+
+---
+
+## Relevant Financial Relationships
+
+| Company | Relationship | Ended? |
+| --- | --- | --- |
+| None |  |  |
+|  |  |  |
+|  |  |  |
 
 ---
 
@@ -37,50 +46,110 @@ Frame this as a mental-model course, not a syntax course. Reassure trainees that
 
 By the end of this module, you will be able to:
 
+- Situate data literacy within the broader landscape of data science and analytics as practiced in the clinical laboratory
 - Distinguish common data types and explain why type matters for downstream analysis
 - Identify whether a dataset follows tidy data principles — and articulate the tradeoffs
-- Apply project and file organization principles for a reproducible analysis
 - Recognize common data quality issues and their downstream consequences
 
 <div class="pillars">
+<div><h4>Context</h4><p>Where does this fit in data science?</p></div>
 <div><h4>Types</h4><p>What can this value even do?</p></div>
 <div><h4>Structure</h4><p>How easy is this to work with?</p></div>
 <div><h4>Quality</h4><p>Can I trust this answer?</p></div>
-<div><h4>Organization</h4><p>Can I repeat this in 6 months?</p></div>
 </div>
 
 ---
 
-## Before We Start: Orienting in RStudio
+## The DIKW Pyramid
 
-This module has **no R code** — but we'll still work inside RStudio.
+Data is synthesized into information, then knowledge — and knowledge, in turn, can drive decision-making.
 
-Today, RStudio is simply a **text editor**: a place to open files, read them carefully, and record your answers.
+- **Data** — raw observations, recorded systematically
+- **Information** — data organized to answer a specific question
+- **Knowledge** — information connected to context and experience
+- **Wisdom** — knowledge applied to make a sound decision
 
-1. Open the course project — double-click the `.Rproj` file
-2. In the **Files** pane, open `updates_2026/exercises/module_1_exercises.qmd`
-3. This file opens in the **Source** pane — you'll type your answers directly into it
-4. Save often (Cmd/Ctrl+S) — nothing here runs or executes
+<p class="lead">Everything in this course lives at the base of this pyramid — but the whole point of building a solid base is what it lets you build on top of it.</p>
 
-> Getting oriented now — before anything needs to *run* — is what makes Module 2 feel easy instead of overwhelming.
+---
+
+## What Is Data Science?
+
+- Interdisciplinary field that uses computational methods, statistics, and broad analysis techniques (including visualization) to extract knowledge from data
+- Draws on a variety of academic disciplines, including mathematics, statistics, computer science, and information science/informatics
+- Critical to integrate domain knowledge: laboratory medicine
+
+---
+
+## Computational Tools Support a Broad Data Lifecycle
+
+Data science extends beyond *analysis* of data and includes considerations for *capturing* and *maintaining* data.
+
+- Capture — how data enters a system in the first place
+- Maintain — storage, structure, and quality over time
+- Analyze — the stage most people think of as "data science," but only one part of the lifecycle
+
+<p class="lead">Source: <em>ischoolonline.berkeley.edu/data-science/what-is-data-science</em></p>
+
+---
+
+## Statistics Helps Us Interpret Data Based on Expectations
+
+- Many categories of numeric lab data can be described by known distributions, e.g. the normal distribution
+- Statistical methods allow us to evaluate hypotheses about the data
+  - Does the data fit a normal distribution? If not, why not?
+  - Are the differences between these sets of observations significant?
 
 ::: {.notes}
-Emphasize: opening the .Rproj first matters because it sets the working directory correctly for every later module. This is the seed that pays off in Module 2 when relative paths need to work.
+Statistics can also be applied to non-numeric data — e.g. analysis of how words are used in clinical notes, and deriving methods to extract useful information from them.
 :::
 
 ---
 
-## Why RStudio — Even for a Non-Coding Module?
+## Data Analytics Is a Subset of Data Science
 
-- One consistent home for course materials, exercises, and (soon) code
-- The **Source** pane doubles as a plain-text and Markdown editor
-- Getting comfortable navigating panes *before* you need to run anything lowers the stakes
-- Module 2 will introduce RStudio as a *computational* tool — today is just geography
+Data analytics includes discovering useful information and conclusions to support decision-making from data:
 
-<div class="pillars">
-<div><h4>Today</h4><p>RStudio as a text editor — read, navigate, record answers</p></div>
-<div><h4>Module 2+</h4><p>RStudio as a computational tool — import, transform, visualize</p></div>
-</div>
+- Using real-world data
+- Visualization
+- Statistical and exploratory analysis
+- Machine learning
+- Communicating results
+
+---
+
+## Data Science Can Be Categorized by How the Data Is Applied
+
+| Quadrant | Question | Time Orientation |
+| --- | --- | --- |
+| **Descriptive** | What is happening? | Right now / recent past |
+| **Diagnostic** | Why is it happening? What are the root causes? | Recent past |
+| **Predictive** | What will happen? When might it happen? | Future |
+| **Prescriptive** | What should we do? | Integrates predicted and past |
+
+---
+
+## Descriptive Analytics Are Becoming More Common Across Healthcare Settings
+
+Example: a DLMP Quality Assurance Dashboard — surfacing current and recent-past lab performance metrics for ongoing monitoring.
+
+---
+
+## Predictive Analytics Are Emerging in Multiple Domains
+
+Example: a UWMC Phlebotomy Prediction model — using historical patterns to anticipate future draw volume.
+
+---
+
+## What Is the Role of the Laboratorian?
+
+- Define the important problems to solve and/or questions to answer
+- Subject matter expert: those generating the data best understand the data
+- Perform and interpret routine analyses (e.g. quality control)
+- Support the validation of analyses done by others
+- Develop and/or perform new analyses for quality improvement
+
+<p class="lead">Data science tools are only as good as the domain expertise that directs them — and in the clinical lab, that expertise is yours.</p>
 
 ---
 
@@ -99,6 +168,20 @@ Emphasize: opening the .Rproj first matters because it sets the working director
   - **Derived data** — calculated or transformed from raw values (a turnaround time, a mean)
 
 > If you can't say what real-world event a value represents, you don't yet understand your data.
+
+---
+
+## Data Representation
+
+Data representation is the assignment of meaning to physical artifacts — characters, numbers, words, phrases — as electronic states of computer memory.
+
+- **Unstructured data** (human language): extremely flexible; form and usage vary with location and time; context-dependent
+- **Structured data**: constrained language; well-defined syntax and semantics
+- A **data standard** is a formal agreement on data representation — the thing that allows data to be shared and interoperate across systems
+
+::: {.notes}
+Pre-computer, "data representation" usually meant visual artifacts. Data standards are what allow sharing and interoperability. Source: Siriyasatien et al., IEEE Access 2018, doi:10.1109/ACCESS.2018.2871241. © 2023 James H. Harrison, Jr.
+:::
 
 ---
 
@@ -145,6 +228,28 @@ Walk through each card briefly rather than reading it verbatim — ask learners 
 
 ---
 
+## Poll: How Many Ways Can "100" Be Represented in a Computer?
+
+<p class="lead">Take a moment before the next slide — how many representations can you think of?</p>
+
+---
+
+## Representation Has Functional Implications
+
+All representations of a number are ultimately binary — but the *form* matters:
+
+- **Integer** — can't divide with a decimal result or include directly in text
+- **Floating point** — inexact, can't include directly in text
+- **Character string** — can't do math without conversion
+
+<p class="lead">Medical systems often represent numbers as text: it saves space for usual-sized numbers, display is often the primary purpose, and math is converted only when needed.</p>
+
+::: {.notes}
+© 2023 James H. Harrison, Jr.
+:::
+
+---
+
 ## A Special Case: Censored / Below-LOD Values
 
 ::: columns
@@ -177,6 +282,55 @@ We will not perform formal censored-data statistics in this course — but recog
 - The datetime has no explicit format label — R will have to be told how to read it (Module 2)
 
 <p class="lead">Every column in this row is a small decision you'll have to make deliberately.</p>
+
+---
+
+## Data Frames
+
+- A **data frame** is a two-dimensional collection of heterogeneous data
+- Spreadsheet-like data — typically organized in columns with a fixed data type
+- Columns (or variables) are often explicitly named
+
+| Identifier | Location | Test | Value |
+| --- | --- | --- | --- |
+| F123456 | Inpatient | Sodium | 140 |
+| W987654 | Outpatient | Potassium | 4.8 |
+| X234537 | ED | AST | 70 |
+
+<p class="lead">Everything you'll do in R starts from data shaped like this.</p>
+
+---
+
+## Before We Start: Orienting in RStudio
+
+This module has **no R code** — but we'll still work inside RStudio.
+
+Today, RStudio is simply a **text editor**: a place to open files, read them carefully, and record your answers.
+
+1. Open the course project — double-click the `.Rproj` file
+2. In the **Files** pane, open `updates_2026/exercises/module_1_exercises.qmd`
+3. This file opens in the **Source** pane — you'll type your answers directly into it
+4. Save often (Cmd/Ctrl+S) — nothing here runs or executes
+
+> Getting oriented now — before anything needs to *run* — is what makes Module 2 feel easy instead of overwhelming.
+
+::: {.notes}
+Emphasize: opening the .Rproj first matters because it sets the working directory correctly for every later module. This is the seed that pays off in Module 2 when relative paths need to work.
+:::
+
+---
+
+## Why RStudio — Even for a Non-Coding Module?
+
+- One consistent home for course materials, exercises, and (soon) code
+- The **Source** pane doubles as a plain-text and Markdown editor
+- Getting comfortable navigating panes *before* you need to run anything lowers the stakes
+- Module 2 will introduce RStudio as a *computational* tool — today is just geography
+
+<div class="pillars">
+<div><h4>Today</h4><p>RStudio as a text editor — read, navigate, record answers</p></div>
+<div><h4>Module 2+</h4><p>RStudio as a computational tool — import, transform, visualize</p></div>
+</div>
 
 ---
 
@@ -239,6 +393,22 @@ Same information — very different shapes. Notice the explicit `NA` that appear
 
 ---
 
+## Tidy Data Summarized
+
+A dataset is tidy if:
+
+- Each **variable** is in its own column
+- Each **observation** is in its own row
+- Each **value** is in its own cell
+
+<p class="lead">MRN, test, value, and every other measured fact each get their own column — and every patient/analyte combination gets its own row.</p>
+
+::: {.notes}
+Wickham, H. (2014). Tidy Data. Journal of Statistical Software, 59(10), 1–23.
+:::
+
+---
+
 ## → Check-in 1B: Tidy or Not Tidy? {background-color="#8e44ad"}
 
 <div class="badge">⏱ 8 minutes</div>
@@ -256,6 +426,24 @@ Answer three written questions in `module_1_exercises.qmd`:
 ## 1.4 Data Quality and Common Pitfalls {background-color="#2c3e50"}
 
 <p class="subtitle">Plausible-looking data is not the same thing as trustworthy data</p>
+
+---
+
+## Data Quality
+
+| Dimension | Question |
+| --- | --- |
+| **Completeness** | Is data present and available? |
+| **Correctness** | Is data true? |
+| **Concordance** | Is there agreement and consistency between data elements? |
+| **Plausibility** | Does data make sense in the clinical context? |
+| **Currency** | Is data a relevant representation at a defined point in time? |
+
+::: {.notes}
+Weiskopf NG, Weng C. Methods and dimensions of electronic health record data quality assessment: enabling reuse for clinical research. J Am Med Inform Assoc. 2013;20(1):144-151. doi:10.1136/amiajnl-2011-000681. © 2023 James H. Harrison, Jr.
+
+Why is data quality important for computers? Humans become conservative when data is uncertain and the stakes are high; computers don't, unless programmed to. Handling uncertainty and incorporating low quality into a result means the result quality may reflect the lowest-quality input — garbage in, garbage out.
+:::
 
 ---
 
@@ -281,65 +469,31 @@ Answer three written questions in `module_1_exercises.qmd`:
 
 ---
 
-## 1.5 Project and File Organization {background-color="#2c3e50"}
-
-<p class="subtitle">Reproducibility starts with where your files live, not with your code</p>
-
----
-
-## RStudio Needs a "Point of Reference"
-
-- Every time R reads or writes a file, it looks relative to one location: the **working directory**
-- Write `"data/chem_data.csv"` and R has to guess *which* `data/` folder you mean — it guesses based on the working directory, not where the file "obviously" is
-- No defined point of reference means the same code can run on your laptop and fail on a colleague's — or fail on your own machine next month
-- This is *not* a coding topic — it's a mental model you need before you write a single line of import code
-
-> A script that only runs from your Desktop isn't reproducible. It's just accidentally correct on your computer, today.
-
-::: {.notes}
-Frame the working directory as "where R thinks it is right now." Most import errors in Module 2 will trace back to this concept, so it's worth landing solidly here.
-:::
-
----
-
-## RStudio Projects Fix the Problem
-
-- An **`.Rproj` file** marks a folder as a *project* — opening it tells RStudio "set the working directory here, every time"
-- Every relative path in your code (`data/chem_data.csv`) is now anchored to that project folder, regardless of whose computer it lives on
-- This is *why* Module 2 always starts with "open the `.Rproj` file" — not the script, not the `.qmd` — the project file first
-- Combined with a consistent folder structure, this is what makes an analysis **portable**: it runs the same way on any machine
-
-<p class="lead">The folder structure on the next slide only pays off once a project file anchors it.</p>
-
----
-
-## A Simple, Durable Folder Structure
-
-![](assets/module_1/folder_structure.svg){fig-align="center" width="88%"}
-
-- **`data/` is read-only, in spirit** — never overwrite or edit a raw file by hand
-- The `.Rproj` file anchors all relative paths so your code works regardless of where the folder lives on disk
-
----
-
 ## Bringing It Together
 
 <div class="pillars">
 <div><h4>Data types</h4><p>Determine what's even <em>possible</em> to compute</p></div>
 <div><h4>Tidy structure</h4><p>Determines what's <em>easy</em> to compute</p></div>
 <div><h4>Data quality</h4><p>Determines whether your answer is <em>trustworthy</em></p></div>
-<div><h4>File organization</h4><p>Determines whether your work is <em>repeatable</em></p></div>
 </div>
 
-<p class="lead">Four habits. Zero lines of R code. All essential before you ever open a script.</p>
+<p class="lead">Three habits. Zero lines of R code. All essential before you ever open a script.</p>
 
 ---
 
 ## Coming Up: Module 2
 
 - RStudio as a **computational** tool, not just a text editor
+- How to set up a project so your code runs the same way on any machine
 - Importing `chem_data.csv` with the tidyverse
 - Correcting the types you predicted today
 - A hands-on data validation checklist
 
 <p class="lead"><strong>Bring your laptop, charged, with R and RStudio installed.</strong></p>
+
+---
+
+## References & Acknowledgements
+
+- James Harrison, *Introduction to Pathology Informatics*, Session 8: Cybersecurity, API Distribution 1.0, 2023. Available at: https://www.pathologyinformatics.org/teaching-slide-sets
+- Robert Benirschke & Chris McCudden for slides adapted from ADLM Data Science Certificate materials

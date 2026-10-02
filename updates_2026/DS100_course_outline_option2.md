@@ -17,32 +17,50 @@ The 5-module version treats computational thinking as a destination — a standa
 ---
 
 ## Module 1: Data Literacy Foundations
-**Duration: 1.4 hours**
+**Duration: 1.4 hours (~81 min content, remainder is transition/buffer)**
+
+Slide count and timing below are aligned to the current `module_1_slides.pptx` (41 slides), assuming 1–2 minutes per slide depending on density (a single-bullet transition slide runs ~1 min; a diagram or table slide runs ~2–2.5 min).
 
 ### Learning Objectives
+- Situate data literacy within the broader landscape of data science and analytics as practiced in the clinical laboratory
 - Distinguish common data types and explain why type matters for downstream analysis
 - Identify whether a dataset follows tidy data principles and articulate the tradeoffs
 - Recognize common data quality issues and explain their downstream consequences
 
 ### Topics and Interspersed Exercises
 
-**1.1 What Is Data? (10 min)**  
-Data as observations recorded systematically; the distinction between raw and derived values; why structure matters before any analysis begins.
+**Required CME disclosure (1.5 min, 2 slides)**  
+Disclosure of Relevant Financial Relationships (verbatim, unmodified per MSACL requirement) and the Relevant Financial Relationships table.
 
-**1.2 Data Types — including censored/LOD values (15 min)**  
-Numeric, categorical, ordinal, datetime, and censored/LOD types; why misidentifying a type causes downstream errors; how types appear in a raw CSV.
+**1.0 Data Science in the Clinical Laboratory (20 min, 9 slides — carried over from the prior year's deck)**  
+Module Learning Objectives; the DIKW pyramid (data → information → knowledge → decision); what data science is and the disciplines it draws on; the broader data lifecycle (capture, maintain, analyze); how statistics fits in as one tool among several for evaluating expectations against data; data analytics as a subset of data science; the four-quadrant framework for categorizing analytics by how the data is applied (descriptive, diagnostic, predictive, prescriptive), with a real descriptive-analytics example (a DLMP quality dashboard) and a real predictive-analytics example (a phlebotomy prediction model); the laboratorian's role as subject-matter expert, interpreter, validator, and developer of analyses. This section sets the stage before narrowing to the mechanics of data itself — it answers "why does any of this matter to me as a laboratorian?" before Section 1.1 asks "what actually is data?"
+
+**1.1 What Is Data? (7 min, 3 slides)**  
+Data as observations recorded systematically; the distinction between raw and derived values; how data is represented physically and in structured vs. unstructured form; why structure matters before any analysis begins.
+
+**1.2 Data Types — including censored/LOD values (14 min, 7 slides)**  
+Why data types matter; the common data-type categories; a poll on how many ways a single value like "100" can be represented in a computer, followed by the functional implications of that representation (integer vs. floating point vs. character string, and why medical systems often store numbers as text); censored/below-LOD values as a special, non-missing type; how types appear (or fail to declare themselves) in a raw CSV row; data frames as the two-dimensional structure that will hold all of this in R.
+
+**Orienting in RStudio (3 min, 2 slides)**  
+Before Check-in 1A asks learners to record answers in a `.qmd` file, a short orientation: RStudio today is purely a text editor (open the `.Rproj`, open `module_1_exercises.qmd`, type answers, save often — nothing executes) and a preview of why RStudio is a durable home for materials even in a non-coding module. This orientation is placed immediately before the check-in that requires it, rather than at the top of the module, so the "why" is immediately followed by the "do."
 
 → **Check-in 1A: Spot the Types (10 min)**  
 Open chem_data.csv in a text editor (no R yet). For each of the 13 columns, predict the data type and note any ambiguities — particularly collect_dt, value, and pregnancy_status_at_exam. Debrief as a group; instructor highlights the datetime format string and the LOD issue in value.
 
-**1.3 Tidy Data Principles (12 min)**  
-Each variable a column, each observation a row, each value a cell; why the same data can be structured multiple ways; the tradeoffs between long and wide formats.
+**1.3 Tidy Data Principles (8 min, 4 slides)**  
+Each variable a column, each observation a row, each value a cell; why the same data can be structured multiple ways; the tradeoffs between long and wide formats; a summary recap of the three principles with a worked example.
 
 → **Check-in 1B: Tidy or Not Tidy? (8 min)**  
 Two printed or projected tables — one tidy (long), one wide. Answer three written questions: which is tidy, what would need to change to make the other one tidy, and which format would you use for a chart vs. a pivot table?
 
-**1.4 Data Quality and Common Pitfalls (10 min)**  
-Missing values, duplicate rows, out-of-range values, encoding inconsistencies, timestamp errors; how each can silently corrupt downstream results.
+**1.4 Data Quality and Common Pitfalls (6 min, 3 slides)**  
+The five dimensions of data quality (completeness, correctness, concordance, plausibility, currency); common data quality issues in practice (missing values, duplicate rows, out-of-range values, encoding inconsistencies, timestamp errors); why silent errors — the ones that don't crash anything — are the dangerous ones.
+
+**Closing (3 min, 2 slides)**  
+Bringing it together (types/structure/quality as the three habits underlying everything that follows); a preview of Module 2.
+
+**References (0.5 min, 1 slide)**  
+Cited sources and acknowledgements for content adapted from prior MSACL/ADLM Data Science Certificate materials.
 
 ---
 
@@ -251,11 +269,11 @@ Exercises are interspersed throughout each module rather than batched at the end
 
 | Module | Title | Lecture | Check-ins / Exercises | Total |
 |--------|-------|---------|-----------|-------|
-| 1 | Data Literacy Foundations | 40 min | 18 min (2 check-ins) | 1.4 hrs |
+| 1 | Data Literacy Foundations | 63 min | 18 min (2 check-ins) | 1.35 hrs |
 | 2 | Introduction to R and RStudio | 67 min | 43 min (3 check-ins) | 2.1 hrs |
 | 3 | Visualization Principles and Best Practices | 50 min | 60 min (3 check-ins + 2 exercises) | 2.0 hrs |
 | 4 | Computational Approaches to Data | 50 min | 143 min (7 check-ins + capstone) | 3.5 hrs |
-| **Total** | | **207 min** | **264 min** | **9.0 hrs** |
+| **Total** | | **230 min** | **264 min** | **8.97 hrs** |
 
 *Module 4 includes a 10-minute mid-module break absorbed within the 3.5-hour allocation. The larger exercise-to-lecture ratio in Module 4 is intentional: once each CT pillar is introduced (≤12 min), learners immediately apply it before the next concept is introduced.*
 

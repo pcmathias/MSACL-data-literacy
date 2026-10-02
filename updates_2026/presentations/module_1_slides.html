@@ -146,19 +146,13 @@ MSACL DS 100
 </div>
 
 </section>
-<section id="welcome-to-ds-100" class="slide level2">
-<h2>Welcome to DS 100</h2>
-<ul>
-<li>A short course on <strong>data literacy</strong>, <strong>visualization</strong>, and <strong>computational thinking</strong> for clinical laboratory professionals</li>
-<li>We’ll use <strong>RStudio and the tidyverse</strong> exclusively — no Excel</li>
-<li>Designed to complement <strong>MSACL 101</strong> (“Breaking Up with Excel”), which teaches R syntax in depth</li>
-<li>This course focuses on the <em>mental models</em> — why you organize and think about data the way you do</li>
-</ul>
-<p class="lead">
-By the end of today: you’ll think like a data-literate scientist before you write a single line of R.
-</p>
+<section id="disclosure-of-relevant-financial-relationships" class="slide level2">
+<h2>Disclosure of Relevant Financial Relationships</h2>
+<p>The faculty, committee members, and staff who are in position to control the content of this activity are required to disclose to MSACL and to learners any financial relationships that have occurred within the last 24 months with ineligible companies whose primary business is producing, marketing, selling, re-selling, or distributing healthcare products used by or on patients. MSACL has reviewed the disclosures and mitigated all relevant financial relationships.</p>
+<p>You can view the financial disclosures of any Steering / Scientific Committee Member or Podium Presenters (except for Industry Workshops, which do not qualify for CME credit) on the MSACL website directly underneath the person’s name. Click “Review Relevant Financial Disclosures”.</p>
+<p>MSACL staff associated with the development of content for this activity report no relevant financial relationships.</p>
 <aside class="notes">
-<p>Frame this as a mental-model course, not a syntax course. Reassure trainees that heavy coding starts in Module 2, not now.</p>
+<p>This slide must be included in the deck WITHOUT MODIFICATION. Relevant Financial Relationships are declared on the following slide.</p>
 <style type="text/css">
         span.MJX_Assistive_MathML {
           position:absolute!important;
@@ -171,16 +165,53 @@ By the end of today: you’ll think like a data-literate scientist before you wr
           display:block!important;
       }</style></aside>
 </section>
+<section id="relevant-financial-relationships" class="slide level2">
+<h2>Relevant Financial Relationships</h2>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Company</th>
+<th>Relationship</th>
+<th>Ended?</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>None</td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
 <section id="module-1-learning-objectives" class="slide level2">
 <h2>Module 1 Learning Objectives</h2>
 <p>By the end of this module, you will be able to:</p>
 <ul>
+<li>Situate data literacy within the broader landscape of data science and analytics as practiced in the clinical laboratory</li>
 <li>Distinguish common data types and explain why type matters for downstream analysis</li>
 <li>Identify whether a dataset follows tidy data principles — and articulate the tradeoffs</li>
-<li>Apply project and file organization principles for a reproducible analysis</li>
 <li>Recognize common data quality issues and their downstream consequences</li>
 </ul>
 <div class="pillars">
+<div>
+<h4>
+Context
+</h4>
+<p>
+Where does this fit in data science?
+</p>
+</div>
 <div>
 <h4>
 Types
@@ -205,31 +236,53 @@ Quality
 Can I trust this answer?
 </p>
 </div>
-<div>
-<h4>
-Organization
-</h4>
-<p>
-Can I repeat this in 6 months?
-</p>
-</div>
 </div>
 </section>
-<section id="before-we-start-orienting-in-rstudio" class="slide level2">
-<h2>Before We Start: Orienting in RStudio</h2>
-<p>This module has <strong>no R code</strong> — but we’ll still work inside RStudio.</p>
-<p>Today, RStudio is simply a <strong>text editor</strong>: a place to open files, read them carefully, and record your answers.</p>
-<ol type="1">
-<li>Open the course project — double-click the <code>.Rproj</code> file</li>
-<li>In the <strong>Files</strong> pane, open <code>updates_2026/exercises/module_1_exercises.qmd</code></li>
-<li>This file opens in the <strong>Source</strong> pane — you’ll type your answers directly into it</li>
-<li>Save often (Cmd/Ctrl+S) — nothing here runs or executes</li>
-</ol>
-<blockquote>
-<p>Getting oriented now — before anything needs to <em>run</em> — is what makes Module 2 feel easy instead of overwhelming.</p>
-</blockquote>
+<section id="the-dikw-pyramid" class="slide level2">
+<h2>The DIKW Pyramid</h2>
+<p>Data is synthesized into information, then knowledge — and knowledge, in turn, can drive decision-making.</p>
+<ul>
+<li><strong>Data</strong> — raw observations, recorded systematically</li>
+<li><strong>Information</strong> — data organized to answer a specific question</li>
+<li><strong>Knowledge</strong> — information connected to context and experience</li>
+<li><strong>Wisdom</strong> — knowledge applied to make a sound decision</li>
+</ul>
+<p class="lead">
+Everything in this course lives at the base of this pyramid — but the whole point of building a solid base is what it lets you build on top of it.
+</p>
+</section>
+<section id="what-is-data-science" class="slide level2">
+<h2>What Is Data Science?</h2>
+<ul>
+<li>Interdisciplinary field that uses computational methods, statistics, and broad analysis techniques (including visualization) to extract knowledge from data</li>
+<li>Draws on a variety of academic disciplines, including mathematics, statistics, computer science, and information science/informatics</li>
+<li>Critical to integrate domain knowledge: laboratory medicine</li>
+</ul>
+</section>
+<section id="computational-tools-support-a-broad-data-lifecycle" class="slide level2">
+<h2>Computational Tools Support a Broad Data Lifecycle</h2>
+<p>Data science extends beyond <em>analysis</em> of data and includes considerations for <em>capturing</em> and <em>maintaining</em> data.</p>
+<ul>
+<li>Capture — how data enters a system in the first place</li>
+<li>Maintain — storage, structure, and quality over time</li>
+<li>Analyze — the stage most people think of as “data science,” but only one part of the lifecycle</li>
+</ul>
+<p class="lead">
+Source: <em>ischoolonline.berkeley.edu/data-science/what-is-data-science</em>
+</p>
+</section>
+<section id="statistics-helps-us-interpret-data-based-on-expectations" class="slide level2">
+<h2>Statistics Helps Us Interpret Data Based on Expectations</h2>
+<ul>
+<li>Many categories of numeric lab data can be described by known distributions, e.g.&nbsp;the normal distribution</li>
+<li>Statistical methods allow us to evaluate hypotheses about the data
+<ul>
+<li>Does the data fit a normal distribution? If not, why not?</li>
+<li>Are the differences between these sets of observations significant?</li>
+</ul></li>
+</ul>
 <aside class="notes">
-<p>Emphasize: opening the .Rproj first matters because it sets the working directory correctly for every later module. This is the seed that pays off in Module 2 when relative paths need to work.</p>
+<p>Statistics can also be applied to non-numeric data — e.g.&nbsp;analysis of how words are used in clinical notes, and deriving methods to extract useful information from them.</p>
 <style type="text/css">
         span.MJX_Assistive_MathML {
           position:absolute!important;
@@ -242,32 +295,76 @@ Can I repeat this in 6 months?
           display:block!important;
       }</style></aside>
 </section>
-<section id="why-rstudio-even-for-a-non-coding-module" class="slide level2">
-<h2>Why RStudio — Even for a Non-Coding Module?</h2>
+<section id="data-analytics-is-a-subset-of-data-science" class="slide level2">
+<h2>Data Analytics Is a Subset of Data Science</h2>
+<p>Data analytics includes discovering useful information and conclusions to support decision-making from data:</p>
 <ul>
-<li>One consistent home for course materials, exercises, and (soon) code</li>
-<li>The <strong>Source</strong> pane doubles as a plain-text and Markdown editor</li>
-<li>Getting comfortable navigating panes <em>before</em> you need to run anything lowers the stakes</li>
-<li>Module 2 will introduce RStudio as a <em>computational</em> tool — today is just geography</li>
+<li>Using real-world data</li>
+<li>Visualization</li>
+<li>Statistical and exploratory analysis</li>
+<li>Machine learning</li>
+<li>Communicating results</li>
 </ul>
-<div class="pillars">
-<div>
-<h4>
-Today
-</h4>
-<p>
-RStudio as a text editor — read, navigate, record answers
+</section>
+<section id="data-science-can-be-categorized-by-how-the-data-is-applied" class="slide level2">
+<h2>Data Science Can Be Categorized by How the Data Is Applied</h2>
+<table class="caption-top">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Quadrant</th>
+<th>Question</th>
+<th>Time Orientation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Descriptive</strong></td>
+<td>What is happening?</td>
+<td>Right now / recent past</td>
+</tr>
+<tr class="even">
+<td><strong>Diagnostic</strong></td>
+<td>Why is it happening? What are the root causes?</td>
+<td>Recent past</td>
+</tr>
+<tr class="odd">
+<td><strong>Predictive</strong></td>
+<td>What will happen? When might it happen?</td>
+<td>Future</td>
+</tr>
+<tr class="even">
+<td><strong>Prescriptive</strong></td>
+<td>What should we do?</td>
+<td>Integrates predicted and past</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="descriptive-analytics-are-becoming-more-common-across-healthcare-settings" class="slide level2">
+<h2>Descriptive Analytics Are Becoming More Common Across Healthcare Settings</h2>
+<p>Example: a DLMP Quality Assurance Dashboard — surfacing current and recent-past lab performance metrics for ongoing monitoring.</p>
+</section>
+<section id="predictive-analytics-are-emerging-in-multiple-domains" class="slide level2">
+<h2>Predictive Analytics Are Emerging in Multiple Domains</h2>
+<p>Example: a UWMC Phlebotomy Prediction model — using historical patterns to anticipate future draw volume.</p>
+</section>
+<section id="what-is-the-role-of-the-laboratorian" class="slide level2">
+<h2>What Is the Role of the Laboratorian?</h2>
+<ul>
+<li>Define the important problems to solve and/or questions to answer</li>
+<li>Subject matter expert: those generating the data best understand the data</li>
+<li>Perform and interpret routine analyses (e.g.&nbsp;quality control)</li>
+<li>Support the validation of analyses done by others</li>
+<li>Develop and/or perform new analyses for quality improvement</li>
+</ul>
+<p class="lead">
+Data science tools are only as good as the domain expertise that directs them — and in the clinical lab, that expertise is yours.
 </p>
-</div>
-<div>
-<h4>
-Module 2+
-</h4>
-<p>
-RStudio as a computational tool — import, transform, visualize
-</p>
-</div>
-</div>
 </section>
 <section id="what-is-data" class="slide level2" data-background-color="#2c3e50">
 <h2>1.1 What Is Data?</h2>
@@ -289,6 +386,28 @@ Before we touch R, we need a shared vocabulary for what we’re even looking at
 <blockquote>
 <p>If you can’t say what real-world event a value represents, you don’t yet understand your data.</p>
 </blockquote>
+</section>
+<section id="data-representation" class="slide level2">
+<h2>Data Representation</h2>
+<p>Data representation is the assignment of meaning to physical artifacts — characters, numbers, words, phrases — as electronic states of computer memory.</p>
+<ul>
+<li><strong>Unstructured data</strong> (human language): extremely flexible; form and usage vary with location and time; context-dependent</li>
+<li><strong>Structured data</strong>: constrained language; well-defined syntax and semantics</li>
+<li>A <strong>data standard</strong> is a formal agreement on data representation — the thing that allows data to be shared and interoperate across systems</li>
+</ul>
+<aside class="notes">
+<p>Pre-computer, “data representation” usually meant visual artifacts. Data standards are what allow sharing and interoperability. Source: Siriyasatien et al., IEEE Access 2018, doi:10.1109/ACCESS.2018.2871241. © 2023 James H. Harrison, Jr.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
 </section>
 <section id="why-structure-matters-before-any-analysis" class="slide level2">
 <h2>Why Structure Matters — Before Any Analysis</h2>
@@ -330,6 +449,37 @@ Six categories cover almost everything you’ll encounter in clinical and MS dat
 
 <img data-src="assets/module_1/data_types.svg" class="quarto-figure quarto-figure-center r-stretch" style="width:92.0%"><aside class="notes">
 <p>Walk through each card briefly rather than reading it verbatim — ask learners to shout out which chem_data column they think matches each card.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="poll-how-many-ways-can-100-be-represented-in-a-computer" class="slide level2">
+<h2>Poll: How Many Ways Can “100” Be Represented in a Computer?</h2>
+<p class="lead">
+Take a moment before the next slide — how many representations can you think of?
+</p>
+</section>
+<section id="representation-has-functional-implications" class="slide level2">
+<h2>Representation Has Functional Implications</h2>
+<p>All representations of a number are ultimately binary — but the <em>form</em> matters:</p>
+<ul>
+<li><strong>Integer</strong> — can’t divide with a decimal result or include directly in text</li>
+<li><strong>Floating point</strong> — inexact, can’t include directly in text</li>
+<li><strong>Character string</strong> — can’t do math without conversion</li>
+</ul>
+<p class="lead">
+Medical systems often represent numbers as text: it saves space for usual-sized numbers, display is often the primary purpose, and math is converted only when needed.
+</p>
+<aside class="notes">
+<p>© 2023 James H. Harrison, Jr.</p>
 <style type="text/css">
         span.MJX_Assistive_MathML {
           position:absolute!important;
@@ -385,6 +535,101 @@ Six categories cover almost everything you’ll encounter in clinical and MS dat
 <p class="lead">
 Every column in this row is a small decision you’ll have to make deliberately.
 </p>
+</section>
+<section id="data-frames" class="slide level2">
+<h2>Data Frames</h2>
+<ul>
+<li>A <strong>data frame</strong> is a two-dimensional collection of heterogeneous data</li>
+<li>Spreadsheet-like data — typically organized in columns with a fixed data type</li>
+<li>Columns (or variables) are often explicitly named</li>
+</ul>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Identifier</th>
+<th>Location</th>
+<th>Test</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>F123456</td>
+<td>Inpatient</td>
+<td>Sodium</td>
+<td>140</td>
+</tr>
+<tr class="even">
+<td>W987654</td>
+<td>Outpatient</td>
+<td>Potassium</td>
+<td>4.8</td>
+</tr>
+<tr class="odd">
+<td>X234537</td>
+<td>ED</td>
+<td>AST</td>
+<td>70</td>
+</tr>
+</tbody>
+</table>
+<p class="lead">
+Everything you’ll do in R starts from data shaped like this.
+</p>
+</section>
+<section id="before-we-start-orienting-in-rstudio" class="slide level2">
+<h2>Before We Start: Orienting in RStudio</h2>
+<p>This module has <strong>no R code</strong> — but we’ll still work inside RStudio.</p>
+<p>Today, RStudio is simply a <strong>text editor</strong>: a place to open files, read them carefully, and record your answers.</p>
+<ol type="1">
+<li>Open the course project — double-click the <code>.Rproj</code> file</li>
+<li>In the <strong>Files</strong> pane, open <code>updates_2026/exercises/module_1_exercises.qmd</code></li>
+<li>This file opens in the <strong>Source</strong> pane — you’ll type your answers directly into it</li>
+<li>Save often (Cmd/Ctrl+S) — nothing here runs or executes</li>
+</ol>
+<blockquote>
+<p>Getting oriented now — before anything needs to <em>run</em> — is what makes Module 2 feel easy instead of overwhelming.</p>
+</blockquote>
+<aside class="notes">
+<p>Emphasize: opening the .Rproj first matters because it sets the working directory correctly for every later module. This is the seed that pays off in Module 2 when relative paths need to work.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="why-rstudio-even-for-a-non-coding-module" class="slide level2">
+<h2>Why RStudio — Even for a Non-Coding Module?</h2>
+<ul>
+<li>One consistent home for course materials, exercises, and (soon) code</li>
+<li>The <strong>Source</strong> pane doubles as a plain-text and Markdown editor</li>
+<li>Getting comfortable navigating panes <em>before</em> you need to run anything lowers the stakes</li>
+<li>Module 2 will introduce RStudio as a <em>computational</em> tool — today is just geography</li>
+</ul>
+<div class="pillars">
+<div>
+<h4>
+Today
+</h4>
+<p>
+RStudio as a text editor — read, navigate, record answers
+</p>
+</div>
+<div>
+<h4>
+Module 2+
+</h4>
+<p>
+RStudio as a computational tool — import, transform, visualize
+</p>
+</div>
+</div>
 </section>
 <section id="check-in-1a-spot-the-types" class="slide level2" data-background-color="#8e44ad">
 <h2>→ Check-in 1A: Spot the Types</h2>
@@ -470,6 +715,31 @@ The same facts, organized differently, can make an analysis easy or nearly impos
 <li>The tidyverse gives you tools (<code>pivot_longer()</code>, <code>pivot_wider()</code>) to convert between them — we’ll see these in Module 4</li>
 </ul>
 </section>
+<section id="tidy-data-summarized" class="slide level2">
+<h2>Tidy Data Summarized</h2>
+<p>A dataset is tidy if:</p>
+<ul>
+<li>Each <strong>variable</strong> is in its own column</li>
+<li>Each <strong>observation</strong> is in its own row</li>
+<li>Each <strong>value</strong> is in its own cell</li>
+</ul>
+<p class="lead">
+MRN, test, value, and every other measured fact each get their own column — and every patient/analyte combination gets its own row.
+</p>
+<aside class="notes">
+<p>Wickham, H. (2014). Tidy Data. Journal of Statistical Software, 59(10), 1–23.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
 <section id="check-in-1b-tidy-or-not-tidy" class="slide level2" data-background-color="#8e44ad">
 <h2>→ Check-in 1B: Tidy or Not Tidy?</h2>
 <div class="badge">
@@ -488,6 +758,57 @@ The same facts, organized differently, can make an analysis easy or nearly impos
 <p class="subtitle">
 Plausible-looking data is not the same thing as trustworthy data
 </p>
+</section>
+<section id="data-quality" class="slide level2">
+<h2>Data Quality</h2>
+<table class="caption-top">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Dimension</th>
+<th>Question</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Completeness</strong></td>
+<td>Is data present and available?</td>
+</tr>
+<tr class="even">
+<td><strong>Correctness</strong></td>
+<td>Is data true?</td>
+</tr>
+<tr class="odd">
+<td><strong>Concordance</strong></td>
+<td>Is there agreement and consistency between data elements?</td>
+</tr>
+<tr class="even">
+<td><strong>Plausibility</strong></td>
+<td>Does data make sense in the clinical context?</td>
+</tr>
+<tr class="odd">
+<td><strong>Currency</strong></td>
+<td>Is data a relevant representation at a defined point in time?</td>
+</tr>
+</tbody>
+</table>
+<aside class="notes">
+<p>Weiskopf NG, Weng C. Methods and dimensions of electronic health record data quality assessment: enabling reuse for clinical research. J Am Med Inform Assoc. 2013;20(1):144-151. doi:10.1136/amiajnl-2011-000681. © 2023 James H. Harrison, Jr.</p>
+<p>Why is data quality important for computers? Humans become conservative when data is uncertain and the stakes are high; computers don’t, unless programmed to. Handling uncertainty and incorporating low quality into a result means the result quality may reflect the lowest-quality input — garbage in, garbage out.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
 </section>
 <section id="common-data-quality-issues" class="slide level2">
 <h2>Common Data Quality Issues</h2>
@@ -512,20 +833,6 @@ Each of these can silently corrupt a downstream summary — often without any er
 <blockquote>
 <p>The most dangerous bugs are the ones that produce an answer — just the wrong one.</p>
 </blockquote>
-</section>
-<section id="project-and-file-organization" class="slide level2" data-background-color="#2c3e50">
-<h2>1.5 Project and File Organization</h2>
-<p class="subtitle">
-Reproducibility starts with where your files live, not with your code
-</p>
-</section>
-<section id="a-simple-durable-folder-structure" class="slide level2">
-<h2>A Simple, Durable Folder Structure</h2>
-
-<img data-src="assets/module_1/folder_structure.svg" class="quarto-figure quarto-figure-center r-stretch" style="width:88.0%"><ul>
-<li><strong><code>data/</code> is read-only, in spirit</strong> — never overwrite or edit a raw file by hand</li>
-<li>The <code>.Rproj</code> file anchors all relative paths so your code works regardless of where the folder lives on disk</li>
-</ul>
 </section>
 <section id="bringing-it-together" class="slide level2">
 <h2>Bringing It Together</h2>
@@ -554,23 +861,16 @@ Data quality
 Determines whether your answer is <em>trustworthy</em>
 </p>
 </div>
-<div>
-<h4>
-File organization
-</h4>
-<p>
-Determines whether your work is <em>repeatable</em>
-</p>
-</div>
 </div>
 <p class="lead">
-Four habits. Zero lines of R code. All essential before you ever open a script.
+Three habits. Zero lines of R code. All essential before you ever open a script.
 </p>
 </section>
 <section id="coming-up-module-2" class="slide level2">
 <h2>Coming Up: Module 2</h2>
 <ul>
 <li>RStudio as a <strong>computational</strong> tool, not just a text editor</li>
+<li>How to set up a project so your code runs the same way on any machine</li>
 <li>Importing <code>chem_data.csv</code> with the tidyverse</li>
 <li>Correcting the types you predicted today</li>
 <li>A hands-on data validation checklist</li>
@@ -578,6 +878,13 @@ Four habits. Zero lines of R code. All essential before you ever open a script.
 <p class="lead">
 <strong>Bring your laptop, charged, with R and RStudio installed.</strong>
 </p>
+</section>
+<section id="references-acknowledgements" class="slide level2">
+<h2>References &amp; Acknowledgements</h2>
+<ul>
+<li>James Harrison, <em>Introduction to Pathology Informatics</em>, Session 8: Cybersecurity, API Distribution 1.0, 2023. Available at: https://www.pathologyinformatics.org/teaching-slide-sets</li>
+<li>Robert Benirschke &amp; Chris McCudden for slides adapted from ADLM Data Science Certificate materials</li>
+</ul>
 
 </section>
     </div>

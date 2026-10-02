@@ -6,11 +6,9 @@ editor: visual
 
 This module requires no R. You will work directly with raw data files using a plain text editor. The goal is to build your mental model of what a dataset looks like before any software touches it — and to practice recognizing data types, spotting problems, and thinking about structure.
 
-Two short check-ins are interspersed with the lecture: **Check-in 1A** follows section 1.2 (Data Types) and **Check-in 1B** follows section 1.3 (Tidy Data). Do not work ahead — wait for your instructor's prompt before starting each one.
+------------------------------------------------------------------------
 
----
-
-## Check-in 1A: Reading Raw Data and Spotting Types *(10 minutes — after section 1.2)*
+## Check-in: Reading Raw Data and Spotting Types
 
 ### Setup
 
@@ -28,22 +26,36 @@ For **Predicted data type**, use plain language: *text*, *whole number*, *decima
 For **Notes/concerns**, flag anything that might cause problems: unusual formats, potential missingness, values that could be misread by software, ambiguity about what the variable represents.
 
 | Variable | Example raw values | Predicted data type | Notes/concerns |
-|---|---|---|---|
-| mrn | 118087 | | |
-| gender | Male | | |
-| age | 51 | | |
-| pregnancy_status_at_exam | *(empty)* | | |
-| collect_dt | 2022/12/26 11:28:10 | | |
-| receive_dt | 2022/12/29 11:01:20 | | |
-| verify_dt | 2022/12/30 03:39:38 | | |
-| pat_type | cancer center | | |
-| payor_groups | self pay | | |
-| last_name | harrell | | |
-| test | alanine_aminotransferase | | |
-| value | 21 | | |
-| units | U/L | | |
+|----|----|----|----|
+| mrn | 118087 |  |  |
+| gender | Male |  |  |
+| age | 51 |  |  |
+| pregnancy_status_at_exam | *(empty)* |  |  |
+| collect_dt | 2022/12/26 11:28:10 |  |  |
+| receive_dt | 2022/12/29 11:01:20 |  |  |
+| verify_dt | 2022/12/30 03:39:38 |  |  |
+| pat_type | cancer center |  |  |
+| payor_groups | self pay |  |  |
+| last_name | harrell |  |  |
+| test | alanine_aminotransferase |  |  |
+| value | 21 |  |  |
+| units | U/L |  |  |
 
-### Follow-up: The Wide Format
+**Stop here** — your instructor will debrief before continuing to section 1.3.
+
+------------------------------------------------------------------------
+
+## Check-in: Tidy or Not Tidy?
+
+These questions ask you to think about data structure. There is no single right answer to some of them — the goal is to reason carefully and be specific.
+
+**Three principles of tidy data:**
+
+1.  Every variable has its own column.
+2.  Every observation has its own row.
+3.  Every value has its own cell.
+
+------------------------------------------------------------------------
 
 Now open `chem_data_wide.csv` in the same plain text editor.
 
@@ -61,40 +73,12 @@ Scroll across the header row. Answer the following questions in the space provid
 
 <!-- your answer here -->
 
----
+**Looking at `chem_data.csv` (long format) versus `chem_data_wide.csv` (wide format): which tidy data principle or principles does the wide format violate, and how?**
 
-**Stop here** — your instructor will debrief before continuing to section 1.3.
+<!-- your answer here -->
 
----
-
-## Check-in 1B: Tidy or Not Tidy? *(8 minutes — after section 1.3)*
-
-These questions ask you to think about data structure. There is no single right answer to some of them — the goal is to reason carefully and be specific.
-
-**Three principles of tidy data:**
-
-1. Every variable has its own column.
-2. Every observation has its own row.
-3. Every value has its own cell.
-
----
-
-**Question 1.** Looking at `chem_data.csv` (long format) versus `chem_data_wide.csv` (wide format): which tidy data principle or principles does the **wide** format violate, and how?
-
-> Your answer:
-
----
-
-**Question 2.** Name one analytical question that would be *easier* to answer from the **long** format, and one that would be *easier* from the **wide** format. Be specific — use actual column names or analyte names.
+**Name one analytical question that would be *easier* to answer from the long format, and one that would be *easier* from the wide format.**
 
 > Easier from long format:
 
 > Easier from wide format:
-
----
-
-**Question 3.** Suppose you received a new batch of results from your instrument's vendor software and it was delivered in wide format — one row per patient, one column per analyte. What would you need to do to it before analyzing it in R using tidyverse tools? Name at least two concrete steps.
-
-> Your answer:
-
----
