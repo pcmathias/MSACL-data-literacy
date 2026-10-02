@@ -1,0 +1,174 @@
+/* DS 100 Module 1 — custom revealjs styling */
+
+:root {
+  --navy: #2c3e50;
+  --accent: #2980b9;
+  --accent-dark: #1f618d;
+  --teal: #16a085;
+  --purple: #8e44ad;
+  --warn: #c0392b;
+}
+
+.reveal {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.reveal .slides section {
+  text-align: left;
+}
+
+/* Headings */
+.reveal h2 {
+  color: var(--navy);
+  font-weight: 700;
+  border-bottom: 4px solid var(--accent);
+  padding-bottom: 0.22em;
+  margin-bottom: 0.7em;
+  letter-spacing: -0.01em;
+}
+
+.reveal h3 {
+  color: var(--accent-dark);
+}
+
+/* Body text rhythm */
+.reveal p,
+.reveal li {
+  line-height: 1.55;
+}
+
+.reveal ul li,
+.reveal ol li {
+  margin-bottom: 0.45em;
+}
+
+.reveal ul li::marker {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.reveal ol li::marker {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+/* Blockquotes as pull-quotes */
+.reveal blockquote {
+  border-left: 6px solid var(--accent);
+  background: #f4f8fb;
+  padding: 0.55em 1em;
+  font-size: 1.15em;
+  font-style: italic;
+  color: var(--navy);
+  box-shadow: none;
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Inline code */
+.reveal code {
+  color: var(--accent-dark);
+  background: #eef4f8;
+  border-radius: 4px;
+}
+
+.reveal pre code {
+  color: #eee;
+  background: #2c3e50;
+}
+
+/* Section divider slides (dark navy background) */
+.reveal section[data-background-color="#2c3e50"] {
+  text-align: center;
+}
+
+.reveal section[data-background-color="#2c3e50"] h2 {
+  color: #ffffff;
+  border-bottom: none;
+  font-size: 2.4em;
+  margin-bottom: 0.4em;
+}
+
+.reveal section[data-background-color="#2c3e50"] .subtitle {
+  color: #aed6f1;
+  font-size: 1.3em;
+  font-style: italic;
+  max-width: 80%;
+  margin: 0 auto;
+}
+
+/* Check-in / exercise slides (purple background) */
+.reveal section[data-background-color="#8e44ad"] {
+  text-align: center;
+}
+
+.reveal section[data-background-color="#8e44ad"] h2,
+.reveal section[data-background-color="#8e44ad"] p,
+.reveal section[data-background-color="#8e44ad"] em,
+.reveal section[data-background-color="#8e44ad"] strong {
+  color: #ffffff;
+}
+
+.reveal section[data-background-color="#8e44ad"] h2 {
+  border-bottom: none;
+  font-size: 2.1em;
+}
+
+.reveal section[data-background-color="#8e44ad"] .badge {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.18);
+  border: 2px solid rgba(255, 255, 255, 0.6);
+  border-radius: 999px;
+  padding: 0.35em 1.3em;
+  font-size: 1.4em;
+  font-weight: 700;
+  margin: 0.3em 0 0.6em 0;
+}
+
+/* Emphasis / lead paragraphs for sparse slides */
+.reveal .lead {
+  font-size: 1.3em;
+  color: var(--navy);
+  text-align: center;
+  max-width: 85%;
+  margin: 0.6em auto 0 auto;
+}
+
+/* Two-up icon/summary row */
+.reveal .pillars {
+  display: flex;
+  justify-content: space-between;
+  gap: 1em;
+  margin-top: 0.8em;
+}
+
+.reveal .pillars > div {
+  flex: 1;
+  background: #f4f8fb;
+  border-radius: 10px;
+  padding: 0.8em 1em;
+  border-top: 5px solid var(--accent);
+}
+
+.reveal .pillars h4 {
+  margin: 0 0 0.3em 0;
+  color: var(--navy);
+  font-size: 1.05em;
+}
+
+.reveal .pillars p {
+  margin: 0;
+  font-size: 0.85em;
+  color: #4a5a68;
+}
+
+/* Callouts */
+.reveal .callout-note {
+  font-size: 0.95em;
+}
+
+/* Title slide */
+.reveal .title-slide,
+.reveal .reveal-title-slide {
+  text-align: center;
+}
