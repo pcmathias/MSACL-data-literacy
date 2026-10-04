@@ -24,12 +24,18 @@ chem <- read_csv("../data/chem_data.csv",
                      payor_groups = col_factor(),
                      test = col_factor(),
                      units = col_factor())) # Read in data - note we determined data types up front
-# the code below prepares a data set that contains only potassium values
+# prepare a data set that contains only potassium values
 k_data <- chem |> 
   filter(test == 'potassium')
-# the code below prepares a data set that contains electrolytes commonly assayed in a metabolic panel
+# prepare a data set that contains electrolytes commonly assayed in a metabolic panel
 lyte_data <- chem |> 
   filter(test %in% c('sodium', 'potassium', 'chloride', 'bicarbonate'))
+# prepare a wide version of the data set
+chem_wide <- chem |> 
+  pivot_wider(id_cols = c(mrn, gender, age, pregnancy_status_at_exam, pat_type, payor_groups,
+                          collect_dt, receive_dt, verify_dt),
+              names_from = test,
+              values_from = value)
 ```
 
 **Stop Here**
@@ -37,7 +43,8 @@ lyte_data <- chem |>
 ## Creating a ggplot
 
 ```{r}
-
+ggplot(data = k_data) + 
+  geom_histogram(mapping = aes(x = value))
 ```
 
 Does the plot fit the image you were expecting? Why or why not?
@@ -123,58 +130,72 @@ ggplot(data = k_data) +
 
 **Stop Here**
 
-## Faceting
+## Small Multiples for Comparisons
 
-A grid of subplots can be produced using faceting functions, including `facet_grid()` which we demonstrate below. You can think about faceting like grouping the data frame - it is a convenient method to generate plots of subsets of data. The code chunk below takes our *k_data* dataframe and generates a series of histograms that are split into 2 rows by *gender* and 6 columns based on the *pat_type*, so that each individual plot represents the distribution of the intersection of those 2 variables.
+A grid of subplots can be produced using faceting functions, including `facet_grid()` which we demonstrate below. You can think about faceting like grouping the data frame - it is a convenient method to generate plots of subsets of data. The code chunk below takes our *k_data* dataframe and generates a series of histograms that are split into 6 columns based on the *pat_type*.
 
 ```{r}
 ggplot(data = k_data) +
   geom_histogram(mapping = aes(x = value), binwidth = 0.1) +
-  facet_grid(rows = vars(gender), 
-		   cols = vars(pat_type),
-		   scales = "free")
+  facet_grid(cols = vars(pat_type),
+             scales = "free")
 ```
 
-Recall that in our setup chunk we made a data frame that contains all of the electrolyte data *lyte_data*. We would like to visualize the distribution of results in this data set by test and by patient gender. Build a faceted plot for the data frame that separates each gender group into separate rows and each test into separate columns. Use the `scales = "free"` argument to allow each column to use a different scale.
+**What other variables could be used to split the data set further? Fill in the code chunk below to create a grid of plots for the potassium values based on two qualitative variables.**
 
 ```{r}
-#lyte_data <- chem |> # uncomment these lines if you do not have lyte_data in your environment
-#  filter(test %in% c('sodium', 'potassium', 'bicarbonate', 'chloride'))
-ggplot(data = ......) +
-  geom_histogram(mapping = aes(x = ......)) +
-  facet_grid(cols = vars(......), 
-             rows = vars(......), 
-             .......)
-```
-
-The histogram shapes have some irregularities. Why might that be? How can you modify the plot to provide a better visualization? Consider that each of the analytes has a different measurement range. What option(s) for your geom function can you use to handle these disparate values?
-
-```{r}
-ggplot(data = ......) +
-  geom_histogram(mapping = aes(x = ......), .......) +
-  facet_grid(cols = vars(......), 
-             rows = vars(......), 
-             .......)
+ggplot(data = k_data) +
+  geom_histogram(mapping = aes(x = value), binwidth = 0.1) +
+  facet_grid(rows = vars(______),
+             cols = vars(______),
+             scales = "free")
 ```
 
 **Stop Here**
 
-## Asking AI for Help
+## Quantitative Comparisons
 
-Large language models (LLMs) such as ChatGPT have been trained with a large number of problems and code on the internet. They can help you discover new functions and find the solution to a problem quickly but you will arrive at the solution much more quickly if provide clear explanations of what you are trying to accomplish using clear vocabulary and concepts we cover in these sessions.
+In the setup chunk we created a wide version of the data to help compare quantitative values (if you want to learn more about how copy and paste code into Claude and ask for an explanation). Review the first few rows of data below.
 
-Tips for effective use of LLM tools:
+```{r}
+head(chem_wide)
+```
 
-- Clearly describe the data set you are working with names for the relevant components. This can be more straightforward if you are working with tidy data, including data frames that are built with variables as columns and single observations in each row.
+We now have a data set where every lab value for a single patient is contained on one row. This can help perform visual comparisons between values, as each variable (column) can be provided to ggplot as input to the plot. We can use `geom_point()` to build a scatterplot with ggplot and compare ALT with AST, two liver enzymes that would be expected to correlate with one another.
 
-- If the data set is not tidy but you'd like or need it to be, or if your primary goal is to transform the data (will be covered in more detail in the next lessons), clearly describe how the data looks at the beginning and how you'd like it to look at the end, with clear descriptions of what is in each cell, column, and row.
+```{r}
+ggplot(data = chem_wide) +
+  geom_point(mapping = aes(x = alanine_aminotransferase, y = aspartate_aminotransferase))
+```
 
-- Apply computational thinking - try to break down the problem into multiple steps and prompt for solutions at each step, then verify the output of the code at every step. If you see something wrong or unexpected, you can provide that feedback clearly to the LLM and it will adjust its answer to adjust the output and fix the problem.
+**What other variables (tests) may have interesting relationships in this data set? Fill in the code chunk below to visualize the relationship between 2 other tests.**
 
-- In these lessons we are working with tidy data and using packages from the tidyverse group of packages, which is built on standard assumptions of how functions are written. There are many solutions to problems in "base" R that do not use tidyverse functions but these may be harder to read or understand, especially as your are first learning. Asking for solutions that use tidyverse packages explicitly may be helpful. This may happen by default if you describe your data set in terms of observations and variables, but if it doesn't, you can always explicitly ask for a different solution.
+```{r}
+ggplot(data = chem_wide) +
+  geom_point(mapping = aes(x = ______, y = ______))
+```
 
-For most of the lesson we focused on plotting the distribution of a single variable, though with faceting we learned how to add another variable and create separate plots to show distributions that are subset by one or more variables. Let's do this within a single plot with the help of a large language model. Using the DLMP Chatbot, ask for help visualizing the distributions of our potassium data split by another variable (e.g. sex or pat_type) using at least 2 different types of plots, within a single plot (i.e. not faceting).
+**Are there other variables that may be interesting to visualize? How would you incorporate them into the visualization to visualize 3 variables at once? Use the code chunk below to add another variable.** The RStudio ggplot Cheatsheet may be helpful: <https://opensource.posit.co/resources/cheatsheets/data-visualization/>. Consult Claude for help if you have an idea but are not sure what the correct syntax is, and be sure to include prior code as well as additional information not represented in the code (e.g. variable names).
 
 ```{r}
 
+```
+
+## Let's Put It To Practice
+
+**Using Claude for assistance, optimize the faceted plot you created in the Small Multiples exercise for readability and interpret-ability.** Consider the overall color scheme, background, labels, and titles, in addition to any other relationships that may be of interest to visualize.
+
+```{r}
+ggplot(data = k_data) +
+  geom_histogram(mapping = aes(x = value), binwidth = 0.1) +
+  facet_grid(rows = vars(______),
+             cols = vars(______),
+             scales = "free")
+```
+
+**Now optimize the scatterplot you developed, considering similar principles as above.**
+
+```{r}
+ggplot(data = chem_wide) +
+  geom_point(mapping = aes(x = ______, y = ______))
 ```
