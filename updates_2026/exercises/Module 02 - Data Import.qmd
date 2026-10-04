@@ -138,11 +138,61 @@ summary(chem_data)
 
 ## Data Validation
 
+Let's consider the overall quality of our data by doing some basic data validation steps. We are interested in assessing:
+
+- completeness - is the data present and available?
+
+- correctness - is the data true?
+
+- concordance - is there agreement and consistency between the data elements?
+
+- plausibility - does the data make sense in the context?
+
+- currency - is data a relevant representation at a defined point in time?
+
+The chemistry data set we are working from is derived from a publicly available study data set (National Health and Nutrition Examination Survey) with some synthetic clinic features, so we may not be able to do a thorough job with all of these characteristics of the data. But there are certain assumptions we can validate:
+
+- each patient has had the same tests
+
+- each patient and their test results are represented once in the data set
+
+- dates and times for when samples were collected are consistently captured
+
+First run this chunk to ensure the data is imported appropriately, with the correct data types.
+
+```{r}
+chem <- read_csv("../data/chem_data.csv", 
+                 col_types = cols(gender = col_factor(),
+                                  pregnancy_status_at_exam = col_factor(),
+                                  collect_dt = col_datetime("%Y/%m/%d %H:%M:%S"), 
+                                  receive_dt = col_datetime("%Y/%m/%d %H:%M:%S"), 
+                                  verify_dt = col_datetime("%Y/%m/%d %H:%M:%S"), 
+                                  pat_type = col_factor(),
+                                  payor_groups = col_factor(),
+                                  test = col_factor(),
+                                  units = col_factor()))
+```
+
+We can use a simple function called `summary()` that we have previously used to review some basic characteristics of the data set. Recall that some basic statistics will be calculated for numeric variables and variables that are factors will display a count of the various levels of that factor. Recall also that *NA* is the representation of missing data in R.
+
 ```{r}
 summary(chem)
 ```
 
+**Which variables have missing data? Why might those variables specifically have missing data?**
+
+<!-- your answer here -->
+
+**Are there any variables that may help us evaluate the plausibility of the data?**
+
+<!-- your answer here -->
+
+Recall that earlier you installed a package called janitor onto your computer for later use. Let's go ahead and call that package using the `library()` function so that functions available within are available for us to use during this session.
+
 ```{r}
-library(skimr)
-skim(chem)
+library(janitor)
+```
+
+```{r}
+get_dupes(chem)
 ```
