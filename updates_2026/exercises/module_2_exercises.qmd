@@ -182,14 +182,15 @@ count(chem, pat_type, sort = TRUE)
 ```{r}
 #| label: val-values
 # 5. Value range — any implausible results?
+# Sodium's reference range is 135-145 mmol/L, so we can spot-check it directly.
+# (filter() narrows to one analyte at a time — we'll understand it fully in Module 4)
 chem |>
-  group_by(test) |>
+  filter(test == "sodium") |>
   summarize(
     min       = min(value, na.rm = TRUE),
     max       = max(value, na.rm = TRUE),
     n_missing = sum(is.na(value))
-  ) |>
-  print(n = 30)
+  )
 ```
 
 *Your interpretation:*

@@ -8,7 +8,7 @@ This module requires no R. You will work directly with raw data files using a pl
 
 ------------------------------------------------------------------------
 
-## Check-in: Reading Raw Data and Spotting Types
+## Exercise: Identifying Data Types from Raw Data
 
 ### Setup
 
@@ -41,7 +41,7 @@ For **Notes/concerns**, flag anything that might cause problems: unusual formats
 | value | 21 |  |  |
 | units | U/L |  |  |
 
-**Stop here** — your instructor will debrief before continuing to section 1.3.
+**Stop here**
 
 ------------------------------------------------------------------------
 
