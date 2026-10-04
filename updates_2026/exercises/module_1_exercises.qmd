@@ -31,9 +31,9 @@ For **Notes/concerns**, flag anything that might cause problems: unusual formats
 | gender | Male |  |  |
 | age | 51 |  |  |
 | pregnancy_status_at_exam | *(empty)* |  |  |
-| collect_dt | 2022/12/26 11:28:10 |  |  |
-| receive_dt | 2022/12/29 11:01:20 |  |  |
-| verify_dt | 2022/12/30 03:39:38 |  |  |
+| collect_dt | 2022/12/26 17:28:35 |  |  |
+| receive_dt | 2022/12/26 19:22:09 |  |  |
+| verify_dt | 2022/12/26 20:09:44 |  |  |
 | pat_type | cancer center |  |  |
 | payor_groups | self pay |  |  |
 | last_name | harrell |  |  |
