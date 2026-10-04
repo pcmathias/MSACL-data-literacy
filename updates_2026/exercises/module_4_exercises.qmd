@@ -1,0 +1,184 @@
+---
+title: "Module 4 Exercises: Computational Thinking"
+format: pdf
+editor: visual
+execute:
+  eval: false
+---
+
+# Computational Thinking with GenAI:
+
+# LEARNER WORKBOOK
+
+For this lesson, all the code you need is here or comes from Claude.
+
+### How to use this file:
+
+\- Run ONE section at a time. Highlight the lines, then press Ctrl+Enter (Windows) or Cmd+Enter (Mac).
+
+\- Paste code from Claude where it says PASTE HERE.
+
+\- If code gives an error, copy the full error message to Claude.
+
+\- Put chem_data.csv in the same folder as this file, then use
+
+Session \> Set Working Directory \> To Source File Location.
+
+```{r}
+#| label: setup
+#| message: false
+#| warning: false
+library(tidyverse)
+chem <- read_csv("../../data/chem_data.csv")
+```
+
+### Scenario:
+
+### ICU clinicians say their chemistry results come back slower
+
+As the lab director, you've requested data to help you determine
+
+Q1. Does turnaround time (TAT) differ by patient type?
+
+Q2. Are we meeting a 3-hour collect-to-verify goal?
+
+# 
+
+```{r}
+# RUN THIS CODE CHUNK TO LOAD REQUIRED PACKAGES
+library(tidyverse)
+
+```
+
+## Build your data subset
+
+Fill in the two blanks with "potassium" and "creatinine". Keep the quote marks. This will create a data set that only includes data from glucose, potassium, and creatinine tests.
+
+```{r}
+tests_keep <- c("glucose", , )
+
+read_csv("chem_data.csv", show_col_types = FALSE) |> 
+    filter(test %in% tests_keep) |> 
+    write_csv("chem_subset.csv")
+
+chem <- read_csv("chem_subset.csv", show_col_types = FALSE) 
+
+glimpse(chem)
+
+```
+
+CHECK: you should have 19,443 rows (6,481 patients x 3 tests).
+
+# 
+
+## INITIAL GEN AI PROMPT
+
+Do not upload the data file to Claude.
+
+Paste your prompt here:
+
+Paste the code Claude gave you in the code chunk below. Run it. What happened?
+
+```{r}
+# PASTE CODE FROM CLAUDE HERE AND RUN IT
+
+
+```
+
+# 
+
+## EXERCISE 1. Decomposition (Objective 1)
+
+No code. Follow the slides. You can type your response below.
+
+## EXERCISE 2. Pattern recognition (Objective 2)
+
+The code below works for ONE test (glucose) in ONE patient type (icu). Run it first.
+
+```{r}
+chem |> filter(test == "glucose", pat_type == "icu") |> 
+          summarize(n_results = n(), median_value = median(value))
+
+```
+
+### A) Claude's version for every patient type, glucose only
+
+```{r}
+# PASTE CODE FROM CLAUDE HERE AND RUN IT
+
+
+```
+
+### B) Claude's version for every test and every patient type
+
+```{r}
+# PASTE CODE FROM CLAUDE HERE AND RUN IT
+
+
+```
+
+## EXERCISE 3. Abstraction (Objective 3)
+
+### Run both code chunks below. Then inspect the code in each chunk to find what differs between them.
+
+```{r}
+chem |> filter(test == "glucose") |> 
+          group_by(pat_type) |> 
+          summarize(n_results = n(), pct_above = round(100 * mean(value > 125), 1))
+
+
+```
+
+Answer:
+
+```{r}
+chem |> filter(test == "potassium") |> 
+          group_by(pat_type) |> 
+          summarize(n_results = n(), pct_above = round(100 * mean(value > 5.0), 1))
+
+
+```
+
+Answer:
+
+What differs between the two code chunks?
+
+### Claude's code from your filled-in prompt template
+
+```{r}
+# PASTE CODE FROM CLAUDE HERE AND RUN IT
+
+
+```
+
+# 
+
+## EXERCISE 4. Algorithm design (Objective 4)
+
+## REVISED GEN AI PROMPT
+
+Paste your prompt here:
+
+### Paste the code Claude wrote AFTER you answered its questions and approved its plan.
+
+```{r}
+# PASTE CODE FROM CLAUDE HERE AND RUN IT
+
+
+```
+
+CHECK: the patient counts in your table should total 6,481, and patients with no patient type should still be there as a group.
+
+# 
+
+### DEBRIEF. Does this make sense?
+
+```{r}
+n_distinct(chem$mrn) # how many patients are in the data? Do they total 6,481?
+
+nrow(chem)/n_distinct(chem$mrn)    # how many rows per patient? Is there 3 (one for each test)
+
+
+```
+
+If the total number of patients is 5,393, patients with no patient type were dropped.
