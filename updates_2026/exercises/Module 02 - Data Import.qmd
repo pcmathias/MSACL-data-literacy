@@ -31,15 +31,25 @@ On the far right next to *chem*, you will spot a symbol that looks like a small 
 
 Without writing any code, just by working with the Data Viewer, try to answer the following questions: (feel free to type in responses directly into this Quarto document)
 
-1.  How many rows are in the data frame? How many columns?
+1.  In newer versions of RStudio, there is a pop out Summary window on top of the Data Viewer, on the right. Review the contents. What information is it providing? Close the window by hitting the "X" on the top right.
 
-2.  Go ahead and try to edit one of the values in this viewer. You will find that you can't. It would have been easy for the RStudio programmers to allow editing of specific values, but they decided not to add that feature. Why do you think this was designed that way?
+    <!-- your answer here -->
 
-3.  Each row in *chem* represents a single result from a chemistry test. The value in the *test* column indicates the specific test performed and the value column contains the patient result for that test. What is the largest numerical value in the data set? What is the smallest?
+2.  How many rows are in the data frame? How many columns?
 
-4.  How many results are available for patients who are 50 and older? Of those patients 50 and older, how many albumin results are available? (Hint: look at the Filter button)
+    <!-- your answer here -->
 
-When you are done, put your sticky note up.
+3.  Go ahead and try to edit one of the values in this viewer. You will find that you can't. It would have been easy for the RStudio programmers to allow editing of specific values, but they decided not to add that feature. Why do you think this was designed that way?
+
+    <!-- your answer here -->
+
+4.  Each row in *chem* represents a single result from a chemistry test. The value in the *test* column indicates the specific test performed and the value column contains the patient result for that test. What is the largest numerical value in the data set? What is the smallest?
+
+    <!-- your answer here -->
+
+5.  How many results are available for patients who are 50 and older? Of those patients 50 and older, how many albumin results are available? (Hint: look at the Filter button)
+
+    <!-- your answer here -->
 
 **Stop Here**
 
@@ -126,19 +136,13 @@ summary(chem_data)
 
 **Stop Here**
 
-## Exporting Data
-
-The most efficient workflow for many data analysis projects is to develop a Quarto file that integrates a narrative analysis with the code. You starts with raw data, perform data cleaning and transformation, perform calculations/statistical tests, and generate plots, all within a single report that can be shared with others. However, in many contexts you may want to perform some data preparation or analysis and hand off the data to colleagues. Or you may want to do some heavy lifting in terms of data preparation/analysis that takes too long to repeat every time you want to do the analysis and save files from that work to pick up later.
-
-It would be helpful to create a file from R that we can then save and share if needed. Within the *readr* package (that is included when you call `library(tidyverse)`) there are functions to help you write data frames to files - essentially the opposite of `read_csv()`. Let's use the `write_csv()` function to write our *chem_data* dataframe to a file.
-
-1.  First, to better segregate our data from our analysis files, use the New Folder button in your Files window to create a new folder called *output*. You should be in the Home \> projects \> core directory.
-2.  In the code chunk below, use the `write_csv()` function to write your *chem_data* dataframe to a file called *chem_data_mod_types.csv* (since we modified some data types) in the *output* folder. Recall that the syntax for navigating to a different folder under than the one you are in is to provide the "path" to the destination, e.g. "folder/file_name.csv". Replace the dummy variables that have been included
-3.  Navigate to your output folder in the Files window. Click the box to the left of your *chem_data_mod_types.csv* file to select it. In the More options under the Files window, select *Export*. You will be presented with a window to download the file you selected. This should be downloaded onto your local drive on your computer, in your default folder to receive downloads.
-4.  Open the file you downloaded to your system in Excel. Compare it with the original *chem_data.csv* file that you uploaded earlier in the lesson. Are there any differences?
+## Data Validation
 
 ```{r}
-write_csv(data_frame, file = "folder/file_name.csv")
+summary(chem)
 ```
 
-**Stop Here**
+```{r}
+library(skimr)
+skim(chem)
+```
