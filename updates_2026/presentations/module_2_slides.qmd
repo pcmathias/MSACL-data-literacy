@@ -37,12 +37,14 @@ Callback to Module 1's closing slide: today is where the "four habits, zero line
 By the end of this module, you will be able to:
 
 - Navigate the RStudio interface and explain the purpose of each pane
+- Apply project and file organization principles for a reproducible analysis
 - Import and inspect a dataset using the tidyverse
 - Recognize and correct common data type misassignments
 - Apply a systematic data validation checklist after importing data
 
 <div class="pillars">
 <div><h4>Interface</h4><p>Where do things happen, and why does it matter?</p></div>
+<div><h4>Organization</h4><p>A project file so your code runs anywhere</p></div>
 <div><h4>Import</h4><p>Getting data in — correctly, not just successfully</p></div>
 <div><h4>Types</h4><p>Catching R's wrong guesses before they cost you</p></div>
 <div><h4>Validation</h4><p>Proving the data is what you think it is</p></div>
@@ -159,6 +161,41 @@ Keep this brief — MSACL 101 goes deeper into package management and installati
 
 ---
 
+## RStudio Needs a "Point of Reference"
+
+- Every time R reads or writes a file, it looks relative to one location: the **working directory**
+- Write `"data/chem_data.csv"` and R has to guess *which* `data/` folder you mean — it guesses based on the working directory, not where the file "obviously" is
+- No defined point of reference means the same code can run on your laptop and fail on a colleague's — or fail on your own machine next month
+- This is exactly why you opened the `.Rproj` file first in Check-in 2A, before touching any code
+
+> A script that only runs from your Desktop isn't reproducible. It's just accidentally correct on your computer, today.
+
+::: {.notes}
+Callback directly to Check-in 2A: learners already opened the .Rproj file — now they learn *why* that step mattered. Most import errors trace back to this concept, so land it solidly here.
+:::
+
+---
+
+## RStudio Projects Fix the Problem
+
+- An **`.Rproj` file** marks a folder as a *project* — opening it tells RStudio "set the working directory here, every time"
+- Every relative path in your code (`data/chem_data.csv`) is now anchored to that project folder, regardless of whose computer it lives on
+- This is *why* every exercise in this course starts with "open the `.Rproj` file" — not the script, not the `.qmd` — the project file first
+- Combined with a consistent folder structure, this is what makes an analysis **portable**: it runs the same way on any machine
+
+<p class="lead">The folder structure on the next slide only pays off once a project file anchors it.</p>
+
+---
+
+## A Simple, Durable Folder Structure
+
+![](assets/module_1/folder_structure.svg){fig-align="center" width="88%"}
+
+- **`data/` is read-only, in spirit** — never overwrite or edit a raw file by hand
+- The `.Rproj` file anchors all relative paths so your code works regardless of where the folder lives on disk
+
+---
+
 ## 2.3 Importing Data with Explicit Column Types {background-color="#2c3e50"}
 
 <p class="subtitle">R has to guess at every column's type — and sometimes it guesses wrong</p>
@@ -260,6 +297,7 @@ Step through all six validation checks on the correctly imported `chem_data`. Re
 
 <div class="pillars">
 <div><h4>Interface</h4><p>Source writes, Console runs, Environment remembers</p></div>
+<div><h4>Organization</h4><p>The .Rproj file anchors every relative path</p></div>
 <div><h4>Import</h4><p>Tell R the types — don't trust the guess</p></div>
 <div><h4>Validation</h4><p>A receipt that the data is what you expect</p></div>
 <div><h4>Mindset</h4><p>Reproducible, auditable, and built to scale</p></div>
