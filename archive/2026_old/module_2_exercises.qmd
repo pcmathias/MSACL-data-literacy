@@ -1,0 +1,220 @@
+---
+title: "Module 2 Exercises: Introduction to R and RStudio"
+format: html
+editor: visual
+---
+
+In this module you will get oriented inside RStudio, import `chem_data.csv`, and work through a structured data validation checklist. The emphasis is on understanding *what is happening* at each step, not just running code and moving on.
+
+Three check-ins are interspersed with the lecture: **Check-in 2A** follows section 2.1 (Why Use a Programmatic Tool?), **Check-in 2B** follows section 2.3 (Importing Data with Explicit Column Types), and **Check-in 2C** follows section 2.4 (Data Validation Checklist). Do not work ahead.
+
+```{r}
+#| label: setup
+#| message: false
+#| warning: false
+library(tidyverse)
+chem <- read_csv("../../data/chem_data.csv")
+```
+
+---
+
+## Check-in 2A: Getting Oriented in RStudio *(8 minutes — after section 2.1)*
+
+### Setup Steps
+
+Before answering any questions, do the following in order:
+
+1. Open the course `.Rproj` file from your file system (do not just open the `.qmd` file directly).
+2. In the **Console** pane, type `1 + 1` and press Enter. Confirm you see `[1] 2`.
+3. Return to this document in the **Source** pane. Run the setup chunk at the top of this file (the one that loads `tidyverse` and imports `chem`). Use the green Run button or Ctrl/Cmd+Shift+Enter.
+
+### RStudio Panes
+
+Fill in the table below. The first column is provided. Leave the last two columns blank and fill them in based on what you observe on your screen.
+
+| Pane name | What it contains | One specific thing you notice right now |
+|---|---|---|
+| Source | | |
+| Console | | |
+| Environment | | |
+| Files / Plots / Help | | |
+
+### Written Questions
+
+**Question 1.** After running the setup chunk, what appears in the Environment pane? Be specific about what information is shown.
+
+> Your answer:
+
+**Question 2.** Why does opening the `.Rproj` file first matter, rather than just opening the `.qmd` file directly?
+
+> Your answer:
+
+**Question 3.** You run a line of code in the Console that produces a result. Is that result saved anywhere you can use later? How is this different from running the same line inside a code chunk in this document?
+
+> Your answer:
+
+---
+
+**Stop here** — your instructor will debrief before continuing to section 2.2.
+
+---
+
+## Check-in 2B: Importing and Inspecting chem_data *(20 minutes — after section 2.3)*
+
+### Part 1 — Run and Interpret
+
+Run each of the three chunks below in order. After each one, answer the question that follows in the space provided.
+
+```{r}
+#| label: glimpse-chem
+glimpse(chem)
+```
+
+**How many rows does `chem` have? How many columns? Which columns currently have type `<chr>` that you would expect to be stored as something else?**
+
+> Your answer:
+
+---
+
+```{r}
+#| label: head-chem
+head(chem, 10)
+```
+
+**What does each row in this dataset represent? Write one precise sentence.**
+
+> Your answer:
+
+---
+
+```{r}
+#| label: summary-chem
+summary(chem)
+```
+
+**What is unusual about `pregnancy_status_at_exam` in this summary? What does the summary of `value` tell you about the range of results in this dataset?**
+
+> Your answer:
+
+---
+
+### Part 2 — Re-import with Explicit Column Types
+
+When you use `read_csv()` without specifying column types, R makes educated guesses. Those guesses are often wrong — or at least imprecise. The code below re-imports `chem_data.csv` with explicit types.
+
+Fill in the two blanks marked with `___`. One is a format string for `col_datetime()`; the other is the name of the `col_` function appropriate for `pat_type`. Hint: look at what the other factor columns are using.
+
+```{r}
+#| label: reimport-typed
+chem <- read_csv("../../data/chem_data.csv",
+  col_types = cols(
+    gender                   = col_factor(),
+    pregnancy_status_at_exam = col_factor(),
+    collect_dt               = col_datetime("___"),    # fill in the format string
+    receive_dt               = col_datetime("%Y/%m/%d %H:%M:%S"),
+    verify_dt                = col_datetime("%Y/%m/%d %H:%M:%S"),
+    pat_type                 = ___(),                  # fill in the col_ function
+    payor_groups             = col_factor(),
+    test                     = col_factor(),
+    units                    = col_factor()
+  ))
+glimpse(chem)
+```
+
+**Which columns changed type compared to the first import? What did they change from and to?**
+
+> Your answer:
+
+---
+
+**Stop here** — your instructor will debrief before continuing to section 2.4.
+
+---
+
+## Check-in 2C: Data Validation Checklist *(15 minutes — after section 2.4)*
+
+Before analyzing any dataset, you should work through a short validation checklist and record what you find. Think of this as a signed receipt: you are documenting that the data arrived in the shape you expected.
+
+Run each chunk below. After each one, write your interpretation in the space provided — not just the number, but what it *means* given what you know about this dataset.
+
+---
+
+```{r}
+#| label: val-rowcount
+# 1. Row count — does it match what we expect?
+nrow(chem)
+```
+
+*Your interpretation:*
+
+---
+
+```{r}
+#| label: val-patients
+# 2. Distinct patients — how many unique individuals?
+n_distinct(chem$mrn)
+```
+
+*Your interpretation:*
+
+---
+
+```{r}
+#| label: val-analytes
+# 3. Analyte coverage — are all 24 analytes present and evenly represented?
+count(chem, test) |> print(n = 30)
+```
+
+*Your interpretation:*
+
+---
+
+```{r}
+#| label: val-pattype
+# 4. Patient type — what categories exist and how common is missing data?
+count(chem, pat_type, sort = TRUE)
+```
+
+*Your interpretation:*
+
+---
+
+```{r}
+#| label: val-values
+# 5. Value range — any implausible results?
+# Sodium's reference range is 135-145 mmol/L, so we can spot-check it directly.
+# (filter() narrows to one analyte at a time — we'll understand it fully in Module 4)
+chem |>
+  filter(test == "sodium") |>
+  summarize(
+    min       = min(value, na.rm = TRUE),
+    max       = max(value, na.rm = TRUE),
+    n_missing = sum(is.na(value))
+  )
+```
+
+*Your interpretation:*
+
+---
+
+```{r}
+#| label: val-timestamps
+# 6. Timestamp completeness
+chem |> summarize(
+  missing_collect = sum(is.na(collect_dt)),
+  missing_receive = sum(is.na(receive_dt)),
+  missing_verify  = sum(is.na(verify_dt))
+)
+```
+
+*Your interpretation:*
+
+---
+
+### Closing Question
+
+Based on your validation work above, identify **one data quality issue** you would want to investigate further before presenting results to a lab director. Describe the issue and explain why it matters.
+
+> Your answer:
+
+---

@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 320" font-family="Helvetica, Arial, sans-serif">
+  <!-- axis -->
+  <line x1="80" y1="270" x2="850" y2="270" stroke="#333" stroke-width="2"/>
+  <line x1="80" y1="40" x2="80" y2="270" stroke="#333" stroke-width="2"/>
+  <text x="400" y="310" font-size="16" fill="#333">Reported concentration</text>
+
+  <!-- Region shading below LOD -->
+  <rect x="80" y="40" width="150" height="230" fill="#c0392b" opacity="0.08"/>
+
+  <!-- LOD line -->
+  <line x1="230" y1="40" x2="230" y2="270" stroke="#c0392b" stroke-width="3" stroke-dasharray="8,5"/>
+  <text x="240" y="55" font-size="17" font-weight="700" fill="#c0392b">Limit of Detection (LOD)</text>
+
+  <text x="90" y="95" font-size="13" fill="#c0392b">true values</text>
+  <text x="90" y="112" font-size="13" fill="#c0392b">unknown — only</text>
+  <text x="90" y="129" font-size="13" fill="#c0392b">known to be</text>
+  <text x="90" y="146" font-size="13" fill="#c0392b">below LOD</text>
+
+  <!-- Data points above LOD (normal, blue) -->
+  <circle cx="280" cy="210" r="8" fill="#2980b9" opacity="0.85"/>
+  <circle cx="330" cy="190" r="8" fill="#2980b9" opacity="0.85"/>
+  <circle cx="390" cy="160" r="8" fill="#2980b9" opacity="0.85"/>
+  <circle cx="450" cy="140" r="8" fill="#2980b9" opacity="0.85"/>
+  <circle cx="520" cy="120" r="8" fill="#2980b9" opacity="0.85"/>
+  <circle cx="600" cy="100" r="8" fill="#2980b9" opacity="0.85"/>
+  <circle cx="680" cy="80" r="8" fill="#2980b9" opacity="0.85"/>
+  <circle cx="760" cy="70" r="8" fill="#2980b9" opacity="0.85"/>
+
+  <!-- Censored points below LOD -->
+  <circle cx="150" cy="255" r="8" fill="#c0392b" opacity="0.85"/>
+  <circle cx="130" cy="258" r="8" fill="#c0392b" opacity="0.85"/>
+  <circle cx="170" cy="253" r="8" fill="#c0392b" opacity="0.85"/>
+  <circle cx="110" cy="260" r="8" fill="#c0392b" opacity="0.85"/>
+  <circle cx="190" cy="256" r="8" fill="#c0392b" opacity="0.85"/>
+
+  <text x="55" y="292" font-size="15" font-weight="700" fill="#c0392b">reported as "&lt;0.5"</text>
+  <text x="560" y="292" font-size="15" font-weight="700" fill="#2980b9">measured values</text>
+
+  <!-- Warning callout -->
+  <g transform="translate(500,150)">
+    <rect x="0" y="0" width="300" height="95" rx="10" fill="#fff3cd" stroke="#e0a800" stroke-width="2"/>
+    <text x="15" y="25" font-size="15" font-weight="700" fill="#7a5c00">Common mistake:</text>
+    <text x="15" y="47" font-size="14" fill="#7a5c00">treating censored values as</text>
+    <text x="15" y="65" font-size="14" fill="#7a5c00">missing (NA) or as zero —</text>
+    <text x="15" y="83" font-size="14" fill="#7a5c00">both distort the true mean</text>
+  </g>
+</svg>

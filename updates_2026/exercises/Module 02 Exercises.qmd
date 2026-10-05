@@ -1,0 +1,303 @@
+---
+title: "Module 02 - Data Import"
+format: html
+editor: visual
+---
+
+## Importing Data from a CSV File
+
+Take a look at the *Files* pane on the bottom right. In the previous Your Turn you added the *chem_data.csv* file to the *data* folder you created. The objective of this exercise is to *import* that CSV file into R as a data frame, and then take a first look at its contents using the *Data Viewer*.
+
+Recall that to import CSV files, we use the *read_csv()* function, which is part of the *tidyverse* package. The *read_csv()* function takes a *filename* as an argument and returns a *data frame*. To capture the data frame in a named object, we use the *assignment operator* ( \<- ).
+
+In the following code chunk, we first load the *tidyverse* package and then use the *read_csv()* function to load the *chem_data.csv* file and capture it in an object named *chem*. Note that the *Module* *02 - Data Import.qmd* file is in the *exercises* directory so we have to provide the *data/* path to point the *read_csv* function to the right location for our file. This step is very important if you follow the best practice of segregating your raw data in a different location from your analysis and output files.
+
+Run the following code chunk.
+
+```{r, message = FALSE}
+library(tidyverse)
+chem <- read_csv("../data/chem_data.csv")
+```
+
+Hint: click on the green triangle in the upper right corner of the code chunk!
+
+## Inspecting a Data Frame
+
+One thing that Excel does well is to provide an interactive visual representation of the data. This allows you to inspect it by sorting and filtering. RStudio actually does this well, too, with one difference - it won't let you *change* any of the data while you inspect it.
+
+Look on the right at the *Environment* pane (you might have to click on the "Environment" tab) and find the entry *chem*. This is the data frame you just created inside of R's memory. (If you don't see *chem*, try running the code chunk above again).
+
+On the far right next to *chem*, you will spot a symbol that looks like a small table. Click on it to make the *Data Viewer* appear.
+
+Without writing any code, just by working with the Data Viewer, try to answer the following questions: (feel free to type in responses directly into this Quarto document)
+
+1.  In newer versions of RStudio, there is a pop out Summary window on top of the Data Viewer, on the right. Review the contents. What information is it providing? Close the window by hitting the "X" on the top right.
+
+    <!-- your answer here -->
+
+2.  How many rows are in the data frame? How many columns?
+
+    <!-- your answer here -->
+
+3.  Go ahead and try to edit one of the values in this viewer. You will find that you can't. It would have been easy for the RStudio programmers to allow editing of specific values, but they decided not to add that feature. Why do you think this was designed that way?
+
+    <!-- your answer here -->
+
+4.  Each row in *chem* represents a single result from a chemistry test. The value in the *test* column indicates the specific test performed and the value column contains the patient result for that test. What is the largest numerical value in the data set? What is the smallest?
+
+    <!-- your answer here -->
+
+5.  How many results are available for patients who are 50 and older? Of those patients 50 and older, how many albumin results are available? (Hint: look at the Filter button)
+
+    <!-- your answer here -->
+
+**Stop Here**
+
+## Identifying Data Types
+
+Functions that import data in R make assumptions of how the data needs to be represented, typically based on scanning a limited number of rows and "guessing" what data type will fit best. At high level, R is often looking for numbers vs. characters and will default to defining a variable as a character. The data type for each variable impacts how R interprets and displays the values in your data frame.
+
+First let's use the `summary()` function to review statistical summaries for the chem data set. (Hit the green play button on the right below.)
+
+```{r}
+summary(chem)
+```
+
+There is a useful summary for the value field
+
+Let's take a look at the data set we imported using the `glimpse()` function, which is a quick mechanism to review data types and the first entries for a given variable. (Hit the green play button on the right below.)
+
+```{r}
+glimpse(chem)
+```
+
+Here are some common data types in R:
+
+- Integer (int) = whole numbers
+
+- Double (dbl) = numeric with decimal precision
+
+- Logical (lgl) = logical, e.g. TRUE or FALSE
+
+- Character (chr) = character string
+
+- Factor (fct) = categorical variable with fixed "levels"
+
+- Date-Time (dttm) = date and time (also called POSIXct)
+
+- Date (date) = calendar date
+
+- Time (tms) = time of day
+
+- List (list) = complex list that include different data types for each entry
+
+**Refer back to the data types exercise in your Module 1 Exercises file (re-open it here in RStudio if you closed it). Did R/RStudio import the data as the data types you expected? Which variables are discrepant?**
+
+<!-- your answer here -->
+
+## Modifying Data Types
+
+It would be helpful to instruct R specifically how which data type each variable should be mapped to. We can add additional arguments to our `read_csv()` function to define the necessary column types. In the code chunk below we are going to create a new object *chem_data* that imports our same *chem_data.csv* file using the `read_csv()` function but we have added a *col_types* argument to convert the *pregnancy_status_at_exam* and *pat_type* variables to factors and the *collect_dt* variable to a data type that recognizes both date and time.
+
+The general format for applying the *col_types* argument is that we call a `cols()` function with a format of `cols(variable_name = col_data_type(arguments)`.
+
+Run the code chunk below and inspect the output.
+
+```{r}
+chem_data <- read_csv("data/chem_data.csv", 
+    col_types = cols(
+      pregnancy_status_at_exam = col_factor(), 
+      collect_dt = col_datetime("%Y/%m/%d %H:%M:%S"), 
+      pat_type = col_factor()))
+summary(chem_data)
+```
+
+The output for the variables we converted to factors and datetimes is now much more descriptive. To convert *collect_dt* into a datetime data type, we specified the format of the original character string that was imported. The key for what each symbol (e.g. "%Y" = 4 digit year) can be found here: <https://readr.tidyverse.org/reference/parse_datetime.html>.
+
+Which other variables would it make sense to convert to different data types? As a rule of thumb, uniquely identifiable observations (e.g. MRNs, names) probably don't make sense to be expressed as a factor but categorical variables where there is value to reviewing breakdowns across a population (e.g. gender, sex, race, ethnicity) likely do make sense to convert into a factor.
+
+In the code chunk below, specify new data types for additional variables and rebuild the object *chem_data* with the most appropriate data types for each of the variables by filling in the \_\_\_\_\_\_ with the right code (don't worry about coercing the variable's data type if is already appropriate). Note that the order in which you list the arguments to the `cols()` function does not matter.
+
+```{r}
+chem_data <- read_csv("data/chem_data.csv", 
+    col_types = cols(
+      gender = _______,  
+      pregnancy_status_at_exam = col_factor(),
+      collect_dt = col_datetime("%Y/%m/%d %H:%M:%S"), 
+      receive_dt = _______,
+      verify_dt = _______,
+      pat_type = col_factor(),
+      payor_groups = _______,
+      test = _______,
+      units = _______
+      ))
+summary(chem_data)
+```
+
+**Stop Here**
+
+## Data Validation
+
+Let's consider the overall quality of our data by doing some basic data validation steps. We are interested in assessing:
+
+- completeness - is the data present and available?
+
+- correctness - is the data true?
+
+- concordance - is there agreement and consistency between the data elements?
+
+- plausibility - does the data make sense in the context?
+
+- currency - is data a relevant representation at a defined point in time?
+
+The chemistry data set we are working from is derived from a publicly available study data set (National Health and Nutrition Examination Survey) with some synthetic clinic features, so we may not be able to do a thorough job with all of these characteristics of the data. But there are certain assumptions we can validate:
+
+- each patient has had the same tests
+
+- each patient and their test results are represented once in the data set
+
+- dates and times for when samples were collected are consistently captured
+
+First run this chunk to ensure the data is imported appropriately, with the correct data types.
+
+```{r}
+chem <- read_csv("../data/chem_data.csv", 
+                 col_types = cols(gender = col_factor(),
+                                  pregnancy_status_at_exam = col_factor(),
+                                  collect_dt = col_datetime("%Y/%m/%d %H:%M:%S"), 
+                                  receive_dt = col_datetime("%Y/%m/%d %H:%M:%S"), 
+                                  verify_dt = col_datetime("%Y/%m/%d %H:%M:%S"), 
+                                  pat_type = col_factor(),
+                                  payor_groups = col_factor(),
+                                  test = col_factor(),
+                                  units = col_factor()))
+```
+
+We can use a simple function called `summary()` that we have previously used to review some basic characteristics of the data set. Recall that some basic statistics will be calculated for numeric variables and variables that are factors will display a count of the various levels of that factor. Recall also that *NA* is the representation of missing data in R.
+
+```{r}
+summary(chem)
+```
+
+**Which variables have missing data? Why might those variables specifically have missing data?**
+
+<!-- your answer here -->
+
+**Are there any variables that may help us evaluate the plausibility of the data?**
+
+<!-- your answer here -->
+
+Recall that earlier you installed a package called janitor onto your computer for later use. Let's go ahead and call that package using the `library()` function so that functions available within are available for us to use during this session.
+
+```{r}
+library(janitor)
+```
+
+The janitor package provides a number of functions that help to identify and clean up (hence the package name) common irregularities in a data set. A detailed description of many of the functions in the package can be found here: <https://cran.r-project.org/web/packages/janitor/vignettes/janitor.html>. One common issue with data extracted from clinical information systems is the appearance of duplicate data. This often arises inadvertently when data is extracted from an information system and a single observation may be linked to multiple versions of a specific data element. For example a test result may be linked to a patient whose insurance status has changed and the same result may get linked to both versions of the type of insurance (payor_groups variable in this data set). This may be harder to detect than missing data. While a manual review of data sorted by multiple variables may help detect his, doing a systematic analysis more broadly is more likely to detect low frequency duplication.
+
+The janitor function offers a `get_dupes()` function that helps to identify duplicate observations. The function takes the data set as the first argument and expects additional variables that define the minimum variables required for an observation as arguments. If no additional arguments beyond the data set are provided, the function will use all of the variables and identify any rows that are exact duplicates of one another.
+
+```{r}
+get_dupes(chem)
+```
+
+**Given the fact we are most interested reviewing a single test value per patient in this data set, what variables should we provide to determine that the data set meets these conditions? Enter the variable(s) to the function below.**
+
+```{r}
+get_dupes(chem, ____________)
+```
+
+There are other data validation steps you can take to ensure it is useful going forward, and some of those steps also include visualization methods we will cover in the next module. Starting with identifying missing and duplicate data are often good first steps to working with a new data set.
+
+**Stop Here**
+
+## Prompting AI for Help
+
+Historically learning a programming language has required significant effort to learn vocabulary and syntax of a new language. Generative AI can help decrease the overhead of learning vocab and syntax but still requires a different approach to communicating since computers work different than our brain. We will be covering more concepts of computational thinking throughout the rest of the course but there are structured methods for working with generative AI and chatbots in particular. RISE is one approach:
+
+- Role: assign the model a role to start the prompt
+
+- Input: specify what the response should (and should not) contain
+
+- Steps: for complex tasks, ask for a step by step plan to review (and modify if needed)
+
+- Expectations: provide a precise specification of the deliverable
+
+Here is an example prompt to Claude:
+
+You are a clinical chemistry laboratory director analyzing a data set in R that includes the values of 24 lab tests for 6,481 patients as well as demographic variables and timestamps for sample collection, lab receipt, and result verification. Write R code to import the data and ensure variables are defined as appropriate data types. Use tidyverse functions as well as other purpose-built packages to minimize the amount of code needed.
+
+Example output:
+
+```{r}
+# install.packages(c("tidyverse", "janitor", "skimr", "naniar"))
+library(tidyverse)   # readr, dplyr, tidyr, forcats, lubridate, stringr
+library(janitor)     # clean_names(), get_dupes()
+library(skimr)       # skim()
+library(naniar)      # miss_var_summary()
+
+# ---- Edit these ----------------------------------------------------------
+file_path   <- "lab_data.csv"
+tz          <- "America/Los_Angeles"
+time_cols   <- c("collection_time", "receipt_time", "verified_time")
+factor_cols <- c("sex", "race", "location")
+analytes    <- c("sodium", "potassium", "chloride", "co2", "bun", "creatinine",
+                 "glucose", "calcium", "magnesium", "phosphate", "albumin",
+                 "total_protein", "alt", "ast", "alp", "total_bilirubin",
+                 "ldh", "ck", "troponin", "crp", "tsh", "hba1c", "ferritin",
+                 "vitamin_d")   # replace with your 24 test names
+# --------------------------------------------------------------------------
+
+labs_raw <- read_csv(
+  file_path,
+  col_types = cols(.default = col_character()),   # read everything as text first
+  na = c("", "NA", "N/A", "NULL", "QNS", "Hemolyzed", "Pending")
+) |>
+  clean_names()
+
+labs <- labs_raw |>
+  mutate(
+    # IDs stay character (preserve leading zeros)
+    patient_id = as.character(patient_id),
+    
+    # Timestamps -> POSIXct (handles mixed formats)
+    across(all_of(time_cols),
+           ~ parse_date_time(.x, orders = c("ymd HMS", "ymd HM", "mdy HMS", "mdy HM"),
+                             tz = tz)),
+    
+    # Demographics
+    age = parse_number(age),
+    across(all_of(factor_cols), ~ as_factor(str_squish(.x))),
+    
+    # Analytes -> numeric; capture censored results like "<0.01" or ">1000"
+    across(all_of(analytes),
+           list(flag = ~ str_extract(.x, "^[<>]"),
+                value = ~ parse_number(.x)),
+           .names = "{.col}__{.fn}")
+  ) |>
+  # Keep numeric analyte columns under original names; keep flag columns alongside
+  rename_with(~ str_remove(.x, "__value$"), ends_with("__value")) |>
+  select(-all_of(analytes[analytes %in% names(labs_raw)]) |> any_of(),
+         everything()) |>
+  # Turnaround-time metrics (minutes)
+  mutate(
+    collect_to_receipt_min = as.numeric(difftime(receipt_time,  collection_time, units = "mins")),
+    receipt_to_verify_min  = as.numeric(difftime(verified_time, receipt_time,    units = "mins")),
+    total_tat_min          = as.numeric(difftime(verified_time, collection_time, units = "mins"))
+  )
+
+# ---- Quality checks ------------------------------------------------------
+glimpse(labs)
+skim(labs)
+miss_var_summary(labs)                                    # missingness by variable
+labs |> get_dupes(patient_id, collection_time)            # duplicate specimens
+labs |> filter(if_any(ends_with("_min"), ~ .x < 0))       # impossible timestamp order
+```
+
+In the absence of a detailed description of the data, Claude provided a lot of useful suggestions that largely cover the steps we've previously performed in analyzing the data so far.
+
+**How can you improve the prompt? What do you think you can do for Claude to provide useful code for us to analyze our data? Modify the example prompt above, with an emphasis on data validation to see if you can get useful code. Add the code below and modify (if needed) to analyze our data specifically.**
+
+```{r}
+
+```
