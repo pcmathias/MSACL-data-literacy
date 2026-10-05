@@ -104,7 +104,7 @@ The general format for applying the *col_types* argument is that we call a `cols
 Run the code chunk below and inspect the output.
 
 ```{r}
-chem_data <- read_csv("data/chem_data.csv", 
+chem_data <- read_csv("../data/chem_data.csv", 
     col_types = cols(
       pregnancy_status_at_exam = col_factor(), 
       collect_dt = col_datetime("%Y/%m/%d %H:%M:%S"), 
@@ -119,7 +119,7 @@ Which other variables would it make sense to convert to different data types? As
 In the code chunk below, specify new data types for additional variables and rebuild the object *chem_data* with the most appropriate data types for each of the variables by filling in the \_\_\_\_\_\_ with the right code (don't worry about coercing the variable's data type if is already appropriate). Note that the order in which you list the arguments to the `cols()` function does not matter.
 
 ```{r}
-chem_data <- read_csv("data/chem_data.csv", 
+chem_data <- read_csv("../data/chem_data.csv", 
     col_types = cols(
       gender = _______,  
       pregnancy_status_at_exam = col_factor(),
@@ -296,7 +296,7 @@ labs |> filter(if_any(ends_with("_min"), ~ .x < 0))       # impossible timestamp
 
 In the absence of a detailed description of the data, Claude provided a lot of useful suggestions that largely cover the steps we've previously performed in analyzing the data so far.
 
-**How can you improve the prompt? What do you think you can do for Claude to provide useful code for us to analyze our data? Modify the example prompt above, with an emphasis on data validation to see if you can get useful code. Add the code below and modify (if needed) to analyze our data specifically.**
+**How can you improve the prompt? What do you think you can do for Claude to provide useful code for us to analyze our data? Modify the example prompt above, with an emphasis on data validation after the data is imported to see if you can get useful code. Add the code below and modify (if needed) to analyze our data specifically.**
 
 ```{r}
 

@@ -42,9 +42,11 @@ chem_wide <- chem |>
 
 ## Creating a ggplot
 
+Type the code on the Powerpoint exactly into the grey box below.
+
 ```{r}
-ggplot(data = k_data) + 
-  geom_histogram(mapping = aes(x = value))
+
+
 ```
 
 Does the plot fit the image you were expecting? Why or why not?

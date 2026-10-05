@@ -29,7 +29,7 @@ Session \> Set Working Directory \> To Source File Location.
 #| message: false
 #| warning: false
 library(tidyverse)
-chem <- read_csv("../../data/chem_data.csv")
+chem <- read_csv("../data/chem_data.csv")
 ```
 
 ### Scenario:
@@ -57,7 +57,7 @@ Fill in the two blanks with "potassium" and "creatinine". Keep the quote marks. 
 ```{r}
 tests_keep <- c("glucose", , )
 
-read_csv("chem_data.csv", show_col_types = FALSE) |> 
+read_csv("../chem_data.csv", show_col_types = FALSE) |> 
     filter(test %in% tests_keep) |> 
     write_csv("chem_subset.csv")
 
