@@ -29,7 +29,16 @@ Session \> Set Working Directory \> To Source File Location.
 #| message: false
 #| warning: false
 library(tidyverse)
-chem <- read_csv("../data/chem_data.csv")
+chem <- read_csv("../data/chem_data.csv", 
+                 col_types = cols(gender = col_factor(),
+                                  pregnancy_status_at_exam = col_factor(),
+                                  collect_dt = col_datetime("%Y/%m/%d %H:%M:%S"), 
+                                  receive_dt = col_datetime("%Y/%m/%d %H:%M:%S"), 
+                                  verify_dt = col_datetime("%Y/%m/%d %H:%M:%S"), 
+                                  pat_type = col_factor(),
+                                  payor_groups = col_factor(),
+                                  test = col_factor(),
+                                  units = col_factor())) 
 ```
 
 ### Scenario:
@@ -42,14 +51,6 @@ Q1. Does turnaround time (TAT) differ by patient type?
 
 Q2. Are we meeting a 3-hour collect-to-verify goal?
 
-# 
-
-```{r}
-# RUN THIS CODE CHUNK TO LOAD REQUIRED PACKAGES
-library(tidyverse)
-
-```
-
 ## Build your data subset
 
 Fill in the two blanks with "potassium" and "creatinine". Keep the quote marks. This will create a data set that only includes data from glucose, potassium, and creatinine tests.
@@ -57,13 +58,13 @@ Fill in the two blanks with "potassium" and "creatinine". Keep the quote marks. 
 ```{r}
 tests_keep <- c("glucose", , )
 
-read_csv("../chem_data.csv", show_col_types = FALSE) |> 
+chem |> 
     filter(test %in% tests_keep) |> 
     write_csv("chem_subset.csv")
 
-chem <- read_csv("chem_subset.csv", show_col_types = FALSE) 
+chem_subset <- read_csv("chem_subset.csv", show_col_types = FALSE) 
 
-glimpse(chem)
+glimpse(chem_subset)
 
 ```
 
@@ -96,7 +97,7 @@ No code. Follow the slides. You can type your response below.
 The code below works for ONE test (glucose) in ONE patient type (icu). Run it first.
 
 ```{r}
-chem |> filter(test == "glucose", pat_type == "icu") |> 
+chem_subset |> filter(test == "glucose", pat_type == "icu") |> 
           summarize(n_results = n(), median_value = median(value))
 
 ```
@@ -122,7 +123,7 @@ chem |> filter(test == "glucose", pat_type == "icu") |>
 ### Run both code chunks below. Then inspect the code in each chunk to find what differs between them.
 
 ```{r}
-chem |> filter(test == "glucose") |> 
+chem_subset |> filter(test == "glucose") |> 
           group_by(pat_type) |> 
           summarize(n_results = n(), pct_above = round(100 * mean(value > 125), 1))
 
@@ -132,7 +133,7 @@ chem |> filter(test == "glucose") |>
 Answer:
 
 ```{r}
-chem |> filter(test == "potassium") |> 
+chem_subset |> filter(test == "potassium") |> 
           group_by(pat_type) |> 
           summarize(n_results = n(), pct_above = round(100 * mean(value > 5.0), 1))
 
@@ -174,9 +175,9 @@ CHECK: the patient counts in your table should total 6,481, and patients with no
 ### DEBRIEF. Does this make sense?
 
 ```{r}
-n_distinct(chem$mrn) # how many patients are in the data? Do they total 6,481?
+n_distinct(chem_subset$mrn) # how many patients are in the data? Do they total 6,481?
 
-nrow(chem)/n_distinct(chem$mrn)    # how many rows per patient? Is there 3 (one for each test)
+nrow(chem_subset)/n_distinct(chem_subset$mrn)    # how many rows per patient? Is there 3 (one for each test)
 
 
 ```
