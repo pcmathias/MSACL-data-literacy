@@ -56,13 +56,11 @@ Q2. Are we meeting a 3-hour collect-to-verify goal?
 Fill in the two blanks with "potassium" and "creatinine". Keep the quote marks. This will create a data set that only includes data from glucose, potassium, and creatinine tests.
 
 ```{r}
-tests_keep <- c("glucose", , )
+tests_keep <- c("glucose", ______, _______)
 
-chem |> 
+chem_subset <- chem |> 
     filter(test %in% tests_keep) |> 
     write_csv("chem_subset.csv")
-
-chem_subset <- read_csv("chem_subset.csv", show_col_types = FALSE) 
 
 glimpse(chem_subset)
 
@@ -91,6 +89,18 @@ Paste the code Claude gave you in the code chunk below. Run it. What happened?
 ## EXERCISE 1. Decomposition (Objective 1)
 
 No code. Follow the slides. You can type your response below.
+
+- Load data
+
+- Verify/modify data types
+
+- Validate - missing and duplicate data
+
+- Calculate TAT
+
+- Run descriptive stats for TAT by patient type
+
+- Compare TAT against 3 hr goal
 
 ## EXERCISE 2. Pattern recognition (Objective 2)
 
