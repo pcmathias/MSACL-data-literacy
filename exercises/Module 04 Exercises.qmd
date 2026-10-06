@@ -180,20 +180,6 @@ Paste your prompt here:
 
 CHECK: the patient counts in your table should total 6,481, and patients with no patient type should still be there as a group.
 
-# 
-
-### DEBRIEF. Does this make sense?
-
-```{r}
-n_distinct(chem_subset$mrn) # how many patients are in the data? Do they total 6,481?
-
-nrow(chem_subset)/n_distinct(chem_subset$mrn)    # how many rows per patient? Is there 3 (one for each test)
-
-
-```
-
-If the total number of patients is 5,393, patients with no patient type were dropped.
-
 ## ALGORITHM DESIGN PART 2
 
 Compare the output from above with the output from this structured prompt.
@@ -215,3 +201,15 @@ Use the code chunk below to evaluate all or part of the output.
 ```{r}
 
 ```
+
+### DEBRIEF. Does this make sense?
+
+```{r}
+n_distinct(chem_subset$mrn) # how many patients are in the data? Do they total 6,481?
+
+nrow(chem_subset)/n_distinct(chem_subset$mrn)    # how many rows per patient? Is there 3 (one for each test)
+
+
+```
+
+If the total number of patients is 5,393, patients with no patient type were dropped.
