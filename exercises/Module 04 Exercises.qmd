@@ -166,7 +166,7 @@ What differs between the two code chunks?
 
 ## EXERCISE 4. Algorithm design (Objective 4)
 
-## REVISED GEN AI PROMPT
+## ALGORITHM DESIGN PART 1 - REVISED GEN AI PROMPT
 
 Paste your prompt here:
 
@@ -193,3 +193,25 @@ nrow(chem_subset)/n_distinct(chem_subset$mrn)    # how many rows per patient? Is
 ```
 
 If the total number of patients is 5,393, patients with no patient type were dropped.
+
+## ALGORITHM DESIGN PART 2
+
+Compare the output from above with the output from this structured prompt.
+
+- Task: Write R code to answer two questions. Q1. Does turnaround time differ by patient type? Q2. Are we meeting a 3-hour collect-to-verify goal?
+
+- Context: I am a core lab director answering a concern from an ICU physician, who says ICU chemistry results come back slower than results for other units. Our target is \_\_\_\_% of patients within 3 hours. I am new to R.
+
+- Material: My data is in a file called chem_subset.csv. I can't upload it. The columns are: \[paste the column names\]. One row is ***. Each patient has*** \_ rows. The columns col_rec_tat and rec_ver_tat are turnaround times in ***.***
+
+- ***Constraints: Use dplyr. Count patients, not rows. For patients with no patient type,*** . Tell me anything you assume.
+
+- Output: First give me your plan as numbered steps. Do not write code until I approve the plan. Then give me one table by patient type with the number of patients, the median total turnaround time and the percent within 3 hours, plus one sentence answering each question. Keep the code short, with a comment on each step.
+
+- If anything essential is missing, ask me before answering.
+
+Use the code chunk below to evaluate all or part of the output.
+
+```{r}
+
+```
